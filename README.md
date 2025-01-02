@@ -1,12 +1,13 @@
 
 ## Team NetNinjas
 
-| Category | Details |
-|----------|---------|
-|**Mentor**|[Jaber Kibria](https://github.com/mhsjaber) |
-|<td rowspan="3">**Team Member** </td>| [Rabbani Islam Refat](https://github.com/refat75) |
-| |[Md. Nazmul Hossain](https://github.com/nazmulhossin)|
-| |[Sujan Roy](https://github.com/sujan-roy24) | 
+| Category        | Details                                               |
+|-----------------|-------------------------------------------------------|
+| **Mentor**      | [Jaber Kibria](https://github.com/mhsjaber)           |
+| **Team Member** | [Rabbani Islam Refat](https://github.com/refat75)     |
+|                 | [Md. Nazmul Hossain](https://github.com/nazmulhossin) |
+|                 | [Sujan Roy](https://github.com/sujan-roy24)           |
+
 
 
 ## Project Description
