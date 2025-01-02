@@ -1,12 +1,13 @@
-# netninjas
 
-## Team Members
-- refat75 (Team Leader)
-- nazmulhossin
-- sujan-roy24
+## Team NetNinjas
 
-## Mentor
-- sohelatbs23
+| Category | Details |
+|----------|---------|
+|**Mentor**|[Jaber Kibria](https://github.com/mhsjaber) |
+|<td rowspan="3">**Team Member** </td>| [Rabbani Islam Refat](https://github.com/refat75) |
+| |[Md. Nazmul Hossain](https://github.com/nazmulhossin)|
+| |[Sujan Roy](https://github.com/sujan-roy24) | 
+
 
 ## Project Description
 Add your project description here.
@@ -26,3 +27,4 @@ Add your project description here.
 - [Project Documentation](docs/)
 - [Development Setup](docs/setup.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
+
