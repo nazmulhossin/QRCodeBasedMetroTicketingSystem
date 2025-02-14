@@ -12,7 +12,10 @@
 
 ## Project Description (QR Code-Based Metro Ticketing System)
 ### Introduction 
-We want to develop a QR code-based metro ticketing system that generates a unique QR code for users upon each trip. The system records the entry station when the user scans the QR code at the entry gate and tracks the exit station when the QR code is scanned again at the destination. Fares are calculated based on predefined rates set by the admin, and the charges are automatically deducted from the user’s account balance. Users can top up their account balance via a mobile app or website.
+<p align="justify">
+  We want to develop a QR code-based metro ticketing system that generates a unique QR code for users upon each trip. The system records the entry station when the user scans the QR code at the entry gate and tracks the exit station when the QR code is scanned again at the destination. Fares are calculated based on predefined rates set by the admin, and the charges are automatically deducted from the user’s account balance. Users can top up their account balance via a mobile app or website.
+</p>
+
 ### User Requirements 
 1.	Users must log in with their credentials (e.g., email & password or OTP) to access the system.
 2.	Users can add funds to their account through an integrated payment gateway (e.g., credit/debit cards, digital wallets, or mobile banking).
@@ -26,6 +29,7 @@ We want to develop a QR code-based metro ticketing system that generates a uniqu
 10.	Users can manage multiple tickets in a single trip.
 11.	Users can report lost items through the system, and the system notifies station admins for assistance.
 12.	Users receive real-time updates about station closures, maintenance, delays, or other service disruptions.
+
 ### Admin Requirements
 1.	Admins can add, update, or remove stations from the system as needed.
 2.	Admins can set or adjust fare rates based on travel distances.
