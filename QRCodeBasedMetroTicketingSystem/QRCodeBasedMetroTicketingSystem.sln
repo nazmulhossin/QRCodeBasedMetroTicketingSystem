@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35806.99 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeBasedMetroTicketingSystem.Web", "QRCodeBasedMetroTicketingSystem.Web\QRCodeBasedMetroTicketingSystem.Web.csproj", "{3BEAB29C-F674-431E-B76E-D36C005EBCFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeBasedMetroTicketingSystem.Web", "QRCodeBasedMetroTicketingSystem.Web\QRCodeBasedMetroTicketingSystem.Web.csproj", "{423E891A-F673-4895-8B98-17C526A40100}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeBasedMetroTicketingSystem.Domain", "QRCodeBasedMetroTicketingSystem.Domain\QRCodeBasedMetroTicketingSystem.Domain.csproj", "{20F25C40-A62D-4475-A426-29AA937A2D30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeBasedMetroTicketingSystem.Application", "QRCodeBasedMetroTicketingSystem.Application\QRCodeBasedMetroTicketingSystem.Application.csproj", "{DD156151-CC6C-4A94-A49B-5B0E5061015A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodeBasedMetroTicketingSystem.Infrastructure", "QRCodeBasedMetroTicketingSystem.Infrastructure\QRCodeBasedMetroTicketingSystem.Infrastructure.csproj", "{D3D7ABE9-370C-4A85-997F-252D80944606}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3BEAB29C-F674-431E-B76E-D36C005EBCFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BEAB29C-F674-431E-B76E-D36C005EBCFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3BEAB29C-F674-431E-B76E-D36C005EBCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3BEAB29C-F674-431E-B76E-D36C005EBCFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{423E891A-F673-4895-8B98-17C526A40100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{423E891A-F673-4895-8B98-17C526A40100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{423E891A-F673-4895-8B98-17C526A40100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{423E891A-F673-4895-8B98-17C526A40100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F25C40-A62D-4475-A426-29AA937A2D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F25C40-A62D-4475-A426-29AA937A2D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F25C40-A62D-4475-A426-29AA937A2D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F25C40-A62D-4475-A426-29AA937A2D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD156151-CC6C-4A94-A49B-5B0E5061015A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD156151-CC6C-4A94-A49B-5B0E5061015A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD156151-CC6C-4A94-A49B-5B0E5061015A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD156151-CC6C-4A94-A49B-5B0E5061015A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3D7ABE9-370C-4A85-997F-252D80944606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3D7ABE9-370C-4A85-997F-252D80944606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3D7ABE9-370C-4A85-997F-252D80944606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3D7ABE9-370C-4A85-997F-252D80944606}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B4ADAAB8-34EB-4121-839C-D495D53A8C7A}
+		SolutionGuid = {400E185D-6A79-4BF2-B55A-756BCDC816BF}
 	EndGlobalSection
 EndGlobal
