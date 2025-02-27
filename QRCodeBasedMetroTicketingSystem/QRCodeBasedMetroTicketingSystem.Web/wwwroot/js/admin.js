@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-// Toggle Sidebar
+    // Toggle Sidebar
     const sidebar = document.querySelector('.sidebar');
     const sidebarMenu = document.querySelector('.sidebar-menu-icon');
     const closeSidebarIcon = document.querySelector('.close-sidebar-icon');
@@ -25,13 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     sidebarMenu.addEventListener('click', toggleSidebar);
     closeSidebarIcon?.addEventListener('click', () => {
-        sidebar.classList.remove('show-sidebar'); 
+        sidebar.classList.remove('show-sidebar');
     });
 
     window.addEventListener('resize', handleResize);
     handleResize(); // Initialize sidebar state based on screen size
 
-// Header dropdown toggle
+    // Header dropdown toggle
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownMenu = document.querySelector('.dropdown-menu');
 
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-// Enter and exit fullscreen
+    // Enter and exit fullscreen
     const fullscreenToggle = document.getElementById("fullscreen");
     const enterFullscreenIcon = document.getElementById("enter-fullscreen");
     const exitFullscreenIcon = document.getElementById("exit-fullscreen");
@@ -71,120 +71,64 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-// Theme switcher functionality
+    // Theme switcher functionality
     const themes = ['dark-slate', 'dark-blue', 'charcoal-black', 'midnight-navy', 'deep-navy', 'white', 'midnight-blue', 'dark-gray'];
-    let storedSidebarTheme = localStorage.getItem('sidebarTheme') || themes[0]; // Default to first theme
-    let storedHeaderTheme = localStorage.getItem('headerTheme') || themes[5]; // Default to first theme
+    const defaultSidebarTheme = themes[0];
+    const defaultHeaderTheme = themes[5];
 
-    if(!themes.some(theme => theme.includes(storedSidebarTheme)))
-        storedSidebarTheme = themes[0];
+    // Fetch stored themes or set defaults
+    let storedSidebarTheme = localStorage.getItem('sidebarTheme') || defaultSidebarTheme;
+    let storedHeaderTheme = localStorage.getItem('headerTheme') || defaultHeaderTheme;
 
-    if(!themes.some(theme => theme.includes(storedHeaderTheme)))
-        storedHeaderTheme = themes[5];
+    // Validate themes
+    storedSidebarTheme = themes.includes(storedSidebarTheme) ? storedSidebarTheme : defaultSidebarTheme;
+    storedHeaderTheme = themes.includes(storedHeaderTheme) ? storedHeaderTheme : defaultHeaderTheme;
 
+    // Theme styles configuration
+    const themeStyles = {
+        "dark-slate": { bg: "#212631", icon: "#ffffff61", text: "#ffffffde", linkText: "#ffffffde", linkHoverBg: "#2a303d", linkHoverText: "#fff", headerHoverText: "#fff", border: "#323a49" },
+        "dark-blue": { bg: "#153657", icon: "#ffffffa3", text: "#ffffffde", linkText: "#ffffffde", linkHoverBg: "#2d5f91", linkHoverText: "#fff", headerHoverText: "#fff", border: "#12293f" },
+        "charcoal-black": { bg: "#212529", icon: "#ffffff80", text: "#ffffffde", linkText: "#ffffffde", linkHoverBg: "#343a40", linkHoverText: "#fff", headerHoverText: "#fff", border: "#323940" },
+        "midnight-navy": { bg: "#121D3E", icon: "#ffffffa3", text: "#ffffffde", linkText: "#c0c0c1", linkHoverBg: "#2E4071", linkHoverText: "#fff", headerHoverText: "#fff", border: "#2a3d76" },
+        "deep-navy": { bg: "#1f283e", icon: "#ffffffa3", text: "#ffffffde", linkText: "#c0c0c1", linkHoverBg: "#283555", linkHoverText: "#fff", headerHoverText: "#fff", border: "#273455" },
+        "white": { bg: "#ffffff", icon: "#314252", text: "#293846", linkText: "#293846", linkHoverBg: "#c8c8c833", linkHoverText: "#293846", headerHoverText: "#293846", border: "#dadada" },
+        "midnight-blue": { bg: "#1a2035", icon: "#ffffffa3", text: "#ffffffde", linkText: "#c0c0c1", linkHoverBg: "#232b47", linkHoverText: "#fff", headerHoverText: "#fff", border: "#252d4c" },
+        "dark-gray": { bg: "#343a40", icon: "#ffffffa3", text: "#c2c7d0", linkText: "#c2c7d0", linkHoverBg: "#ffffff1a", linkHoverText: "#fff", headerHoverText: "#fff", border: "#495057" },
+    };
+
+    // Applies the selected theme to the given section ("sidebar" or "header")
     function applyTheme(section, themeName) {
-        // First remove and then show check icon on theme apply
-        if(section === "sidebar") {
-            document.querySelector(".selected-sidebar-theme")?.classList.remove("selected-sidebar-theme");
-            document.querySelector('.changeSidebarTheme[data-theme="' + themeName + '"]').classList.add("selected-sidebar-theme");
-        } else if(section === "header") {
-            document.querySelector(".selected-header-theme")?.classList.remove("selected-header-theme");
-            document.querySelector('.changeHeaderTheme[data-theme="' + themeName + '"]').classList.add("selected-header-theme");
-        }
-        
-        if(themeName == "dark-slate") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#212631");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffff61");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#2a303d");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#323a49");
-        } else if(themeName == "dark-blue") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#153657");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffffa3");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#2d5f91");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#12293f");
-        } else if(themeName == "charcoal-black") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#212529");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffff80");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#343a40");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#323940");
-            
-        } else if(themeName == "midnight-navy") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#121D3E");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffffa3");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#c0c0c1");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#2E4071");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#2a3d76");
-        } else if(themeName == "deep-navy") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#1f283e");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffffa3");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#c0c0c1");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#283555");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#273455");
-        } else if(themeName == "white") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#ffffff");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#314252");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#293846");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#293846");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#c8c8c833");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#293846");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#293846");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#dadada");
-        } else if(themeName == "midnight-blue") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#1a2035");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffffa3");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#ffffffde");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#c0c0c1");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#232b47");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#252d4c");
-        } else if(themeName == "dark-gray") {
-            document.documentElement.style.setProperty("--" + section + "-bg-color", "#343a40");
-            document.documentElement.style.setProperty("--" + section + "-icon-color", "#ffffffa3");
-            document.documentElement.style.setProperty("--" + section + "-text-color", "#c2c7d0");
-            document.documentElement.style.setProperty("--" + section + "-link-text-color", "#c2c7d0");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-bg-color", "#ffffff1a");
-            document.documentElement.style.setProperty("--" + section + "-link-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-header-hover-text-color", "#fff");
-            document.documentElement.style.setProperty("--" + section + "-border-color", "#495057");
-        }
+        if (!themeStyles[themeName]) return;
+
+        // Update theme styles
+        const styles = themeStyles[themeName];
+        Object.entries(styles).forEach(([property, value]) => {
+            document.documentElement.style.setProperty(`--${section}-${property}Color`, value);
+        });
+
+        // Update UI selection state
+        const capitalizedSection = section.charAt(0).toUpperCase() + section.slice(1);
+        document.querySelector(`.selected-${section}-theme`)?.classList.remove(`selected-${section}-theme`);
+        document.querySelector(`.change${capitalizedSection}Theme[data-theme="${themeName}"]`)?.classList.add(`selected-${section}-theme`);
     }
 
-    // Changing theme on load
+    // Handles theme change events for sidebar and header.
+    function handleThemeChange(event) {
+        const button = event.target.closest('.changeSidebarTheme, .changeHeaderTheme');
+        if (!button) return;
+
+        const section = button.classList.contains('changeSidebarTheme') ? 'sidebar' : 'header';
+        const theme = button.getAttribute('data-theme');
+        if (!themes.includes(theme)) return;
+
+        applyTheme(section, theme);
+        localStorage.setItem(`${section}Theme`, theme);
+    }
+
+    // Apply stored themes on load
     applyTheme("sidebar", storedSidebarTheme);
     applyTheme("header", storedHeaderTheme);
 
-    // Changing theme on click
-    document.querySelectorAll('.changeSidebarTheme').forEach(button => {
-        button.addEventListener('click', function () {
-            applyTheme("sidebar", this.getAttribute('data-theme'));
-            localStorage.setItem('sidebarTheme', this.getAttribute('data-theme'));
-        });
-    });
-
-    document.querySelectorAll('.changeHeaderTheme').forEach(button => {
-    button.addEventListener('click', function () {
-            applyTheme("header", this.getAttribute('data-theme'));
-            localStorage.setItem('headerTheme', this.getAttribute('data-theme'));
-        });
-    });
+    // Applies theme on click
+    document.addEventListener('click', handleThemeChange);
 });

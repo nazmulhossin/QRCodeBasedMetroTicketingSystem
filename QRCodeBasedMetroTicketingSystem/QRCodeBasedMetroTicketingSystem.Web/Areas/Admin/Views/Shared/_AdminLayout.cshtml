@@ -11,7 +11,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
-            <a href="#">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                 <img src="~/images/metro-logo.png" alt="Logo" class="sidebar-logo">
                 <span class="sidebar-title">METRO RAIL</span>
             </a>
@@ -19,7 +19,7 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="" class="active-link"><i class="bi bi-columns-gap"></i> Dashboard</a>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="active-link"><i class="bi bi-columns-gap"></i> Dashboard</a>
             <a href=""><i class="bi bi-buildings"></i> Manage Stations</a>
             <a href=""><i class="bi bi-cash-coin"></i> Fare Settings</a>
             <a href=""><i class="bi bi-people"></i> Manage Users</a>
