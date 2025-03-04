@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\QRCodeBasedMetroTicketingSystem.Domain\QRCodeBasedMetroTicketingSystem.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

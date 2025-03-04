@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Station> Stations { get; set; }
     }
 }
