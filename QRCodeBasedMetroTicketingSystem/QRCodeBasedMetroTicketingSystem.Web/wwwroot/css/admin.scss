@@ -508,7 +508,22 @@ body {
     padding-bottom: 8px;
 }
 
+// Form Styels
+form {
+    color: var(--main-primary-text-color);
+}
 
+.form-control::placeholder, select:has(option:disabled:checked) {
+    color: #6c757d;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.05rem rgba(13, 110, 253, 0.20);
+}
+
+.form-control:not(:placeholder-shown), .form-select:valid, textarea:not(:placeholder-shown) {
+    border-color: lightgrey;
+}
 
 
 
