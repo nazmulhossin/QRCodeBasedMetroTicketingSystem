@@ -11,7 +11,7 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
     public class Station
     {
         [Key]
-        public long StationId { get; set; }
+        public int StationId { get; set; }
 
         [StringLength(100)]
         public required string StationName { get; set; }
@@ -19,15 +19,15 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
         [StringLength(255)]
         public required string Address { get; set; }
 
-        [Column(TypeName = "decimal(10,8)")]
+        [Column(TypeName = "decimal(12,8)")]
         public required decimal Latitude { get; set; }
 
-        [Column(TypeName = "decimal(11,8)")]
+        [Column(TypeName = "decimal(12,8)")]
         public required decimal Longitude { get; set; }
 
         public required int Order { get; set; }
 
-        [StringLength(10)]
+        [StringLength(50)]
         public required string Status { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

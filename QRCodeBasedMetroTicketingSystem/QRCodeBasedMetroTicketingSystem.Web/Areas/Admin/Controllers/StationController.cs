@@ -19,19 +19,38 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var stations = await _db.Stations.OrderBy(s => s.Order).ToListAsync();
+            var stations = await _db.Stations
+                .OrderBy(s => s.Order)
+                .Select(s => new StationViewModel
+                {
+                    StationName = s.StationName,
+                    Address = s.Address,
+                    Latitude = s.Latitude,
+                    Longitude = s.Longitude,
+                    Order = s.Order,
+                    Status = s.Status
+                }).ToListAsync();
+
             return View(stations);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var stations = _db.Stations.OrderBy(s => s.Order).ToList();
+            var stations = await _db.Stations
+                .OrderBy(s => s.Order)
+                .Select(s => new StationListViewModel
+                {
+                    StationId = s.StationId,
+                    StationName = s.StationName,
+                    Order = s.Order
+                }).ToListAsync();
+
             var model = new StationCreationViewModel { Stations = stations };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Create(StationCreationViewModel model)
+        public async Task<IActionResult> Create(StationCreationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -64,11 +83,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
                 // Create the new station
                 var newStation = new Station
                 {
-                    StationName = model.StationName,
-                    Address = model.Address,
+                    StationName = model.StationName!,
+                    Address = model.Address!,
                     Latitude = model.Latitude ?? 0.0M,
                     Longitude = model.Longitude ?? 0.0M,
-                    Status = model.Status,
+                    Status = model.Status!,
                     Order = newOrder
                 };
 
@@ -97,7 +116,15 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             }
 
             // If model state is invalid, reload the form with existing data
-            model.Stations = _db.Stations.OrderBy(s => s.Order).ToList();
+            model.Stations = await _db.Stations
+                .OrderBy(s => s.Order)
+                .Select(s => new StationListViewModel
+                {
+                    StationId = s.StationId,
+                    StationName = s.StationName,
+                    Order = s.Order
+                }).ToListAsync();
+
             return View(model);
         }
     }

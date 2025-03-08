@@ -13,21 +13,20 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
         [Key]
         public int DistanceId { get; set; }
 
-        [Required]
-        public int Station1Id { get; set; }
+        // Foreign key to the Station table for the first station
+        public required int Station1Id { get; set; }
 
-        [Required]
-        public int Station2Id { get; set; }
+        // Foreign key to the Station table for the second station
+        public required int Station2Id { get; set; }
 
-        [Required]
-        public decimal Distance { get; set; }
+        [Column(TypeName = "decimal(12,6)")]
+        public required decimal Distance { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
-        // Navigation properties
-        public Station? Station1 { get; set; }
-        public Station? Station2 { get; set; }
+        // Navigation properties to related Station entities
+        public virtual Station? Station1 { get; set; }
+        public virtual Station? Station2 { get; set; }
     }
 }
