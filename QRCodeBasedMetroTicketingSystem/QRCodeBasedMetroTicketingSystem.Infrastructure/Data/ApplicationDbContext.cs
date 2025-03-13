@@ -22,6 +22,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Station>()
+                .HasIndex(s => s.StationName)
+                .IsUnique();
+
+            modelBuilder.Entity<Station>()
                 .HasIndex(s => s.Order)
                 .IsUnique();
 

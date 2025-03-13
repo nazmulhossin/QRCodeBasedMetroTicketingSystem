@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
-    public class StationViewModel
+    class StationDto
     {
         public int StationId { get; set; }
         public required string StationName { get; set; }

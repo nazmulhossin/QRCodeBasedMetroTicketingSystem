@@ -12,8 +12,8 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250308053216_AddTablesToDb")]
-    partial class AddTablesToDb
+    [Migration("20250312111418_ModifiedStationTable")]
+    partial class ModifiedStationTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,6 +66,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.HasKey("StationId");
 
                     b.HasIndex("Order")
+                        .IsUnique();
+
+                    b.HasIndex("StationName")
                         .IsUnique();
 
                     b.ToTable("Stations");
