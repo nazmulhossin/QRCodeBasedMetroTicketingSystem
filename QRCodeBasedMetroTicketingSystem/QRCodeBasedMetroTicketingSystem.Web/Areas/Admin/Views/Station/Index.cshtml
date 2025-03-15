@@ -50,7 +50,6 @@
     <script asp-append-version="true">
         $(document).ready(function () {
             $('#data-table').DataTable({
-                responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -89,6 +88,7 @@
                     {
                         data: 'stationId',
                         orderable: false,
+                        searchable: false,
                         render: function(data) {
                             return '<div class="table-action-buttons">' +
                                    '<a href="/Admin/Station/Edit/' + data + '" class="btn-icon edit-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Station"><i class="bi bi-pencil"></i></a>' +

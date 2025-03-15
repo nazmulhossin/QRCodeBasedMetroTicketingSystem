@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
-    class StationDto
+    public class StationDto
     {
         public int StationId { get; set; }
         public required string StationName { get; set; }

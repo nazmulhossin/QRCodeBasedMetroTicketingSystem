@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces
+namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
 {
     public interface IStationDistanceRepository
     {
-        Task<List<DistanceViewModel>> GetAdjacentDistancesAsync(int stationId);
+        //Task<List<DistanceViewModel>> GetAdjacentDistancesAsync(int stationId);
         Task AddDistanceAsync(StationDistance distance);
         Task RemoveDistancesAsync(int stationId);
         Task RemoveSpecificDistancesAsync(int station1Id, int station2Id);

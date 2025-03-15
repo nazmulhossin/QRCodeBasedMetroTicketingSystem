@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
+using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
+using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
@@ -13,107 +16,26 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
     public class StationController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IStationService _stationService;
 
-        public StationController(ApplicationDbContext db)
+        public StationController(ApplicationDbContext db, IStationService stationService)
         {
             _db = db;
+            _stationService = stationService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        
         {
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> GetStationData(DataTablesRequest request)
         {
-            try
-            {
-                // Get total count for pagination info
-                var totalRecords = await _db.Stations.CountAsync();
-
-                // Create query from stations
-                var stationsQuery = _db.Stations.AsQueryable();
-
-                // Apply search if present
-                if (!string.IsNullOrEmpty(request.Search?.Value))
-                {
-                    stationsQuery = stationsQuery.Where(s =>
-                        s.StationName.Contains(request.Search.Value) ||
-                        s.Address.Contains(request.Search.Value));
-                }
-
-                // Get filtered count
-                var filteredCount = await stationsQuery.CountAsync();
-
-                // Apply ordering (sort)
-                if (request.Order != null && request.Order.Any())
-                {
-                    var orderColumn = request.Columns[request.Order[0].Column].Name;
-                    var orderDir = request.Order[0].Dir;
-
-                    switch (orderColumn)
-                    {
-                        case "Order":
-                            stationsQuery = orderDir == "asc"
-                                ? stationsQuery.OrderBy(s => s.Order)
-                                : stationsQuery.OrderByDescending(s => s.Order);
-                            break;
-                        case "StationName":
-                            stationsQuery = orderDir == "asc"
-                                ? stationsQuery.OrderBy(s => s.StationName)
-                                : stationsQuery.OrderByDescending(s => s.StationName);
-                            break;
-                        case "Address":
-                            stationsQuery = orderDir == "asc"
-                                ? stationsQuery.OrderBy(s => s.Address)
-                                : stationsQuery.OrderByDescending(s => s.Address);
-                            break;
-                        case "Status":
-                            stationsQuery = orderDir == "asc"
-                                ? stationsQuery.OrderBy(s => s.Status)
-                                : stationsQuery.OrderByDescending(s => s.Status);
-                            break;
-                        default:
-                            stationsQuery = stationsQuery.OrderBy(s => s.Order);
-                            break;
-                    }
-                }
-                else
-                {
-                    // Default ordering
-                    stationsQuery = stationsQuery.OrderBy(s => s.Order);
-                }
-
-                // Apply pagination
-                var stations = await stationsQuery
-                    .Skip(request.Start)
-                    .Take(request.Length)
-                    .Select(s => new StationViewModel
-                    {
-                        StationId = s.StationId,
-                        StationName = s.StationName,
-                        Address = s.Address,
-                        Latitude = s.Latitude,
-                        Longitude = s.Longitude,
-                        Order = s.Order,
-                        Status = s.Status
-                    }).ToListAsync();
-
-                // Return DataTables response format
-                return Json(new
-                {
-                    draw = request.Draw,
-                    recordsTotal = totalRecords,
-                    recordsFiltered = filteredCount,
-                    data = stations
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { error = ex.Message });
-            }
+            var response = await _stationService.GetStationsDataTableAsync(request);
+            return Json(response);
         }
-
 
         public async Task<IActionResult> Create()
         {

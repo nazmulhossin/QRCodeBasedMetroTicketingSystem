@@ -19,11 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QRCodeBasedMetroTicketingSystem.Application\QRCodeBasedMetroTicketingSystem.Application.csproj" />
     <ProjectReference Include="..\QRCodeBasedMetroTicketingSystem.Domain\QRCodeBasedMetroTicketingSystem.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

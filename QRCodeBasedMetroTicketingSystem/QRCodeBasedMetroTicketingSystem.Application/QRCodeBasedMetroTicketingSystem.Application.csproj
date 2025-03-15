@@ -10,9 +10,4 @@
     <ProjectReference Include="..\QRCodeBasedMetroTicketingSystem.Domain\QRCodeBasedMetroTicketingSystem.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Stations\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
