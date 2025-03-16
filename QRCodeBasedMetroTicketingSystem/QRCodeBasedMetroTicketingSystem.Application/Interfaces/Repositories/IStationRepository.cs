@@ -13,5 +13,13 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
     public interface IStationRepository : IRepository<Station>
     {
         Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request);
+        Task<List<StationListDto>> GetStationsOrderedAsync();
+        Task<Station> GetStationByIdAsync(int stationId);
+        Task<bool> StationExistsByNameAsync(string stationName);
+        Task UpdateSubsequentStationOrdersAsync(int fromOrder);
+        Task AddStationAsync(Station station);
+        Task DeleteExistingDistancesAsync(int station1Id, int station2Id);
+        Task AddStationDistancesAsync(int stationId, Dictionary<int, decimal> distances);
+        Task SaveChangesAsync();
     }
 }

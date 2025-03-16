@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
-    public class StationCreationViewModel
+    public class StationCreationDto
     {
         [Required, StringLength(100)]
         public string? StationName { get; set; }
@@ -28,7 +30,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
         public string? Status { get; set; }
 
         public int? InsertAfterStationId { get; set; }
-        public List<StationListViewModel>? Stations { get; set; } = new();
+        public List<StationListDto>? Stations { get; set; } = new();
         public Dictionary<int, decimal>? Distances { get; set; } = new();
     }
 }

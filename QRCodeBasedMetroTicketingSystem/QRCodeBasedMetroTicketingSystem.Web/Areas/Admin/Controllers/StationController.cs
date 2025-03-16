@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
-using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
@@ -17,15 +18,16 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IStationService _stationService;
+        private readonly IMapper _mapper;
 
-        public StationController(ApplicationDbContext db, IStationService stationService)
+        public StationController(ApplicationDbContext db, IStationService stationService, IMapper mapper)
         {
             _db = db;
             _stationService = stationService;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
-        
         {
             return View();
         }
@@ -39,17 +41,9 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var stations = await _db.Stations
-                .OrderBy(s => s.Order)
-                .Select(s => new StationListViewModel
-                {
-                    StationId = s.StationId,
-                    StationName = s.StationName,
-                    Order = s.Order
-                }).ToListAsync();
-
-            var model = new StationCreationViewModel { Stations = stations };
-            return View(model);
+            var StationCreationDto = await _stationService.GetStationCreationModelAsync();
+            var StationCreationVM = _mapper.Map<StationCreationViewModel>(StationCreationDto);
+            return View(StationCreationVM);
         }
 
         [HttpPost]
@@ -58,107 +52,30 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 // If model state is invalid, reload the form with existing data
-                model.Stations = await _db.Stations
-                    .OrderBy(s => s.Order)
-                    .Select(s => new StationListViewModel
-                    {
-                        StationId = s.StationId,
-                        StationName = s.StationName,
-                        Order = s.Order
-                    }).ToListAsync();
-
+                var StationCreationModel = await _stationService.GetStationCreationModelAsync();
+                model.Stations = _mapper.Map<List<StationListViewModel>>(StationCreationModel.Stations);
                 return View(model);
             }
 
             // Check if a station with the same name already exists
-            bool exists = await _db.Stations.AnyAsync(s => s.StationName == model.StationName);
+            bool exists = await _stationService.StationExistsByNameAsync(model.StationName);
             if (exists)
             {
-                model.Stations = await _db.Stations
-                    .OrderBy(s => s.Order)
-                    .Select(s => new StationListViewModel
-                    {
-                        StationId = s.StationId,
-                        StationName = s.StationName,
-                        Order = s.Order
-                    }).ToListAsync();
-
+                var StationCreationModel = await _stationService.GetStationCreationModelAsync();
+                model.Stations = _mapper.Map<List<StationListViewModel>>(StationCreationModel.Stations);
                 ModelState.AddModelError("StationName", "A station with the same name already exists.");
                 return View(model);
             }
 
-            try
-            {
-                // Calculate the new station's order
-                int newOrder = 1;
-                if (model.InsertAfterStationId.HasValue)
-                {
-                    var previousStation = _db.Stations.FirstOrDefault(s => s.StationId == model.InsertAfterStationId.Value);
-                    newOrder = previousStation?.Order + 1 ?? 1;
+            var StationCreationDto = _mapper.Map<StationCreationDto>(model);
+            var result = await _stationService.CreateStationAsync(StationCreationDto);
 
-                    // Update the order of subsequent stations
-                    await _db.Stations
-                        .Where(s => s.Order >= newOrder)
-                        .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.Order, s => s.Order + 1));
-                }
+            if (result.IsSuccess)
+                TempData["SuccessMessage"] = result.Message;
+            else
+                TempData["ErrorMessage"] = result.Message;
 
-                // Create the new station
-                var newStation = new Station
-                {
-                    StationName = model.StationName!,
-                    Address = model.Address!,
-                    Latitude = model.Latitude ?? 0.0M,
-                    Longitude = model.Longitude ?? 0.0M,
-                    Status = model.Status!,
-                    Order = newOrder
-                };
-
-                _db.Stations.Add(newStation);
-                await _db.SaveChangesAsync();
-
-                // Save distances
-                if (model.Distances != null && model.Distances.Count != 0)
-                {
-                    if (model.Distances.Count == 2)
-                    {
-                        var stationIds = model.Distances.Keys.ToList(); // Extract the two station IDs
-                        int station1Id = stationIds[0];
-                        int station2Id = stationIds[1];
-
-                        // Delete existing distance record between the two stations
-                        var existingDistances = _db.StationDistances
-                            .Where(d => (d.Station1Id == station1Id && d.Station2Id == station2Id) ||
-                                        (d.Station1Id == station2Id && d.Station2Id == station1Id))
-                            .ToList();
-
-                        _db.StationDistances.RemoveRange(existingDistances);
-                        await _db.SaveChangesAsync();
-                    }
-
-                    // Add new distances
-                    foreach (var distance in model.Distances)
-                    {
-                        var stationDistance = new StationDistance
-                        {
-                            Station1Id = distance.Key,
-                            Station2Id = newStation.StationId,
-                            Distance = distance.Value
-                        };
-
-                        _db.StationDistances.Add(stationDistance);
-                    }
-
-                    await _db.SaveChangesAsync();
-                }
-
-                TempData["SuccessMessage"] = "Station has been added successfully.";
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "An error occurred while adding the station.";
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Edit(int id)
