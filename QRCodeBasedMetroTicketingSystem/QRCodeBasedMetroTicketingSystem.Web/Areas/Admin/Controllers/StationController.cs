@@ -1,28 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
 using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
-using System.Linq;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class StationController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private readonly IStationService _stationService;
         private readonly IMapper _mapper;
 
-        public StationController(ApplicationDbContext db, IStationService stationService, IMapper mapper)
+        public StationController(IStationService stationService, IMapper mapper)
         {
-            _db = db;
             _stationService = stationService;
             _mapper = mapper;
         }
@@ -119,98 +111,25 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var station = await _db.Stations.FindAsync(id);
-            if (station == null)
+            var stationDeletionDto = await _stationService.GetStationDeletionModelAsync(id);
+            if (stationDeletionDto == null)
             {
                 return NotFound();
             }
 
-            // Load adjacent distances
-            var adjacentDistances = await _db.StationDistances
-                .Where(d => d.Station1Id == id || d.Station2Id == id)
-                .Select(d => new AdjacentStationDistanceViewModel
-                {
-                    StationId = id,
-                    AdjacentStationId = d.Station1Id == id ? d.Station2Id : d.Station1Id,
-                    StationName = _db.Stations.FirstOrDefault(s => s.StationId == (d.Station1Id == id ? d.Station2Id : d.Station1Id))!.StationName!,
-                    Distance = d.Distance
-                })
-                .ToListAsync();
-
-            var model = new StationDeleteViewModel
-            {
-                StationId = station.StationId,
-                StationName = station.StationName,
-                Address = station.Address,
-                Latitude = station.Latitude,
-                Longitude = station.Longitude,
-                Status = station.Status,
-                Distances = adjacentDistances
-            };
-
-            return View(model);
+            var viewModel = _mapper.Map<StationDeletionViewModel>(stationDeletionDto);
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(StationDeleteViewModel model)
+        public async Task<IActionResult> Delete(StationDeletionViewModel viewModel)
         {
-            try
-            {
-                var station = await _db.Stations.FindAsync(model.StationId);
-                if (station == null)
-                {
-                    TempData["ErrorMessage"] = "Station not found.";
-                    return RedirectToAction("Index");
-                }
+            var result = await _stationService.DeleteStationAsync(viewModel.StationId);
 
-                // Get the adjacent distances
-                var adjacentDistances = await _db.StationDistances
-                    .Where(d => d.Station1Id == model.StationId || d.Station2Id == model.StationId)
-                    .ToListAsync();
-
-                // If two adjacent distances are found, add a new distance between the remaining two stations
-                if (adjacentDistances.Count == 2)
-                {
-                    var distance1 = adjacentDistances.FirstOrDefault(d => d.Station1Id == model.StationId || d.Station2Id == model.StationId);
-                    var distance2 = adjacentDistances.LastOrDefault(d => d.Station1Id == model.StationId || d.Station2Id == model.StationId);
-
-                    // Calculate new distance by adding the two distances together
-                    decimal newDistance = distance1!.Distance + distance2!.Distance;
-
-                    // Determine the two adjacent stations that are left
-                    int adjacentStationId1 = distance1.Station1Id == model.StationId ? distance1.Station2Id : distance1.Station1Id;
-                    int adjacentStationId2 = distance2.Station1Id == model.StationId ? distance2.Station2Id : distance2.Station1Id;
-
-                    // Create a new StationDistance record for the adjacent stations
-                    var newStationDistance = new StationDistance
-                    {
-                        Station1Id = adjacentStationId1,
-                        Station2Id = adjacentStationId2,
-                        Distance = newDistance
-                    };
-
-                    // Add the new distance to the database
-                    _db.StationDistances.Add(newStationDistance);
-                }
-
-                // Remove the existing distances involving the station
-                _db.StationDistances.RemoveRange(adjacentDistances);
-
-                // Remove the station itself
-                _db.Stations.Remove(station);
-                await _db.SaveChangesAsync();
-
-                // Update the order of subsequent stations
-                await _db.Stations
-                    .Where(s => s.Order > station.Order)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.Order, s => s.Order - 1));
-
-                TempData["SuccessMessage"] = "Station has been successfully deleted.";
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Failed to delete the station.";
-            }
+            if (result.IsSuccess)
+                TempData["SuccessMessage"] = result.Message;
+            else
+                TempData["ErrorMessage"] = result.Message;
 
             return RedirectToAction("Index");
         }

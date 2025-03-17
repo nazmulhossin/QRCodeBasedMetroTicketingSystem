@@ -4,12 +4,8 @@ using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 {
@@ -103,7 +99,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Station> GetStationByIdAsync(int stationId)
+        public async Task<Station?> GetStationByIdAsync(int stationId)
         {
             return await _db.Stations.FindAsync(stationId);
         }
@@ -114,16 +110,21 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .AnyAsync(s => s.StationName == stationName && (!excludeStationId.HasValue || s.StationId != excludeStationId.Value));
         }
 
-        public async Task UpdateSubsequentStationOrdersAsync(int fromOrder)
+        public async Task UpdateSubsequentStationOrdersAsync(int fromOrder, int step)
         {
             await _dbSet
                 .Where(s => s.Order >= fromOrder)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.Order, s => s.Order + 1));
+                .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.Order, s => s.Order + step));
         }
 
         public async Task AddStationAsync(Station station)
         {
             await _dbSet.AddAsync(station);
+        }
+
+        public void DeleteStationAsync(Station station)
+        {
+            _dbSet.Remove(station);
         }
 
         public async Task DeleteDistanceBetweenAsync(int station1Id, int station2Id)

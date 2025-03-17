@@ -14,10 +14,11 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
     {
         Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request);
         Task<List<StationListDto>> GetStationsOrderedAsync();
-        Task<Station> GetStationByIdAsync(int stationId);
+        Task<Station?> GetStationByIdAsync(int stationId);
         Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null);
-        Task UpdateSubsequentStationOrdersAsync(int fromOrder);
+        Task UpdateSubsequentStationOrdersAsync(int fromOrder, int step);
         Task AddStationAsync(Station station);
+        void DeleteStationAsync(Station station);
         Task DeleteDistanceBetweenAsync(int station1Id, int station2Id);
         Task AddStationDistanceAsync(int fromStation, int toStation, decimal distance);
         Task UpdateStationDistanceAsync(int fromStation, int toStation, decimal newDistance);

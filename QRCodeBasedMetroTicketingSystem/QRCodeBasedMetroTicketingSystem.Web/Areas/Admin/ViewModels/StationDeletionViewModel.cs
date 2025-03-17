@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
 {
-    public class StationDeleteViewModel
+    public class StationDeletionViewModel
     {
         public int StationId { get; set; }
 
