@@ -26,6 +26,6 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
         [Required, StringLength(50)]
         public string? Status { get; set; }
 
-        public List<DistanceViewModel>? Distances { get; set; } = new();
+        public List<AdjacentStationDistanceViewModel>? Distances { get; set; } = new();
     }
 }

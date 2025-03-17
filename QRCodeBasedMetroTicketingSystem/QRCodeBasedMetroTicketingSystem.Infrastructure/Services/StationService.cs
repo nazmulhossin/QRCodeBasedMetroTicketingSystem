@@ -39,6 +39,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return await _stationRepository.StationExistsByNameAsync(stationName);
         }
 
+        public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
+        {
+            return await _stationRepository.StationExistsByNameAsync(stationName, excludeStationId);
+        }
+
         public async Task<Result> CreateStationAsync(StationCreationDto model)
         {
             try
@@ -78,13 +83,22 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                         int station2Id = stationIds[1];
 
                         // Delete existing distance record between the two stations
-                        await _stationRepository.DeleteExistingDistancesAsync(station1Id, station2Id);
+                        await _stationRepository.DeleteDistanceBetweenAsync(station1Id, station2Id);
                         await _stationRepository.SaveChangesAsync();
                     }
 
                     // Add new distances
-                    await _stationRepository.AddStationDistancesAsync(newStation.StationId, model.Distances);
-                    await _stationRepository.SaveChangesAsync();                    
+                    foreach (var d in model.Distances)
+                    {
+                        int fromStation = newStation.StationId;
+                        int toStation = d.Key;
+                        decimal distance = d.Value;
+
+                        await _stationRepository.AddStationDistanceAsync(fromStation, toStation, distance);
+                    }
+
+                    // Save all changes at once
+                    await _stationRepository.SaveChangesAsync();
                 }
 
                 return Result.Success("Station has been added successfully.");
@@ -92,6 +106,68 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             catch (Exception ex)
             {
                 return Result.Failure($"An error occurred while adding the station: {ex.Message}");
+            }
+        }
+
+        public async Task<StationEditDto?> GetStationEditModelAsync(int StationId)
+        {
+            var station = await _stationRepository.GetStationByIdAsync(StationId);
+            if (station == null)
+            {
+                return null;
+            }
+
+            // Get adjacent distances with adjacent station id and name.
+            var adjacentDistances = await _stationRepository.GetAdjacentDistancesAsync(StationId);
+
+            return new StationEditDto
+            {
+                StationId = station.StationId,
+                StationName = station.StationName,
+                Address = station.Address,
+                Latitude = station.Latitude,
+                Longitude = station.Longitude,
+                Status = station.Status,
+                Distances = adjacentDistances
+            };
+        }
+
+        public async Task<Result> UpdateStationAsync(StationEditDto model)
+        {
+            try
+            {
+                var station = await _stationRepository.GetStationByIdAsync(model.StationId);
+                if (station == null)
+                {
+                    return Result.Failure("Station not found.");
+                }
+
+                // Update station details
+                station.StationName = model.StationName;
+                station.Address = model.Address;
+                station.Latitude = model.Latitude ?? 0.0M;
+                station.Longitude = model.Longitude ?? 0.0M;
+                station.Status = model.Status;
+
+                // Update distances
+                if (model.Distances != null && model.Distances.Count > 0)
+                {
+                    foreach (var d in model.Distances)
+                    {
+                        int fromStation = model.StationId;
+                        int toStation = d.AdjacentStationId;
+                        decimal newDistance = d.Distance;
+
+                        await _stationRepository.UpdateStationDistanceAsync(fromStation, toStation, newDistance);
+                    }
+                }
+
+                await _stationRepository.SaveChangesAsync();
+                return Result.Success("Station details updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure($"An error occurred while editing the station: {ex.Message}");
             }
         }
     }

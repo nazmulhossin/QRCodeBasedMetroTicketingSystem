@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
-    public class StationDeleteViewModel
+    public class StationEditDto
     {
         public int StationId { get; set; }
 
@@ -26,6 +31,6 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
         [Required, StringLength(50)]
         public string? Status { get; set; }
 
-        public List<AdjacentStationDistanceViewModel>? Distances { get; set; } = new();
+        public List<AdjacentStationDistanceDto>? Distances { get; set; } = new();
     }
 }

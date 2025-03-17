@@ -41,34 +41,34 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var StationCreationDto = await _stationService.GetStationCreationModelAsync();
-            var StationCreationVM = _mapper.Map<StationCreationViewModel>(StationCreationDto);
-            return View(StationCreationVM);
+            var stationCreationDto = await _stationService.GetStationCreationModelAsync();
+            var viewModel = _mapper.Map<StationCreationViewModel>(stationCreationDto);
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StationCreationViewModel model)
+        public async Task<IActionResult> Create(StationCreationViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 // If model state is invalid, reload the form with existing data
-                var StationCreationModel = await _stationService.GetStationCreationModelAsync();
-                model.Stations = _mapper.Map<List<StationListViewModel>>(StationCreationModel.Stations);
-                return View(model);
+                var stationCreationModel = await _stationService.GetStationCreationModelAsync();
+                viewModel.Stations = _mapper.Map<List<StationListViewModel>>(stationCreationModel.Stations);
+                return View(viewModel);
             }
 
             // Check if a station with the same name already exists
-            bool exists = await _stationService.StationExistsByNameAsync(model.StationName);
+            bool exists = await _stationService.StationExistsByNameAsync(viewModel.StationName);
             if (exists)
             {
-                var StationCreationModel = await _stationService.GetStationCreationModelAsync();
-                model.Stations = _mapper.Map<List<StationListViewModel>>(StationCreationModel.Stations);
+                var stationCreationModel = await _stationService.GetStationCreationModelAsync();
+                viewModel.Stations = _mapper.Map<List<StationListViewModel>>(stationCreationModel.Stations);
                 ModelState.AddModelError("StationName", "A station with the same name already exists.");
-                return View(model);
+                return View(viewModel);
             }
 
-            var StationCreationDto = _mapper.Map<StationCreationDto>(model);
-            var result = await _stationService.CreateStationAsync(StationCreationDto);
+            var stationCreationDto = _mapper.Map<StationCreationDto>(viewModel);
+            var result = await _stationService.CreateStationAsync(stationCreationDto);
 
             if (result.IsSuccess)
                 TempData["SuccessMessage"] = result.Message;
@@ -80,103 +80,41 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var station = await _db.Stations.FindAsync(id);
-            if (station == null)
+            var stationEditDto = await _stationService.GetStationEditModelAsync(id);
+            if (stationEditDto == null)
             {
                 return NotFound();
             }
 
-            // Load adjacent distances
-            var adjacentDistances = await _db.StationDistances
-                .Where(d => d.Station1Id == id || d.Station2Id == id)
-                .Select(d => new DistanceViewModel
-                {
-                    StationId = id,
-                    AdjacentStationId = d.Station1Id == id ? d.Station2Id : d.Station1Id,
-                    StationName = _db.Stations.FirstOrDefault(s => s.StationId == (d.Station1Id == id ? d.Station2Id : d.Station1Id))!.StationName!,
-                    Distance = d.Distance
-                })
-                .ToListAsync();
-
-            var model = new StationEditViewModel
-            {
-                StationId = station.StationId,
-                StationName = station.StationName,
-                Address = station.Address,
-                Latitude = station.Latitude,
-                Longitude = station.Longitude,
-                Status = station.Status,
-                Distances = adjacentDistances
-            };
-
-            return View(model);
+            var viewModel = _mapper.Map<StationEditViewModel>(stationEditDto);
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(StationEditViewModel model)
+        public async Task<IActionResult> Edit(StationEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
 
             // Check if a station with the same name already exists (excluding the current station)
-            bool exists = await _db.Stations
-                .AnyAsync(s => s.StationName == model.StationName && s.StationId != model.StationId);
-
+            bool exists = await _stationService.StationExistsByNameAsync(viewModel.StationName, viewModel.StationId);
             if (exists)
             {
                 ModelState.AddModelError("StationName", "A station with the same name already exists.");
-                return View(model);
+                return View(viewModel);
             }
 
-            try
-            {
-                var station = await _db.Stations.FindAsync(model.StationId);
-                if (station == null)
-                {
-                    return NotFound();
-                }
+            var StationEditDto = _mapper.Map<StationEditDto>(viewModel);
+            var result = await _stationService.UpdateStationAsync(StationEditDto);
 
-                // Update station details
-                station.StationName = model.StationName!;
-                station.Address = model.Address!;
-                station.Latitude = model.Latitude ?? 0.0M;
-                station.Longitude = model.Longitude ?? 0.0M;
-                station.Status = model.Status!;
+            if (result.IsSuccess)
+                TempData["SuccessMessage"] = result.Message;
+            else
+                TempData["ErrorMessage"] = result.Message;
 
-                // Delete existing distances related to this station
-                var existingDistances = _db.StationDistances
-                    .Where(d => d.Station1Id == model.StationId || d.Station2Id == model.StationId);
-
-                _db.StationDistances.RemoveRange(existingDistances);
-
-                // Save updated distances
-                if (model.Distances != null && model.Distances.Count != 0)
-                {
-                    foreach (var distance in model.Distances)
-                    {
-                        var stationDistance = new StationDistance
-                        {
-                            Station1Id = model.StationId,
-                            Station2Id = distance.AdjacentStationId,
-                            Distance = distance.Distance
-                        };
-
-                        _db.StationDistances.Add(stationDistance);
-                    }
-                }
-
-                await _db.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Station details updated successfully.";
-                return RedirectToAction("Index");
-            }
-            catch(Exception)
-            {
-                TempData["ErrorMessage"] = "An error occurred while editing the station.";
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -190,7 +128,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             // Load adjacent distances
             var adjacentDistances = await _db.StationDistances
                 .Where(d => d.Station1Id == id || d.Station2Id == id)
-                .Select(d => new DistanceViewModel
+                .Select(d => new AdjacentStationDistanceViewModel
                 {
                     StationId = id,
                     AdjacentStationId = d.Station1Id == id ? d.Station2Id : d.Station1Id,
