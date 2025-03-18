@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+﻿namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
 {
     public class StationViewModel
     {

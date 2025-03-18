@@ -1,14 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using System.Linq.Expressions;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 {
@@ -22,35 +16,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-
-        //public async Task<IEnumerable<TEntity>> GetAllAsync()
-        //{
-        //    return await _dbSet.ToListAsync();
-        //}
-
-        //public async Task<TEntity> GetByIdAsync(object id)
-        //{
-        //    return await _dbSet.FindAsync(id);
-        //}
-
-        //public async Task InsertAsync(TEntity entity)
-        //{
-        //    await _dbSet.AddAsync(entity);
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public async Task UpdateAsync(TEntity entity)
-        //{
-        //    _dbSet.Update(entity);
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public async Task DeleteAsync(object id)
-        //{
-        //    var entity = await GetByIdAsync(id);
-        //    _dbSet.Remove(entity);
-        //    await _context.SaveChangesAsync();
-        //}
 
         public async Task<DataTablesResponse<TResult>> GetDataTablesResponseAsync<TResult>(
         DataTablesRequest request,

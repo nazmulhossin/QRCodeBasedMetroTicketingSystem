@@ -4,8 +4,6 @@ using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Application.Common.Result;
-using Microsoft.EntityFrameworkCore;
-using static System.Collections.Specialized.BitVector32;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
@@ -57,11 +55,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 // Create the new station
                 var newStation = new Station
                 {
-                    StationName = model.StationName,
-                    Address = model.Address,
+                    Name = model.StationName!,
+                    Address = model.Address!,
                     Latitude = model.Latitude ?? 0.0M,
                     Longitude = model.Longitude ?? 0.0M,
-                    Status = model.Status,
+                    Status = model.Status!,
                     Order = newOrder
                 };
 
@@ -85,7 +83,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     // Add new distances
                     foreach (var d in model.Distances)
                     {
-                        int fromStation = newStation.StationId;
+                        int fromStation = newStation.Id;
                         int toStation = d.Key;
                         decimal distance = d.Value;
 
@@ -117,8 +115,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
             return new StationEditDto
             {
-                StationId = station.StationId,
-                StationName = station.StationName,
+                StationId = station.Id,
+                StationName = station.Name,
                 Address = station.Address,
                 Latitude = station.Latitude,
                 Longitude = station.Longitude,
@@ -138,11 +136,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 }
 
                 // Update station details
-                station.StationName = model.StationName;
-                station.Address = model.Address;
+                station.Name = model.StationName!;
+                station.Address = model.Address!;
                 station.Latitude = model.Latitude ?? 0.0M;
                 station.Longitude = model.Longitude ?? 0.0M;
-                station.Status = model.Status;
+                station.Status = model.Status!;
 
                 // Update distances
                 if (model.Distances != null && model.Distances.Count > 0)
@@ -179,8 +177,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
  
             return new StationDeletionDto
             {
-                StationId = station.StationId,
-                StationName = station.StationName,
+                StationId = station.Id,
+                StationName = station.Name,
                 Address = station.Address,
                 Latitude = station.Latitude,
                 Longitude = station.Longitude,

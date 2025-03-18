@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels

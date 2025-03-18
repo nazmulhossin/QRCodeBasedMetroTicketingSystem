@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTeables : Migration
+    public partial class AddTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +15,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                 name: "Stations",
                 columns: table => new
                 {
-                    StationId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StationName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Latitude = table.Column<decimal>(type: "decimal(12,8)", nullable: false),
                     Longitude = table.Column<decimal>(type: "decimal(12,8)", nullable: false),
@@ -28,14 +28,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stations", x => x.StationId);
+                    table.PrimaryKey("PK_Stations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "StationDistances",
                 columns: table => new
                 {
-                    DistanceId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Station1Id = table.Column<int>(type: "int", nullable: false),
                     Station2Id = table.Column<int>(type: "int", nullable: false),
@@ -45,18 +45,18 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StationDistances", x => x.DistanceId);
+                    table.PrimaryKey("PK_StationDistances", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StationDistances_Stations_Station1Id",
                         column: x => x.Station1Id,
                         principalTable: "Stations",
-                        principalColumn: "StationId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StationDistances_Stations_Station2Id",
                         column: x => x.Station2Id,
                         principalTable: "Stations",
-                        principalColumn: "StationId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -69,6 +69,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                 name: "IX_StationDistances_Station2Id",
                 table: "StationDistances",
                 column: "Station2Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stations_Name",
+                table: "Stations",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stations_Order",

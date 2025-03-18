@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
 {
@@ -22,7 +17,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Station>()
-                .HasIndex(s => s.StationName)
+                .HasIndex(s => s.Name)
                 .IsUnique();
 
             modelBuilder.Entity<Station>()

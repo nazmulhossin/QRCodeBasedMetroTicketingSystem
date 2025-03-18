@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
 {
     public class Station
     {
-        [Key]
-        public int StationId { get; set; }
+        public int Id { get; set; }
 
         [StringLength(100)]
-        public required string StationName { get; set; }
+        public required string Name { get; set; }
 
         [StringLength(255)]
         public required string Address { get; set; }

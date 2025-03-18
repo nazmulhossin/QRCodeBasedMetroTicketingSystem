@@ -28,15 +28,15 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             if (!string.IsNullOrEmpty(request.Search?.Value))
             {
                 var searchValue = request.Search.Value.ToLower();
-                searchFilter = s => s.StationName.ToLower().Contains(searchValue) ||
+                searchFilter = s => s.Name.ToLower().Contains(searchValue) ||
                                     s.Address.ToLower().Contains(searchValue);
             }
 
             // Define the selector to map entity to DTO
             Expression<Func<Station, StationDto>> selector = s => new StationDto
             {
-                StationId = s.StationId,
-                StationName = s.StationName,
+                StationId = s.Id,
+                StationName = s.Name,
                 Address = s.Address,
                 Latitude = s.Latitude,
                 Longitude = s.Longitude,
@@ -61,8 +61,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 
                     case "StationName":
                         query = orderDir == "asc"
-                            ? query.OrderBy(s => s.StationName)
-                            : query.OrderByDescending(s => s.StationName);
+                            ? query.OrderBy(s => s.Name)
+                            : query.OrderByDescending(s => s.Name);
                         break;
 
                     case "Status":
@@ -92,8 +92,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .OrderBy(s => s.Order)
                 .Select(s => new StationListDto
                 {
-                    StationId = s.StationId,
-                    StationName = s.StationName,
+                    StationId = s.Id,
+                    StationName = s.Name,
                     Order = s.Order
                 })
                 .ToListAsync();
@@ -107,7 +107,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
         {
             return await _dbSet
-                .AnyAsync(s => s.StationName == stationName && (!excludeStationId.HasValue || s.StationId != excludeStationId.Value));
+                .AnyAsync(s => s.Name == stationName && (!excludeStationId.HasValue || s.Id != excludeStationId.Value));
         }
 
         public async Task UpdateSubsequentStationOrdersAsync(int fromOrder, int step)
@@ -167,7 +167,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 {
                     StationId = stationId,
                     AdjacentStationId = d.Station1Id == stationId ? d.Station2Id : d.Station1Id,
-                    StationName = _dbSet.FirstOrDefault(s => s.StationId == (d.Station1Id == stationId ? d.Station2Id : d.Station1Id))!.StationName!,
+                    StationName = _dbSet.FirstOrDefault(s => s.Id == (d.Station1Id == stationId ? d.Station2Id : d.Station1Id))!.Name!,
                     Distance = d.Distance
                 })
                 .ToListAsync();

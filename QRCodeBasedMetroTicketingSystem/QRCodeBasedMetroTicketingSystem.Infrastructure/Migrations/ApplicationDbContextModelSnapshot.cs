@@ -24,11 +24,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", b =>
                 {
-                    b.Property<int>("StationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StationId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -44,13 +44,13 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<decimal>("Longitude")
                         .HasColumnType("decimal(12,8)");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StationName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -60,12 +60,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("StationId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Order")
+                    b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("StationName")
+                    b.HasIndex("Order")
                         .IsUnique();
 
                     b.ToTable("Stations");
@@ -73,11 +73,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.StationDistance", b =>
                 {
-                    b.Property<int>("DistanceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DistanceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -94,7 +94,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("DistanceId");
+                    b.HasKey("Id");
 
                     b.HasIndex("Station1Id");
 
