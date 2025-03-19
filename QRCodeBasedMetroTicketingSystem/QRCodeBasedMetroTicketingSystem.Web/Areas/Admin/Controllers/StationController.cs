@@ -27,6 +27,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GetStationData(DataTablesRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var response = await _stationService.GetStationsDataTableAsync(request);
             return Json(response);
         }
@@ -72,6 +77,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var stationEditDto = await _stationService.GetStationEditModelAsync(id);
             if (stationEditDto == null)
             {
@@ -111,6 +121,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var stationDeletionDto = await _stationService.GetStationDeletionModelAsync(id);
             if (stationDeletionDto == null)
             {
@@ -124,6 +139,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(StationDeletionViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _stationService.DeleteStationAsync(viewModel.StationId);
 
             if (result.IsSuccess)

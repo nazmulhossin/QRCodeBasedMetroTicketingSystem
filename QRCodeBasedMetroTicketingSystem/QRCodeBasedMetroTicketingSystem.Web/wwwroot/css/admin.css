@@ -426,10 +426,6 @@ form {
   border-color: lightgrey;
 }
 
-.form-control:disabled, .form-select:disabled {
-  background-color: #F8F9FA;
-}
-
 #data-table_info {
   padding: 10px;
   color: var(--main-primary-text-color);
