@@ -138,8 +138,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 // Update station details
                 station.Name = model.StationName!;
                 station.Address = model.Address!;
-                station.Latitude = model.Latitude;
-                station.Longitude = model.Longitude;
+                station.Latitude = model.Latitude ?? 0.0M;
+                station.Longitude = model.Longitude ?? 0.0M;
                 station.Status = model.Status!;
 
                 // Update distances

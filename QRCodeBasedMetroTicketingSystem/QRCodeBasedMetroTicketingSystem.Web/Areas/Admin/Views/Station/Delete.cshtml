@@ -57,7 +57,7 @@
                                         <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
                                         <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
                                         <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
-                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance" class="form-control" disabled required />
+                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" disabled required />
                                     </div>
                                 }
                             </div>
@@ -69,7 +69,7 @@
                                 }
                                 else
                                 {
-                                    <p><strong>Note:</strong> Deleting this station will directly connect <strong>@Model.Distances[0].StationName</strong> and <strong>@Model.Distances[1].StationName</strong> with a distance of <strong>@(Model.Distances[0].Distance + Model.Distances[1].Distance)</strong> KM.</p>
+                                    <p><strong>Note:</strong> Deleting this station will directly connect <strong>@Model.Distances[0].StationName</strong> and <strong>@Model.Distances[1].StationName</strong> with a distance of <strong>@((Model.Distances[0].Distance + Model.Distances[1].Distance).ToString("0.######"))</strong> KM.</p>
                                 }
                             </div>
                         }

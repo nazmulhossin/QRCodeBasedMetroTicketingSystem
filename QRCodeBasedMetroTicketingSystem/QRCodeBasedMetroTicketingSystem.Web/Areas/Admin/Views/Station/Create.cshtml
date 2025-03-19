@@ -20,30 +20,7 @@
             <div class="card shadow-sm p-3">
                 <div class="card-body">
                     <form asp-area="Admin" asp-controller="Station" asp-action="Create" method="POST">
-                        <div class="mb-3">
-                            <label for="StationName" class="form-label">Station Name</label>
-                            <input asp-for="StationName" class="form-control" placeholder="Enter station name" required>
-                            <span asp-validation-for="StationName" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="Address" class="form-label">Address</label>
-                            <textarea asp-for="Address" class="form-control" rows="2" placeholder="Enter address" required></textarea>
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="Latitude" class="form-label">Latitude</label>
-                                <input asp-for="Latitude" class="form-control" placeholder="Enter latitude (Ex: 23.8697)" required>
-                                <span asp-validation-for="Latitude" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="Longitude" class="form-label">Longitude</label>
-                                <input asp-for="Longitude" class="form-control" placeholder="Enter longitude (Ex: 90.3676)" required>
-                                <span asp-validation-for="Longitude" class="text-danger"></span>
-                            </div>
-                        </div>
+                        <partial name="_StationForm" model="Model" />
 
                         <div class="row">
                             <div class="col-md-6 mb-3">

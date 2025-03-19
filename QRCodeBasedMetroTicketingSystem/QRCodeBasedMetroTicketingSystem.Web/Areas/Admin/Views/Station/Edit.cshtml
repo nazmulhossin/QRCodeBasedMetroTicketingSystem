@@ -21,31 +21,7 @@
                 <div class="card-body">
                     <form asp-area="Admin" asp-controller="Station" asp-action="Edit" method="POST">
                         <input type="hidden" asp-for="StationId" />
-
-                        <div class="mb-3">
-                            <label for="StationName" class="form-label">Station Name</label>
-                            <input asp-for="StationName" class="form-control" placeholder="Enter station name" required>
-                            <span asp-validation-for="StationName" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="Address" class="form-label">Address</label>
-                            <textarea asp-for="Address" class="form-control" rows="2" placeholder="Enter address" required></textarea>
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="Latitude" class="form-label">Latitude</label>
-                                <input asp-for="Latitude" class="form-control" placeholder="Enter latitude (Ex: 23.8697)" required>
-                                <span asp-validation-for="Latitude" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="Longitude" class="form-label">Longitude</label>
-                                <input asp-for="Longitude" class="form-control" placeholder="Enter longitude (Ex: 90.3676)" required>
-                                <span asp-validation-for="Longitude" class="text-danger"></span>
-                            </div>
-                        </div>
+                        <partial name="_StationForm" model="Model" />
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -68,7 +44,7 @@
                                         <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
                                         <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
                                         <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
-                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance" class="form-control" placeholder="Enter distance in KM" required />
+                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" placeholder="Enter distance in KM" required />
                                     </div>
                                 }
                             </div>
