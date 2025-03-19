@@ -1,0 +1,90 @@
+﻿@model StationDeletionViewModel
+
+@{
+    ViewData["Title"] = "Delete Station";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-2">
+        <div class="col-12 page-header">
+            <h1 class="page-title">Delete Station</h1>
+            <div class="breadcrumb">
+                <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span><a asp-area="Admin" asp-controller="Station" asp-action="Index">Manage Stations</a></span><i class="bi bi-chevron-right"></i><span>Delete Station</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <form asp-area="Admin" asp-controller="Station" asp-action="Delete" method="POST">
+                        <input type="hidden" asp-for="StationId" />
+
+                        <div class="mb-3">
+                            <label asp-for="StationName" class="form-label">Station Name</label>
+                            <input asp-for="StationName" class="form-control" readonly required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label">Address</label>
+                            <textarea asp-for="Address" class="form-control" rows="2" readonly required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Latitude" class="form-label">Latitude</label>
+                                <input asp-for="Latitude" class="form-control" readonly required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Longitude" class="form-label">Longitude</label>
+                                <input asp-for="Longitude" class="form-control" readonly required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Status" class="form-label">Status</label>
+                                <input asp-for="Status" class="form-control" readonly required>
+                            </div>
+                        </div>
+
+                        @if (Model.Distances != null && Model.Distances.Any())
+                        {
+                            <div class="row" id="distanceInputs">
+                                @for (int i = 0; i < Model.Distances.Count; i++)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Distance from <strong>@Model.Distances[i].StationName</strong></label>
+                                        <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
+                                        <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
+                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
+                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" readonly required />
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="text-danger">
+                                @if (Model.Distances.Count == 1)
+                                {
+                                    <p><strong>Note:</strong> Deleting this station will remove the connection between <strong>@Model.StationName</strong> and <strong>@Model.Distances[0].StationName</strong></p>
+                                }
+                                else
+                                {
+                                    <p><strong>Note:</strong> Deleting this station will directly connect <strong>@Model.Distances[0].StationName</strong> and <strong>@Model.Distances[1].StationName</strong> with a distance of <strong>@((Model.Distances[0].Distance + Model.Distances[1].Distance).ToString("0.######"))</strong> KM.</p>
+                                }
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-area="Admin" asp-controller="Station" asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-1"></i> Delete Station
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,4 @@
-﻿@model IEnumerable<QRCodeBasedMetroTicketingSystem.Domain.Entities.Station>
-
-@{
+﻿@{
     ViewData["Title"] = "Manage Stations";
 }
 
@@ -26,7 +24,7 @@
 
                     <!-- Stations Info Table -->
                     <div class="table-container">
-                        <table>
+                        <table id="data-table">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Station Order</th>
@@ -38,51 +36,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.Any())
-                                {
-                                    @foreach (var station in Model)
-                                    {
-                                        <tr>
-                                            <td>#@station.Order</td>
-                                            <td>@station.StationName</td>
-                                            <td>@station.Address</td>
-                                            <td>
-                                                @station.Latitude°N <br> @station.Longitude°E
-                                            </td>
-                                            <td>
-                                                @if (station.Status == "Active")
-                                                {
-                                                    <span class="badge bg-success p-2">Active</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger p-2">Inactive</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                <div class="table-action-buttons">
-                                                    <a asp-area="Admin" asp-controller="Station" asp-action="Edit" class="btn-icon edit-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                       title="Edit Station">
-                                                        <i class="bi bi-pencil"></i>
-                                                    </a>
-                                                    <a asp-area="Admin" asp-controller="Station" asp-action="Delete" class="btn-icon delete-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                       title="Delete Station">
-                                                        <i class="bi bi-trash"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <!-- Show message if no stations exist -->
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted">
-                                            No stations available. Please add a station.
-                                        </td>
-                                    </tr>
-                                }
+                                <!-- Table body will be filled by DataTables -->
                             </tbody>
                         </table>
                     </div>
@@ -91,3 +45,65 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script asp-append-version="true">
+        $(document).ready(function () {
+            $('#data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '@Url.Action("GetStationData", "Station", new { area = "Admin" })',
+                    type: 'POST',
+                    dataType: 'json'
+                },
+                columns: [
+                    {
+                        data: 'order',
+                        name: 'Order',
+                        render: function(data) {
+                            return '#' + data;
+                        }
+                    },
+                    { data: 'stationName', name: 'StationName' },
+                    { data: 'address', name: 'Address', orderable: false },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function(data) {
+                            return data.latitude + '°N <br>' + data.longitude + '°E';
+                        }
+                    },
+                    {
+                        data: 'status',
+                        name: 'Status',
+                        render: function(data) {
+                            if (data === 'Active') {
+                                return '<span class="badge bg-success p-2">Active</span>';
+                            } else {
+                                return '<span class="badge bg-danger p-2">Inactive</span>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'stationId',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data) {
+                            return '<div class="table-action-buttons">' +
+                                   '<a href="/Admin/Station/Edit/' + data + '" class="btn-icon edit-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Station"><i class="bi bi-pencil"></i></a>' +
+                                   '<a href="/Admin/Station/Delete/' + data + '" class="btn-icon delete-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Station"><i class="bi bi-trash"></i></a>' +
+                                   '</div>';
+                        }
+                    }
+                ],
+                language: {
+                    emptyTable: "No stations available. Please add a station."
+                },
+                pagingType: "full_numbers",
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]]
+            });
+        });
+    </script>
+}

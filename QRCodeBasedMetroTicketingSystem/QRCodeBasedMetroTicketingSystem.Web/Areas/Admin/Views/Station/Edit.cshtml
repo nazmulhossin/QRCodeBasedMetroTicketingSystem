@@ -1,0 +1,66 @@
+﻿@model StationEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Station";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-2">
+        <div class="col-12 page-header">
+            <h1 class="page-title">Edit Station</h1>
+            <div class="breadcrumb">
+                <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span><a asp-area="Admin" asp-controller="Station" asp-action="Index">Manage Stations</a></span><i class="bi bi-chevron-right"></i><span>Edit Station</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <form asp-area="Admin" asp-controller="Station" asp-action="Edit" method="POST">
+                        <input type="hidden" asp-for="StationId" />
+                        <partial name="_StationForm" model="Model" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="Status" class="form-label">Status</label>
+                                <select asp-for="Status" class="form-select" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @if (Model.Distances != null && Model.Distances.Any())
+                        {
+                            <div class="row" id="distanceInputs">
+                                @for (int i = 0; i < Model.Distances.Count; i++)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Distance from <strong>@Model.Distances[i].StationName</strong></label>
+                                        <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
+                                        <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
+                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
+                                        <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" placeholder="Enter distance in KM" required />
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-area="Admin" asp-controller="Station" asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

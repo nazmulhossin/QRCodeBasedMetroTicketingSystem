@@ -491,7 +491,15 @@ body {
 
 /* Modifies Bootstrap Classes */
 .container-fluid {
-    padding: 25px;
+    padding: 20px;
+}
+
+.row {
+    margin: 0;
+}
+
+.col-sm-12 {
+    padding: 0;
 }
 
 .card {
@@ -503,14 +511,36 @@ body {
     font-size: 1.67rem;
 }
 
+#data-table_wrapper {
+    margin: 0;
+}
+
 .btn {
     padding-top: 8px;
     padding-bottom: 8px;
 }
 
+// Form Styels
+form {
+    color: var(--main-primary-text-color);
+}
 
+.form-control::placeholder, select:has(option:disabled:checked) {
+    color: #6c757d;
+}
 
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.05rem rgba(13, 110, 253, 0.20);
+}
 
+.form-control:not(:placeholder-shown), .form-select:valid, textarea:not(:placeholder-shown) {
+    border-color: lightgrey;
+}
+
+#data-table_info {
+    padding: 10px;
+    color: var(--main-primary-text-color);
+}
 
 
 /* Components styles */
@@ -710,7 +740,7 @@ body {
     overflow-x: auto;
 
     table {
-        width: 100%;
+        width: 100%!important;
         border-collapse: collapse;
 
         th,
@@ -731,19 +761,22 @@ body {
 
         tbody tr:hover {
             background-color: var(--table-row-hover-bg-color);
-
         }
+    }
+
+    .dt-row { // bootstrap class 
+        margin-bottom: 7px;
     }
 }
 
 // Action Buttons Style
 .btn-icon {
-    padding: 4px 6px 0px;
+    padding: 7px 6px 4px;
     border-radius: 4px;
     background-color: transparent;
     border: 1px solid var(--main-secondary-text-color);
     color: var(--main-primary-text-color);
-    margin: 0 3px;
+    margin: 0 4px;
     transition: $transition-speed ease;
 
     i {

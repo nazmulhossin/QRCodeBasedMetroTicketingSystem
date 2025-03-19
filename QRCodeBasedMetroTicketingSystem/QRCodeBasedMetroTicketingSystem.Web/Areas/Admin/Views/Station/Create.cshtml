@@ -1,0 +1,121 @@
+﻿@model StationCreationViewModel
+
+@{
+    ViewData["Title"] = "Create Station";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-2">
+        <div class="col-12 page-header">
+            <h1 class="page-title">Create Station</h1>
+            <div class="breadcrumb">
+                <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span><a asp-area="Admin" asp-controller="Station" asp-action="Index">Manage Stations</a></span><i class="bi bi-chevron-right"></i><span>Create Station</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <form asp-area="Admin" asp-controller="Station" asp-action="Create" method="POST">
+                        <partial name="_StationForm" model="Model" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="Status" class="form-label">Status</label>
+                                <select asp-for="Status" class="form-select" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+
+                            @if (Model.Stations != null && Model.Stations.Any())
+                            {
+                                var lastStation = Model.Stations[Model.Stations.Count - 1];
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="InsertAfterStationId" class="form-label">Insert</label>
+                                    <select class="form-select" id="insertAt" asp-for="InsertAfterStationId" required>
+                                        <option value="0">at Beginning</option>
+                                        @foreach (var station in Model.Stations)
+                                        {
+                                            <option value="@station.StationId" selected="@(lastStation.StationId == station.StationId ? "selected" : null)">
+                                                after @station.StationName
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                        </div>
+
+                        @if (Model.Stations != null && Model.Stations.Any())
+                        {
+                            var lastStation = Model.Stations[Model.Stations.Count - 1];
+
+                            <div class="row" id="distanceInputs">
+                                <div class='col-md-6 mb-3'>
+                                    <label for="Distances[@lastStation.StationId]" class='form-label'> Distance from <strong>@Model.Stations.Last().StationName</strong></label>
+                                    <input type='number' min="0" step="0.000001" name="Distances[@lastStation.StationId]" class='form-control' placeholder="Enter distance in KM" required>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-area="Admin" asp-controller="Station" asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save me-1"></i> Save Station
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script asp-append-version="true">
+        document.getElementById("insertAt")?.addEventListener("change", function () {
+            let selectedValue = this.value;
+            let distanceInputs = document.getElementById("distanceInputs");
+
+            // Get stations array from the model
+            let stations = @Html.Raw(Json.Serialize(Model.Stations));
+
+            if (selectedValue == "0") { // Add station at beginning
+                // Show distance to the first station
+                distanceInputs.innerHTML = `
+                    <div class='col-md-6 mb-3'>
+                        <label class='form-label'>Distance from <strong>${stations[0].stationName}</strong></label>
+                        <input type='number' min="0" step="0.000001" class='form-control' name='Distances[${stations[0].stationId}]' placeholder="Enter distance in KM" required>
+                    </div>`;
+            } else if (selectedValue == stations[stations.length - 1].stationId.toString()) { // Add station at end
+                // Show distance to the last station
+                distanceInputs.innerHTML = `
+                    <div class='col-md-6 mb-3'>
+                        <label class='form-label'>Distance from <strong>${stations[stations.length - 1].stationName}</strong></label>
+                        <input type='number' min="0" step="0.000001" class='form-control' name='Distances[${stations[stations.length - 1].stationId}]' placeholder="Enter distance in KM" required>
+                    </div>`;
+            } else { // Add station at middle
+                let selectedStationId = parseInt(selectedValue);
+                let previousStation = stations.find(s => s.stationId === selectedStationId);
+                let nextStation = stations.find(s => s.order === (previousStation.order + 1));
+
+                distanceInputs.innerHTML = `
+                    <div class='col-md-6 mb-3'>
+                        <label class='form-label'>Distance from <strong>${previousStation.stationName}</strong></label>
+                        <input type='number' step="0.000001" class='form-control' name='Distances[${previousStation.stationId}]' placeholder="Enter distance in KM" required>
+                    </div>
+                    <div class='col-md-6 mb-3'>
+                        <label class='form-label'>Distance from <strong>${nextStation.stationName}</strong></label>
+                        <input type='number' step="0.000001" class='form-control' name='Distances[${nextStation.stationId}]' placeholder="Enter distance in KM" required>
+                    </div>`;
+            }
+        });
+    </script>
+}
