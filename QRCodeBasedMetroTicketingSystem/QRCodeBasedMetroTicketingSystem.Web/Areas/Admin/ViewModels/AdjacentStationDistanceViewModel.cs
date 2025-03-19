@@ -1,10 +1,8 @@
-﻿namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
+
+namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
 {
-    public class AdjacentStationDistanceViewModel
+    public class AdjacentStationDistanceViewModel : AdjacentStationDistanceDto
     {
-        public int StationId { get; set; }
-        public int AdjacentStationId { get; set; }
-        public string StationName { get; set; } = string.Empty;
-        public decimal Distance { get; set; }
     }
 }

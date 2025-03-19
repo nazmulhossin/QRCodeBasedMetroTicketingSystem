@@ -45,7 +45,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             {
                 // If model state is invalid, reload the form with existing data
                 var stationCreationModel = await _stationService.GetStationCreationModelAsync();
-                viewModel.Stations = _mapper.Map<List<StationListViewModel>>(stationCreationModel.Stations);
+                viewModel.Stations = stationCreationModel.Stations;
                 return View(viewModel);
             }
 
@@ -54,7 +54,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             if (exists)
             {
                 var stationCreationModel = await _stationService.GetStationCreationModelAsync();
-                viewModel.Stations = _mapper.Map<List<StationListViewModel>>(stationCreationModel.Stations);
+                viewModel.Stations = stationCreationModel.Stations;
                 ModelState.AddModelError("StationName", "A station with the same name already exists.");
                 return View(viewModel);
             }

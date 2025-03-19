@@ -138,8 +138,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 // Update station details
                 station.Name = model.StationName!;
                 station.Address = model.Address!;
-                station.Latitude = model.Latitude ?? 0.0M;
-                station.Longitude = model.Longitude ?? 0.0M;
+                station.Latitude = model.Latitude;
+                station.Longitude = model.Longitude;
                 station.Status = model.Status!;
 
                 // Update distances
@@ -222,7 +222,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 }
                 else if (adjacentDistances.Count == 1)
                 {
-                    int adjacentStationId = adjacentDistances.FirstOrDefault().AdjacentStationId;
+                    int adjacentStationId = adjacentDistances.FirstOrDefault()!.AdjacentStationId;
                     await _stationRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId);
                 }
 

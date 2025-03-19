@@ -5,6 +5,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
     public class StationDeletionDto
     {
+        [Required]
         public int StationId { get; set; }
 
         [Required, StringLength(100)]

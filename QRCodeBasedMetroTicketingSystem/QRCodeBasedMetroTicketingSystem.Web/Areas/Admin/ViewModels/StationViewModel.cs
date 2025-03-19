@@ -1,13 +1,8 @@
-﻿namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
+﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
+
+namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
 {
-    public class StationViewModel
+    public class StationViewModel : StationDto
     {
-        public int StationId { get; set; }
-        public required string StationName { get; set; }
-        public required string Address { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
-        public required int Order { get; set; }
-        public required string Status { get; set; }
     }
 }

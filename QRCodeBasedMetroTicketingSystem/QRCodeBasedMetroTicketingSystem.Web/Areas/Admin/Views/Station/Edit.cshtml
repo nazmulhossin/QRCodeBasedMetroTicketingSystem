@@ -23,25 +23,25 @@
                         <input type="hidden" asp-for="StationId" />
 
                         <div class="mb-3">
-                            <label asp-for="StationName" class="form-label">Station Name</label>
+                            <label for="StationName" class="form-label">Station Name</label>
                             <input asp-for="StationName" class="form-control" placeholder="Enter station name" required>
                             <span asp-validation-for="StationName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Address" class="form-label">Address</label>
+                            <label for="Address" class="form-label">Address</label>
                             <textarea asp-for="Address" class="form-control" rows="2" placeholder="Enter address" required></textarea>
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Latitude" class="form-label">Latitude</label>
+                                <label for="Latitude" class="form-label">Latitude</label>
                                 <input asp-for="Latitude" class="form-control" placeholder="Enter latitude (Ex: 23.8697)" required>
                                 <span asp-validation-for="Latitude" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Longitude" class="form-label">Longitude</label>
+                                <label for="Longitude" class="form-label">Longitude</label>
                                 <input asp-for="Longitude" class="form-control" placeholder="Enter longitude (Ex: 90.3676)" required>
                                 <span asp-validation-for="Longitude" class="text-danger"></span>
                             </div>
@@ -49,7 +49,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Status" class="form-label">Status</label>
+                                <label for="Status" class="form-label">Status</label>
                                 <select asp-for="Status" class="form-select" required>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>

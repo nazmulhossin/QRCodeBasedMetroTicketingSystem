@@ -2,8 +2,8 @@
 {
     public class StationListDto
     {
-        public int StationId { get; set; }
-        public string? StationName { get; set; }
-        public int Order { get; set; }
+        public required int StationId { get; set; }
+        public required string StationName { get; set; }
+        public required int Order { get; set; }
     }
 }

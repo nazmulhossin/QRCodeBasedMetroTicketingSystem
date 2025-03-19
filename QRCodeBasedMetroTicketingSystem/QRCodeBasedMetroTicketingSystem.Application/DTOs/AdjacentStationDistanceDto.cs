@@ -2,9 +2,9 @@
 {
     public class AdjacentStationDistanceDto
     {
-        public int StationId { get; set; }
-        public int AdjacentStationId { get; set; }
+        public required int StationId { get; set; }
+        public required int AdjacentStationId { get; set; }
         public string StationName { get; set; } = string.Empty;
-        public decimal Distance { get; set; }
+        public required decimal Distance { get; set; }
     }
 }
