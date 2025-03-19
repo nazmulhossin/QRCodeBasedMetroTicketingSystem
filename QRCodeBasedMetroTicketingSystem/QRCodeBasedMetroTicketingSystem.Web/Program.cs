@@ -5,6 +5,7 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Mapping;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
