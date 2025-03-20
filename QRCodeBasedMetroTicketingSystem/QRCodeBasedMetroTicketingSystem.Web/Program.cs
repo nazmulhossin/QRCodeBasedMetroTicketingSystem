@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
+using QRCodeBasedMetroTicketingSystem.Application.Mapping;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
@@ -20,11 +21,14 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(redisConnectionString));
 
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(ViewModelMappingProfile));
+
 
 builder.Services.AddScoped<IStationRepository, StationRepository>();
+builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
 builder.Services.AddScoped<IStationService, StationService>();
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
 
 var app = builder.Build();
 

@@ -4,9 +4,9 @@ using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Mapping
 {
-    public class MappingProfile : Profile
+    public class ViewModelMappingProfile : Profile
     {
-        public MappingProfile()
+        public ViewModelMappingProfile()
         {
             CreateMap<StationListDto, StationListViewModel>().ReverseMap();
             CreateMap<StationCreationDto, StationCreationViewModel>().ReverseMap();

@@ -17,6 +17,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
         Task AddStationDistanceAsync(int fromStation, int toStation, decimal distance);
         Task UpdateStationDistanceAsync(int fromStation, int toStation, decimal newDistance);
         Task<List<AdjacentStationDistanceDto>> GetAdjacentDistancesAsync(int stationId);
+        Task<List<Station>> GetAllStationsOrderedAsync();
         Task SaveChangesAsync();
     }
 }
