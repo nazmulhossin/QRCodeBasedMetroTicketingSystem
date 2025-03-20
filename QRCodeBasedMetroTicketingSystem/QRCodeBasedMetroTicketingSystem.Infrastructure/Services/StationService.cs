@@ -10,10 +10,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     public class StationService : IStationService
     {
         private readonly IStationRepository _stationRepository;
+        private readonly ICacheService _cacheService;
 
-        public StationService(IStationRepository stationRepository)
+        public StationService(IStationRepository stationRepository, ICacheService caceService)
         {
             _stationRepository = stationRepository;
+            _cacheService = caceService;
         }
 
         public async Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request)
@@ -94,6 +96,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     await _stationRepository.SaveChangesAsync();
                 }
 
+                // Clean Distance from Cache
+                await _cacheService.RemoveAsync("Distance");
+
                 return Result.Success("Station has been added successfully.");
             }
             catch (Exception ex)
@@ -154,8 +159,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                         await _stationRepository.UpdateStationDistanceAsync(fromStation, toStation, newDistance);
                     }
                 }
-
+                
                 await _stationRepository.SaveChangesAsync();
+
+                // Clean Distance from Cache
+                await _cacheService.RemoveAsync("Distance");
+                
                 return Result.Success("Station details updated successfully.");
             }
             catch (Exception ex)
@@ -231,6 +240,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
                 // Update the order of subsequent stations
                 await _stationRepository.UpdateSubsequentStationOrdersAsync(station.Order + 1, -1);
+
+                // Clean Distance from Cache
+                await _cacheService.RemoveAsync("Distance");
 
                 return Result.Success("Station has been successfully deleted.");
             }
