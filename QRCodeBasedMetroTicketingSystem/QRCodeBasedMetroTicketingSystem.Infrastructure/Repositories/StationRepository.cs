@@ -101,7 +101,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 
         public async Task<Station?> GetStationByIdAsync(int stationId)
         {
-            return await _db.Stations.FindAsync(stationId);
+            return await _dbSet.FindAsync(stationId);
         }
 
         public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
@@ -171,6 +171,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                     Distance = d.Distance
                 })
                 .ToListAsync();
+        }
+
+        public async Task<List<Station>> GetAllStationsOrderedAsync()
+        {
+            return await _db.Stations.OrderBy(s => s.Order).ToListAsync();
         }
 
         public async Task SaveChangesAsync()
