@@ -6,7 +6,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
     public class StationBaseDto
     {
         [Required, StringLength(100)]
-        public string StationName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required, StringLength(255)]
         public string Address { get; set; } = string.Empty;

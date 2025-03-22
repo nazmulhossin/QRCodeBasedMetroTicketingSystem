@@ -1,49 +1,19 @@
-﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
-using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
+﻿using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using System.Text.Json;
+
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
     public class DistanceCalculationService : IDistanceCalculationService
     {
-        private readonly IStationRepository _stationRepository;
-        private readonly IStationDistanceRepository _stationDistanceRepository;
         private readonly ICacheService _cacheService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly string CacheKey = "Distance";
 
-        public DistanceCalculationService(IStationRepository stationRepository, IStationDistanceRepository stationDistanceRepository, ICacheService cacheService)
+        public DistanceCalculationService(IUnitOfWork unitOfWork, ICacheService cacheService)
         {
-            _stationRepository = stationRepository;
-            _stationDistanceRepository = stationDistanceRepository;
+            _unitOfWork = unitOfWork;
             _cacheService = cacheService;
-        }
-
-        public async Task<List<StationListDto>> GetStationAsync()
-        {
-            var stations = await _stationRepository.GetAllStationsOrderedAsync();
-
-            var StationListDtos = stations.Select(station => new StationListDto
-            {
-                StationId = station.Id,
-                StationName = station.Name,
-                Order = station.Order
-            }).ToList();
-
-            return StationListDtos;
-        }
-
-        public async Task<List<StationDistanceDto>> GetStationDistanceAsync()
-        {
-            var stationDistances = await _stationDistanceRepository.GetAllStationDistancesAsync();
-
-            var StationDistanceDtos = stationDistances.Select(distance => new StationDistanceDto
-            {
-                Station1Id = distance.Station1Id,
-                Station2Id = distance.Station2Id,
-                Distance = distance.Distance
-            }).ToList();
-
-            return StationDistanceDtos;
         }
 
         public async Task<decimal> GetDistanceBetweenAsync(int station1Id, int station2Id)
@@ -82,24 +52,25 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
         public async Task<Dictionary<int, decimal>> CumulativeDistanceAsync()
         {
-            var stations = await GetStationAsync();
-            var distances = await GetStationDistanceAsync();
-            if (!stations.Any() || !distances.Any())
+            var stationList = await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();
+            var stationDistances = await _unitOfWork.StationDistanceRepository.GetAllStationDistancesAsync();
+
+            if (!stationDistances.Any() || !stationDistances.Any())
             {
                 return new Dictionary<int, decimal>();
             }
 
             Dictionary<int, decimal> cumulativeDistances = new();
 
-            cumulativeDistances[stations[0].StationId] = 0;
+            cumulativeDistances[stationList[0].Id] = 0;
 
             decimal cumulativeDistance = 0;
-            for (int i = 0; i < stations.Count - 1; i++)
+            for (int i = 0; i < stationList.Count - 1; i++)
             {
-                int currentStationId = stations[i].StationId;
-                int nextStationId = stations[i + 1].StationId;
+                int currentStationId = stationList[i].Id;
+                int nextStationId = stationList[i + 1].Id;
 
-                var distance = distances.FirstOrDefault(d =>
+                var distance = stationDistances.FirstOrDefault(d =>
                     (d.Station1Id == currentStationId && d.Station2Id == nextStationId) ||
                     (d.Station1Id == nextStationId && d.Station2Id == currentStationId)
                 )?.Distance ?? 0;

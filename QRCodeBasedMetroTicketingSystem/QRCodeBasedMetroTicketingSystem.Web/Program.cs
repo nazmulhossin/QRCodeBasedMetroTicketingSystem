@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(ViewModelMappingProfile));
 
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStationRepository, StationRepository>();
 builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
 builder.Services.AddScoped<IStationService, StationService>();

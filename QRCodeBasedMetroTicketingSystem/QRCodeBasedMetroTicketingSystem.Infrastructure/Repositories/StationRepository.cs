@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
 using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
@@ -11,11 +12,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 {
     public class StationRepository : Repository<Station>, IStationRepository
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
 
-        public StationRepository(ApplicationDbContext context) : base(context)
+        public StationRepository(ApplicationDbContext context, IMapper mapper) : base(context)
         {
-            _db = context;
+            _mapper = mapper;
         }
 
         public async Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request)
@@ -35,8 +36,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             // Define the selector to map entity to DTO
             Expression<Func<Station, StationDto>> selector = s => new StationDto
             {
-                StationId = s.Id,
-                StationName = s.Name,
+                Id = s.Id,
+                Name = s.Name,
                 Address = s.Address,
                 Latitude = s.Latitude,
                 Longitude = s.Longitude,
@@ -86,17 +87,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             return await GetDataTablesResponseAsync(request, query, selector, searchFilter);
         }
 
-        public async Task<List<StationListDto>> GetStationsOrderedAsync()
+        public async Task<List<StationListDto>> GetAllStationsOrderedAsync()
         {
-            return await _dbSet
-                .OrderBy(s => s.Order)
-                .Select(s => new StationListDto
-                {
-                    StationId = s.Id,
-                    StationName = s.Name,
-                    Order = s.Order
-                })
-                .ToListAsync();
+            var stationList = await _dbSet.OrderBy(s => s.Order).ToListAsync();
+            return _mapper.Map<List<StationListDto>>(stationList);
         }
 
         public async Task<Station?> GetStationByIdAsync(int stationId)
@@ -106,8 +100,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 
         public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
         {
-            return await _dbSet
-                .AnyAsync(s => s.Name == stationName && (!excludeStationId.HasValue || s.Id != excludeStationId.Value));
+            return await _dbSet.AnyAsync(s => s.Name == stationName && (!excludeStationId.HasValue || s.Id != excludeStationId.Value));
         }
 
         public async Task UpdateSubsequentStationOrdersAsync(int fromOrder, int step)
@@ -122,65 +115,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             await _dbSet.AddAsync(station);
         }
 
-        public void DeleteStationAsync(Station station)
+        public async Task DeleteStationAsync(Station station)
         {
             _dbSet.Remove(station);
-        }
-
-        public async Task DeleteDistanceBetweenAsync(int station1Id, int station2Id)
-        {
-            var distance = await _db.StationDistances
-                .Where(d => (d.Station1Id == station1Id && d.Station2Id == station2Id) ||
-                            (d.Station1Id == station2Id && d.Station2Id == station1Id))
-                .ToListAsync();
-
-            _db.StationDistances.RemoveRange(distance);
-        }
-
-        public async Task AddStationDistanceAsync(int fromStation, int toStation, decimal distance)
-        {
-            var stationDistance = new StationDistance
-            {
-                Station1Id = fromStation,
-                Station2Id = toStation,
-                Distance = distance
-            };
-
-            await _db.StationDistances.AddAsync(stationDistance);
-        }
-
-        public async Task UpdateStationDistanceAsync(int fromStation, int toStation, decimal newDistance)
-        {
-            await _db.StationDistances
-                .Where(s =>
-                    (s.Station1Id == fromStation && s.Station2Id == toStation) ||
-                    (s.Station1Id == toStation && s.Station2Id == fromStation))
-                .ExecuteUpdateAsync(setters => setters
-                    .SetProperty(s => s.Distance, s => newDistance));
-        }
-
-        public async Task<List<AdjacentStationDistanceDto>> GetAdjacentDistancesAsync(int stationId)
-        {
-            return await _db.StationDistances
-                .Where(d => d.Station1Id == stationId || d.Station2Id == stationId)
-                .Select(d => new AdjacentStationDistanceDto
-                {
-                    StationId = stationId,
-                    AdjacentStationId = d.Station1Id == stationId ? d.Station2Id : d.Station1Id,
-                    StationName = _dbSet.FirstOrDefault(s => s.Id == (d.Station1Id == stationId ? d.Station2Id : d.Station1Id))!.Name!,
-                    Distance = d.Distance
-                })
-                .ToListAsync();
-        }
-
-        public async Task<List<Station>> GetAllStationsOrderedAsync()
-        {
-            return await _db.Stations.OrderBy(s => s.Order).ToListAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _db.SaveChangesAsync();
         }
     }
 }

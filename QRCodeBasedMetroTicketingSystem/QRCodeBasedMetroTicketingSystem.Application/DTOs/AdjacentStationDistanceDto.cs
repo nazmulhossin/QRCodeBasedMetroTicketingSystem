@@ -4,7 +4,7 @@
     {
         public required int StationId { get; set; }
         public required int AdjacentStationId { get; set; }
-        public string StationName { get; set; } = string.Empty;
+        public string AdjacentStationName { get; set; } = string.Empty;
         public required decimal Distance { get; set; }
     }
 }

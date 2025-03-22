@@ -55,7 +55,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             }
 
             // Check if a station with the same name already exists
-            bool exists = await _stationService.StationExistsByNameAsync(viewModel.StationName);
+            bool exists = await _stationService.StationExistsByNameAsync(viewModel.Name);
             if (exists)
             {
                 var stationCreationModel = await _stationService.GetStationCreationModelAsync();
@@ -101,7 +101,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             }
 
             // Check if a station with the same name already exists (excluding the current station)
-            bool exists = await _stationService.StationExistsByNameAsync(viewModel.StationName, viewModel.StationId);
+            bool exists = await _stationService.StationExistsByNameAsync(viewModel.Name, viewModel.Id);
             if (exists)
             {
                 ModelState.AddModelError("StationName", "A station with the same name already exists.");
@@ -144,7 +144,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _stationService.DeleteStationAsync(viewModel.StationId);
+            var result = await _stationService.DeleteStationAsync(viewModel.Id);
 
             if (result.IsSuccess)
                 TempData["SuccessMessage"] = result.Message;

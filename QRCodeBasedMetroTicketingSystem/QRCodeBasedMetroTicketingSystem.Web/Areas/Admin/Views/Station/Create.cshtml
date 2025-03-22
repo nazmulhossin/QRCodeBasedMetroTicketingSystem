@@ -42,8 +42,8 @@
                                         <option value="0">at Beginning</option>
                                         @foreach (var station in Model.Stations)
                                         {
-                                            <option value="@station.StationId" selected="@(lastStation.StationId == station.StationId ? "selected" : null)">
-                                                after @station.StationName
+                                            <option value="@station.Id" selected="@(lastStation.Id == station.Id ? "selected" : null)">
+                                                after @station.Name
                                             </option>
                                         }
                                     </select>
@@ -57,8 +57,8 @@
 
                             <div class="row" id="distanceInputs">
                                 <div class='col-md-6 mb-3'>
-                                    <label for="Distances[@lastStation.StationId]" class='form-label'> Distance from <strong>@Model.Stations.Last().StationName</strong></label>
-                                    <input type='number' min="0" step="0.000001" name="Distances[@lastStation.StationId]" class='form-control' placeholder="Enter distance in KM" required>
+                                    <label for="Distances[@lastStation.Id]" class='form-label'> Distance from <strong>@Model.Stations.Last().Name</strong></label>
+                                    <input type='number' min="0" step="0.000001" name="Distances[@lastStation.Id]" class='form-control' placeholder="Enter distance in KM" required>
                                 </div>
                             </div>
                         }
