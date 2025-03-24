@@ -11,6 +11,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
 
         public DbSet<Station> Stations { get; set; }
         public DbSet<StationDistance> StationDistances { get; set; }
+        public DbSet<Settings> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,19 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(sd => sd.Station2Id)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Settings>().HasData(
+                new Settings
+                {
+                    Id = 1,
+                    MinFare = 20.0000m,
+                    MaxFare = 100.0000m,
+                    FarePerKm = 5.0000m,
+                    QrCodeValidTime = 1440,
+                    CreatedAt = new DateTime(2025, 03, 14, 0, 0, 0, DateTimeKind.Utc),
+                    UpdatedAt = new DateTime(2025, 03, 14, 0, 0, 0, DateTimeKind.Utc)
+                }
+            );
         }
     }
 }

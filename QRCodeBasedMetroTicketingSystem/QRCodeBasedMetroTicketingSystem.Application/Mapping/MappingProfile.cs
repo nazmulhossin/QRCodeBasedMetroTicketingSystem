@@ -10,6 +10,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Mapping
         {
             CreateMap<StationListDto, Station>().ReverseMap();
             CreateMap<StationDistanceDto, StationDistance>().ReverseMap();
+            CreateMap<SettingsDto, Settings>().ReverseMap();
         }
     }
 }

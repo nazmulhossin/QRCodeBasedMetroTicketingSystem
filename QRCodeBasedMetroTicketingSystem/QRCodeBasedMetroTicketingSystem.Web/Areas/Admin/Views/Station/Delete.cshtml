@@ -33,15 +33,15 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3 pe-3">
                                 <label asp-for="Latitude" class="form-label">Latitude</label>
                                 <input asp-for="Latitude" class="form-control" readonly required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3 ps-3 pe-3">
                                 <label asp-for="Longitude" class="form-label">Longitude</label>
                                 <input asp-for="Longitude" class="form-control" readonly required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3 ps-3">
                                 <label asp-for="Status" class="form-label">Status</label>
                                 <input asp-for="Status" class="form-control" readonly required>
                             </div>
@@ -52,7 +52,7 @@
                             <div class="row" id="distanceInputs">
                                 @for (int i = 0; i < Model.Distances.Count; i++)
                                 {
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3 @(i == 0 ? "pe-3" : "ps-3")">
                                         <label class="form-label">Distance from <strong>@Model.Distances[i].AdjacentStationName</strong></label>
                                         <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
                                         <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
