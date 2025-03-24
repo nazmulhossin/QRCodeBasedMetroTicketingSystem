@@ -46,7 +46,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 return Math.Abs(distance2 - distance1);
             }
 
-            Console.WriteLine($"Unable to calculate distance between station {station1Id} and station {station2Id}");
             return -1;
         }
 
@@ -55,7 +54,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             var stationList = await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();
             var stationDistances = await _unitOfWork.StationDistanceRepository.GetAllStationDistancesAsync();
 
-            if (!stationDistances.Any() || !stationDistances.Any())
+            if (!stationDistances.Any())
             {
                 return new Dictionary<int, decimal>();
             }
