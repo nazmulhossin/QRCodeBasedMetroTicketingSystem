@@ -60,7 +60,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             {
                 var stationCreationModel = await _stationService.GetStationCreationModelAsync();
                 viewModel.Stations = stationCreationModel.Stations;
-                ModelState.AddModelError("StationName", "A station with the same name already exists.");
+                ModelState.AddModelError("Name", "A station with the same name already exists.");
                 return View(viewModel);
             }
 
@@ -104,7 +104,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             bool exists = await _stationService.StationExistsByNameAsync(viewModel.Name, viewModel.Id);
             if (exists)
             {
-                ModelState.AddModelError("StationName", "A station with the same name already exists.");
+                ModelState.AddModelError("Name", "A station with the same name already exists.");
                 return View(viewModel);
             }
 

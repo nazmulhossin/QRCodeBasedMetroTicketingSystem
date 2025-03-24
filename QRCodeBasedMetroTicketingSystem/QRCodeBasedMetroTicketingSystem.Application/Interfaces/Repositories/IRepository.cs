@@ -1,6 +1,4 @@
 ﻿using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories

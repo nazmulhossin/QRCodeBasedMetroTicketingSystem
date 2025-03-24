@@ -24,20 +24,15 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return await _unitOfWork.StationRepository.GetStationsDataTableAsync(request);
         }
 
+        public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
+        {
+            return await _unitOfWork.StationRepository.StationExistsByNameAsync(stationName, excludeStationId);
+        }
+
         public async Task<StationCreationDto> GetStationCreationModelAsync()
         {
             var stations = await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();
             return new StationCreationDto { Stations = stations };
-        }
-
-        public async Task<bool> StationExistsByNameAsync(string stationName)
-        {
-            return await _unitOfWork.StationRepository.StationExistsByNameAsync(stationName);
-        }
-
-        public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
-        {
-            return await _unitOfWork.StationRepository.StationExistsByNameAsync(stationName, excludeStationId);
         }
 
         public async Task<Result> CreateStationAsync(StationCreationDto model)
@@ -69,6 +64,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 };
 
                 await _unitOfWork.StationRepository.AddStationAsync(newStation);
+                await _unitOfWork.SaveChangesAsync();
 
                 // Handle distances
                 if (model.Distances != null && model.Distances.Count != 0)
@@ -240,6 +236,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 }
                 
                 await _unitOfWork.StationRepository.DeleteStationAsync(station); // Remove the station itself
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.StationRepository.UpdateSubsequentStationOrdersAsync(station.Order + 1, -1); // Update the order of subsequent stations
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();

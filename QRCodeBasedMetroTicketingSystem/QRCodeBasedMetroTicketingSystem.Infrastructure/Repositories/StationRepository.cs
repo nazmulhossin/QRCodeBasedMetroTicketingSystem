@@ -46,9 +46,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             };
 
             // Check ordering and apply it
-            if (request.Order != null && request.Order.Any())
+            if (request.Order != null && request.Order.Count != 0)
             {
-                var orderColumn = request.Columns[request.Order[0].Column].Name;
+                var orderColumn = request.Columns![request.Order[0].Column].Name;
                 var orderDir = request.Order[0].Dir;
 
                 // Apply specific ordering based on column
