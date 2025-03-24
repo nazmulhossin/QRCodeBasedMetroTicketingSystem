@@ -12,22 +12,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register Redis
 var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnectionString")
                             ?? throw new InvalidOperationException("Redis connection string is missing.");
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(redisConnectionString));
 
-
+// Register AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(ViewModelMappingProfile));
 
-
+// Register repositories
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStationRepository, StationRepository>();
 builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
-builder.Services.AddScoped<IStationService, StationService>();
+
+// Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<IStationService, StationService>();
 builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
 
 var app = builder.Build();

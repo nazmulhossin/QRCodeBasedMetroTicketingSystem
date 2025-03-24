@@ -6,7 +6,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
     public class StationEditDto : StationBaseDto
     {
         [Required]
-        public int StationId { get; set; }
+        public int Id { get; set; }
         public List<AdjacentStationDistanceDto> Distances { get; set; } = new();
     }
 }

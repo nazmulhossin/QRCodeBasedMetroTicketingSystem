@@ -9,55 +9,53 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
     public class StationService : IStationService
     {
-        private readonly IStationRepository _stationRepository;
         private readonly ICacheService _cacheService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly string CacheKey = "Distance";
 
-        public StationService(IStationRepository stationRepository, ICacheService caceService)
+        public StationService(IUnitOfWork unitOfWork, ICacheService cacheService)
         {
-            _stationRepository = stationRepository;
-            _cacheService = caceService;
+            _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
 
         public async Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request)
         {
-            return await _stationRepository.GetStationsDataTableAsync(request);
-        }
-
-        public async Task<StationCreationDto> GetStationCreationModelAsync()
-        {
-            var stations = await _stationRepository.GetStationsOrderedAsync();
-            return new StationCreationDto { Stations = stations };
-        }
-
-        public async Task<bool> StationExistsByNameAsync(string stationName)
-        {
-            return await _stationRepository.StationExistsByNameAsync(stationName);
+            return await _unitOfWork.StationRepository.GetStationsDataTableAsync(request);
         }
 
         public async Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null)
         {
-            return await _stationRepository.StationExistsByNameAsync(stationName, excludeStationId);
+            return await _unitOfWork.StationRepository.StationExistsByNameAsync(stationName, excludeStationId);
+        }
+
+        public async Task<StationCreationDto> GetStationCreationModelAsync()
+        {
+            var stations = await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();
+            return new StationCreationDto { Stations = stations };
         }
 
         public async Task<Result> CreateStationAsync(StationCreationDto model)
         {
             try
             {
+                await _unitOfWork.BeginTransactionAsync();
+
                 // Calculate the new station's order
                 int newOrder = 1;
                 if (model.InsertAfterStationId.HasValue)
                 {
-                    var previousStation = await _stationRepository.GetStationByIdAsync(model.InsertAfterStationId.Value);
+                    var previousStation = await _unitOfWork.StationRepository.GetStationByIdAsync(model.InsertAfterStationId.Value);
                     newOrder = previousStation?.Order + 1 ?? 1;
 
                     // Update the order of subsequent stations
-                    await _stationRepository.UpdateSubsequentStationOrdersAsync(newOrder, 1);
+                    await _unitOfWork.StationRepository.UpdateSubsequentStationOrdersAsync(newOrder, 1);
                 }
 
                 // Create the new station
                 var newStation = new Station
                 {
-                    Name = model.StationName!,
+                    Name = model.Name!,
                     Address = model.Address!,
                     Latitude = model.Latitude ?? 0.0M,
                     Longitude = model.Longitude ?? 0.0M,
@@ -65,8 +63,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     Order = newOrder
                 };
 
-                await _stationRepository.AddStationAsync(newStation);
-                await _stationRepository.SaveChangesAsync();
+                await _unitOfWork.StationRepository.AddStationAsync(newStation);
+                await _unitOfWork.SaveChangesAsync();
 
                 // Handle distances
                 if (model.Distances != null && model.Distances.Count != 0)
@@ -78,8 +76,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                         int station2Id = stationIds[1];
 
                         // Delete existing distance record between the two stations
-                        await _stationRepository.DeleteDistanceBetweenAsync(station1Id, station2Id);
-                        await _stationRepository.SaveChangesAsync();
+                        await _unitOfWork.StationDistanceRepository.DeleteDistanceBetweenAsync(station1Id, station2Id);
                     }
 
                     // Add new distances
@@ -89,39 +86,38 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                         int toStation = d.Key;
                         decimal distance = d.Value;
 
-                        await _stationRepository.AddStationDistanceAsync(fromStation, toStation, distance);
+                        await _unitOfWork.StationDistanceRepository.AddStationDistanceAsync(fromStation, toStation, distance);
                     }
-
-                    // Save all changes at once
-                    await _stationRepository.SaveChangesAsync();
                 }
 
-                // Clean Distance from Cache
-                await _cacheService.RemoveAsync("Distance");
+                await _unitOfWork.SaveChangesAsync();         // Commit all changes at once
+                await _unitOfWork.CommitTransactionAsync();   // Commit the transaction
+                await _cacheService.RemoveAsync(CacheKey);    // Clean Distance from Cache
 
                 return Result.Success("Station has been added successfully.");
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync(); // Rollback the transaction if any error occurs
                 return Result.Failure($"An error occurred while adding the station: {ex.Message}");
             }
         }
 
         public async Task<StationEditDto?> GetStationEditModelAsync(int StationId)
         {
-            var station = await _stationRepository.GetStationByIdAsync(StationId);
+            var station = await _unitOfWork.StationRepository.GetStationByIdAsync(StationId);
             if (station == null)
             {
                 return null;
             }
 
             // Get adjacent distances with adjacent station id and name.
-            var adjacentDistances = await _stationRepository.GetAdjacentDistancesAsync(StationId);
+            var adjacentDistances = await _unitOfWork.StationDistanceRepository.GetAdjacentDistancesAsync(StationId);
 
             return new StationEditDto
             {
-                StationId = station.Id,
-                StationName = station.Name,
+                Id = station.Id,
+                Name = station.Name,
                 Address = station.Address,
                 Latitude = station.Latitude,
                 Longitude = station.Longitude,
@@ -134,14 +130,16 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             try
             {
-                var station = await _stationRepository.GetStationByIdAsync(model.StationId);
+                await _unitOfWork.BeginTransactionAsync();
+
+                var station = await _unitOfWork.StationRepository.GetStationByIdAsync(model.Id);
                 if (station == null)
                 {
                     return Result.Failure("Station not found.");
                 }
 
                 // Update station details
-                station.Name = model.StationName!;
+                station.Name = model.Name!;
                 station.Address = model.Address!;
                 station.Latitude = model.Latitude ?? 0.0M;
                 station.Longitude = model.Longitude ?? 0.0M;
@@ -152,42 +150,42 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 {
                     foreach (var d in model.Distances)
                     {
-                        int fromStation = model.StationId;
+                        int fromStation = model.Id;
                         int toStation = d.AdjacentStationId;
                         decimal newDistance = d.Distance;
 
-                        await _stationRepository.UpdateStationDistanceAsync(fromStation, toStation, newDistance);
+                        await _unitOfWork.StationDistanceRepository.UpdateStationDistanceAsync(fromStation, toStation, newDistance);
                     }
                 }
-                
-                await _stationRepository.SaveChangesAsync();
 
-                // Clean Distance from Cache
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
                 await _cacheService.RemoveAsync("Distance");
-                
+
                 return Result.Success("Station details updated successfully.");
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync();
                 return Result.Failure($"An error occurred while editing the station: {ex.Message}");
             }
         }
 
         public async Task<StationDeletionDto?> GetStationDeletionModelAsync(int StationId)
         {
-            var station = await _stationRepository.GetStationByIdAsync(StationId);
+            var station = await _unitOfWork.StationRepository.GetStationByIdAsync(StationId);
             if (station == null)
             {
                 return null;
             }
 
             // Get adjacent distances with adjacent station id and name.
-            var adjacentDistances = await _stationRepository.GetAdjacentDistancesAsync(StationId);
- 
+            var adjacentDistances = await _unitOfWork.StationDistanceRepository.GetAdjacentDistancesAsync(StationId);
+
             return new StationDeletionDto
             {
-                StationId = station.Id,
-                StationName = station.Name,
+                Id = station.Id,
+                Name = station.Name,
                 Address = station.Address,
                 Latitude = station.Latitude,
                 Longitude = station.Longitude,
@@ -200,14 +198,16 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             try
             {
-                var station = await _stationRepository.GetStationByIdAsync(stationId);
+                await _unitOfWork.BeginTransactionAsync();
+
+                var station = await _unitOfWork.StationRepository.GetStationByIdAsync(stationId);
                 if (station == null)
                 {
                     return Result.Failure("Station not found.");
                 }
 
                 // Get the adjacent distances
-                var adjacentDistances = await _stationRepository.GetAdjacentDistancesAsync(stationId);
+                var adjacentDistances = await _unitOfWork.StationDistanceRepository.GetAdjacentDistancesAsync(stationId);
 
                 // If two adjacent distances are found, add a new distance between the remaining two stations
                 if (adjacentDistances.Count == 2)
@@ -223,31 +223,30 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     int adjacentStationId2 = distance2.AdjacentStationId;
 
                     // Delete the existing distances involving the station
-                    await _stationRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId1);
-                    await _stationRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId2);
+                    await _unitOfWork.StationDistanceRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId1);
+                    await _unitOfWork.StationDistanceRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId2);
 
                     // Add the new distance to the database
-                    await _stationRepository.AddStationDistanceAsync(adjacentStationId1, adjacentStationId2, newDistance);
+                    await _unitOfWork.StationDistanceRepository.AddStationDistanceAsync(adjacentStationId1, adjacentStationId2, newDistance);
                 }
                 else if (adjacentDistances.Count == 1)
                 {
                     int adjacentStationId = adjacentDistances.FirstOrDefault()!.AdjacentStationId;
-                    await _stationRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId);
+                    await _unitOfWork.StationDistanceRepository.DeleteDistanceBetweenAsync(stationId, adjacentStationId);
                 }
-
-                _stationRepository.DeleteStationAsync(station); // Remove the station itself
-                await _stationRepository.SaveChangesAsync();
-
-                // Update the order of subsequent stations
-                await _stationRepository.UpdateSubsequentStationOrdersAsync(station.Order + 1, -1);
-
-                // Clean Distance from Cache
+                
+                await _unitOfWork.StationRepository.DeleteStationAsync(station); // Remove the station itself
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.StationRepository.UpdateSubsequentStationOrdersAsync(station.Order + 1, -1); // Update the order of subsequent stations
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
                 await _cacheService.RemoveAsync("Distance");
 
                 return Result.Success("Station has been successfully deleted.");
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync();
                 return Result.Failure($"Failed to delete the station: {ex.Message}");
             }
         }

@@ -20,11 +20,11 @@
             <div class="card shadow-sm p-3">
                 <div class="card-body">
                     <form asp-area="Admin" asp-controller="Station" asp-action="Delete" method="POST">
-                        <input type="hidden" asp-for="StationId" />
+                        <input type="hidden" asp-for="Id" />
 
                         <div class="mb-3">
-                            <label asp-for="StationName" class="form-label">Station Name</label>
-                            <input asp-for="StationName" class="form-control" readonly required>
+                            <label asp-for="Name" class="form-label">Station Name</label>
+                            <input asp-for="Name" class="form-control" readonly required>
                         </div>
 
                         <div class="mb-3">
@@ -53,10 +53,10 @@
                                 @for (int i = 0; i < Model.Distances.Count; i++)
                                 {
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Distance from <strong>@Model.Distances[i].StationName</strong></label>
+                                        <label class="form-label">Distance from <strong>@Model.Distances[i].AdjacentStationName</strong></label>
                                         <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
                                         <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
-                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
+                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].AdjacentStationName" />
                                         <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" readonly required />
                                     </div>
                                 }
@@ -65,11 +65,11 @@
                             <div class="text-danger">
                                 @if (Model.Distances.Count == 1)
                                 {
-                                    <p><strong>Note:</strong> Deleting this station will remove the connection between <strong>@Model.StationName</strong> and <strong>@Model.Distances[0].StationName</strong></p>
+                                    <p><strong>Note:</strong> Deleting this station will remove the connection between <strong>@Model.Name</strong> and <strong>@Model.Distances[0].AdjacentStationName</strong></p>
                                 }
                                 else
                                 {
-                                    <p><strong>Note:</strong> Deleting this station will directly connect <strong>@Model.Distances[0].StationName</strong> and <strong>@Model.Distances[1].StationName</strong> with a distance of <strong>@((Model.Distances[0].Distance + Model.Distances[1].Distance).ToString("0.######"))</strong> KM.</p>
+                                    <p><strong>Note:</strong> Deleting this station will directly connect <strong>@Model.Distances[0].AdjacentStationName</strong> and <strong>@Model.Distances[1].AdjacentStationName</strong> with a distance of <strong>@((Model.Distances[0].Distance + Model.Distances[1].Distance).ToString("0.######"))</strong> KM.</p>
                                 }
                             </div>
                         }

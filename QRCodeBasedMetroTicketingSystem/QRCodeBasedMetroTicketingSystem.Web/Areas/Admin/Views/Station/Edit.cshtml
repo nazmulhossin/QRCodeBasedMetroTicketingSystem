@@ -20,7 +20,7 @@
             <div class="card shadow-sm p-3">
                 <div class="card-body">
                     <form asp-area="Admin" asp-controller="Station" asp-action="Edit" method="POST">
-                        <input type="hidden" asp-for="StationId" />
+                        <input type="hidden" asp-for="Id" />
                         <partial name="_StationForm" model="Model" />
 
                         <div class="row">
@@ -40,10 +40,10 @@
                                 @for (int i = 0; i < Model.Distances.Count; i++)
                                 {
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Distance from <strong>@Model.Distances[i].StationName</strong></label>
+                                        <label class="form-label">Distance from <strong>@Model.Distances[i].AdjacentStationName</strong></label>
                                         <input type="hidden" name="Distances[@i].StationId" value="@Model.Distances[i].StationId" />
                                         <input type="hidden" name="Distances[@i].AdjacentStationId" value="@Model.Distances[i].AdjacentStationId" />
-                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].StationName" />
+                                        <input type="hidden" name="Distances[@i].StationName" value="@Model.Distances[i].AdjacentStationName" />
                                         <input type="number" min="0" step="0.000001" name="Distances[@i].Distance" value="@Model.Distances[i].Distance.ToString("0.######")" class="form-control" placeholder="Enter distance in KM" required />
                                     </div>
                                 }
