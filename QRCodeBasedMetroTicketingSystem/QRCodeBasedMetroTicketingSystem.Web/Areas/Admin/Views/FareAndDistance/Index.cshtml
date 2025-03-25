@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Fare and Distance";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-2">
+        <div class="col-12 page-header">
+            <h1 class="page-title">Fare and Distance</h1>
+            <div class="breadcrumb">
+                <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span>Fare and Distance</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title mb-0">Distance and Fare Details</h3>
+                    </div>
+
+                    <!-- Search Form -->
+                    <div class="row " style="margin-bottom: 50px">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>From Station</label>
+                                <select id="fromStationId" class="form-control">
+                                    <option value=""> -- Select From Station --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>To Station</label>
+                                <select id="toStationId" class="form-control">
+                                    <option value="">-- Select To Station --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>&nbsp;</label>
+                            <button id="btnSearch" class="btn btn-success w-100"><i class="bi bi-search me-1"></i> Search</button>
+                        </div>
+                    </div>
+
+                    <!-- Distance and Fare Table -->
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>From Station</th>
+                                    <th>To Station</th>
+                                    <th>Distance (km)</th>
+                                    <th>Fare (TK)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

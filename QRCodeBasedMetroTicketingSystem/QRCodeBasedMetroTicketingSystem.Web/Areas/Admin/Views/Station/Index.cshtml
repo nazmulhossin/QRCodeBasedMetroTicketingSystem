@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Manage Stations";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-2">
+        <div class="col-12 page-header">
+            <h1 class="page-title">Manage Stations</h1>
+            <div class="breadcrumb">
+                <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span>Manage Stations</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title mb-0">Stations Info</h3>
+                        <a asp-area="Admin" asp-controller="Station" asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle me-1"></i> Add Station</a>
+                    </div>
+
+                    <!-- Stations Info Table -->
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Station Order</th>
+                                    <th>Station Name</th>
+                                    <th style="width: 30%;">Address</th>
+                                    <th>Coordinates</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table body will be filled by DataTables -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script asp-append-version="true">
+        $(document).ready(function () {
+            $('#data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '@Url.Action("GetStationData", "Station", new { area = "Admin" })',
+                    type: 'POST',
+                    dataType: 'json'
+                },
+                columns: [
+                    {
+                        data: 'order',
+                        name: 'Order',
+                        render: function(data) {
+                            return '#' + data;
+                        }
+                    },
+                    { data: 'name', name: 'Name' },
+                    { data: 'address', name: 'Address', orderable: false },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function(data) {
+                            return data.latitude + '°N <br>' + data.longitude + '°E';
+                        }
+                    },
+                    {
+                        data: 'status',
+                        name: 'Status',
+                        render: function(data) {
+                            if (data === 'Active') {
+                                return '<span class="badge bg-success p-2">Active</span>';
+                            } else {
+                                return '<span class="badge bg-danger p-2">Inactive</span>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'id',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data) {
+                            return '<div class="table-action-buttons">' +
+                                   '<a href="/Admin/Station/Edit/' + data + '" class="btn-icon edit-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Station"><i class="bi bi-pencil"></i></a>' +
+                                   '<a href="/Admin/Station/Delete/' + data + '" class="btn-icon delete-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Station"><i class="bi bi-trash"></i></a>' +
+                                   '</div>';
+                        }
+                    }
+                ],
+                language: {
+                    emptyTable: "No stations available. Please add a station."
+                },
+                pagingType: "full_numbers",
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]]
+            });
+        });
+    </script>
+}
