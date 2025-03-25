@@ -53,7 +53,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 }
 
                 settings.MinFare = settingsDto.MinFare;
-                settings.MaxFare = settingsDto.MaxFare;
                 settings.FarePerKm = settingsDto.FarePerKm;
                 settings.QrCodeValidTime = settingsDto.QrCodeValidTime;
 

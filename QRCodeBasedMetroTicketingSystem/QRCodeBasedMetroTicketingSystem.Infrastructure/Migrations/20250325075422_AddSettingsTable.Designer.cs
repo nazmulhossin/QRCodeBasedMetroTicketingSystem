@@ -12,7 +12,7 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250324153148_AddSettingsTable")]
+    [Migration("20250325075422_AddSettingsTable")]
     partial class AddSettingsTable
     {
         /// <inheritdoc />
@@ -39,9 +39,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<decimal>("FarePerKm")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("MaxFare")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("MinFare")
                         .HasColumnType("decimal(18,2)");
 
@@ -61,7 +58,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                             Id = 1,
                             CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             FarePerKm = 5.0000m,
-                            MaxFare = 100.0000m,
                             MinFare = 20.0000m,
                             QrCodeValidTime = 1440,
                             UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
