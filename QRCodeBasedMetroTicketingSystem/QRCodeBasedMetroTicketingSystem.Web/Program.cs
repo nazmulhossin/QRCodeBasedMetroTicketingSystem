@@ -30,11 +30,13 @@ builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(ViewModelMappingPr
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStationRepository, StationRepository>();
 builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
+builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddScoped<IStationService, StationService>();
 builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 var app = builder.Build();
 
