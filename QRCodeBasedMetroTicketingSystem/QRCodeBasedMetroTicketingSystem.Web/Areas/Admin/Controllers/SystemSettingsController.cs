@@ -41,13 +41,6 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
                 return View(viewModel);
             }
 
-            // Validate business rules
-            if (viewModel.MaxFare < viewModel.MinFare)
-            {
-                ModelState.AddModelError("MaxFare", "Maximum fare must be greater than or equal to minimum fare");
-                return View(viewModel);
-            }
-
             var settingsDto = _mapper.Map<SettingsDto>(viewModel);
             var result = await _settingsService.UpdateSettingsAsync(settingsDto);
 

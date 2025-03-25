@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
 {
@@ -10,9 +9,6 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
 
         [Range(0, double.MaxValue)]
         public decimal MinFare { get; set; } = 20.0000m;
-
-        [Range(0, double.MaxValue)]
-        public decimal MaxFare { get; set; } = 100.0000m;
 
         [Range(0, double.MaxValue)]
         public decimal FarePerKm { get; set; } = 5.0000m;

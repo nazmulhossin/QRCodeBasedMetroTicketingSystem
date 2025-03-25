@@ -42,7 +42,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
                 {
                     Id = 1,
                     MinFare = 20.0000m,
-                    MaxFare = 100.0000m,
                     FarePerKm = 5.0000m,
                     QrCodeValidTime = 1440,
                     CreatedAt = new DateTime(2025, 03, 14, 0, 0, 0, DateTimeKind.Utc),

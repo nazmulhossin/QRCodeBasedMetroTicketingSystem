@@ -10,11 +10,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
         [Range(0, double.MaxValue, ErrorMessage = "Minimum fare must not be negative")]
         public decimal MinFare { get; set; }
 
-        [Required(ErrorMessage = "Maximum fare is required")]
-        [Display(Name = "Maximum Fare (TK)")]
-        [Range(0, double.MaxValue, ErrorMessage = "Maximum fare must not be negative")]
-        public decimal MaxFare { get; set; }
-
         [Required(ErrorMessage = "Fare per kilometer is required")]
         [Display(Name = "Fare Per Kilometer (TK)")]
         [Range(0, double.MaxValue, ErrorMessage = "Fare per kilometer must not be negative")]

@@ -28,20 +28,14 @@
                             </div>
 
                             <div class="col-md-6 mb-3 ps-3">
-                                <label asp-for="MaxFare" class="form-label">Maximum Fare (TK)</label>
-                                <input asp-for="MaxFare" class="form-control" step="0.000001" min="0" disabled required />
-                                <span asp-validation-for="MaxFare" class="text-danger"></span>
+                                <label asp-for="FarePerKm" class="form-label">Fare Per Kilometer (TK)</label>
+                                <input asp-for="FarePerKm" class="form-control" step="0.000001" min="0" disabled required />
+                                <span asp-validation-for="FarePerKm" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3 pe-3">
-                                <label asp-for="FarePerKm" class="form-label">Fare Per Kilometer (TK)</label>
-                                <input asp-for="FarePerKm" class="form-control" step="0.000001" min="0" disabled required />
-                                <span asp-validation-for="FarePerKm" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6 mb-3 ps-3">
                                 <label asp-for="QrCodeValidTime" class="form-label">QR Code Valid Time (Minutes)</label>
                                 <input asp-for="QrCodeValidTime" class="form-control" step="1" min="0" disabled required />
                                 <span asp-validation-for="QrCodeValidTime" class="text-danger"></span>
