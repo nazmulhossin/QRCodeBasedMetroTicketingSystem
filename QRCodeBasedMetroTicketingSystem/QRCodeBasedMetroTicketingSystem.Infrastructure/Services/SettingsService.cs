@@ -10,24 +10,34 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     public class SettingsService : ISettingsService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
         private readonly IMapper _mapper;
+        private const string CacheKey = "system_settings";
 
-        public SettingsService(IUnitOfWork unitOfWork, IMapper mapper)
+        public SettingsService(IUnitOfWork unitOfWork, ICacheService cacheService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
             _mapper = mapper;
         }
 
         public async Task<SettingsDto> GetCurrentSettingsAsync()
         {
-            var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
-
-            if (settings == null)
+            // Try to get settings from cache
+            var cachedSettings = await _cacheService.GetAsync<SettingsDto>(CacheKey);
+            if (cachedSettings != null)
             {
-                settings = new Settings(); // Default settings
+                return cachedSettings;
             }
 
-            return _mapper.Map<SettingsDto>(settings);
+            // Cache miss - Fetch settings from the database
+            var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
+            settings ??= new Settings(); // Default settings
+
+            var settingsDto = _mapper.Map<SettingsDto>(settings);
+            await _cacheService.SetAsync(CacheKey, settingsDto);
+
+            return settingsDto;
         }
 
         public async Task<Result> UpdateSettingsAsync(SettingsDto settingsDto)
@@ -49,6 +59,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
+                await _cacheService.RemoveAsync(CacheKey);
 
                 return Result.Success("System settings detail updated successfully.");
             }
