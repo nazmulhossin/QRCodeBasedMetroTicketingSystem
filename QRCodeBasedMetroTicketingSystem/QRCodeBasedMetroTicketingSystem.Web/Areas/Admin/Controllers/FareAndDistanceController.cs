@@ -1,31 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
+using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
+using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class FareAndDistanceController : Controller
     {
-        private readonly IDistanceCalculationService _distanceCalculationService;
+        private readonly IFareAndDistanceService _distanceAndFareService;
+        private readonly IMapper _mapper;
 
-        public FareAndDistanceController(IDistanceCalculationService distanceCalculationService)
+        public FareAndDistanceController(IFareAndDistanceService distanceAndFareService, IMapper mapper)
         {
-            _distanceCalculationService = distanceCalculationService;
+            _distanceAndFareService = distanceAndFareService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<string> allDistances = new List<string>();
-            for (int i = 1; i < 10; i++)
+            var distanceAndFareDto = await _distanceAndFareService.GetFareAndDistanceModel();
+            var viewModel = _mapper.Map<FareAndDistancesViewModel>(distanceAndFareDto);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetFareDistanceData(
+            int? fromStationId,
+            int? toStationId,
+            int draw,
+        int start,
+            int length)
+        {
+            var fareDistances = await _fareCalculationService.GetFareDistancesAsync(fromStationId, toStationId);
+
+            // Prepare the result for DataTable
+            return Json(new
             {
-                for (int j = 1; j <= 10; j++)
-                { 
-                    decimal distance = await _distanceCalculationService.GetDistanceBetweenAsync(i, j);
-                    allDistances.Add(string.Format("from: {0} to: {1} distance: {2}", i, j, distance));
-                }
-            }
-            return Json(allDistances);
+                draw = draw,
+                recordsTotal = fareDistances.Count(),
+                recordsFiltered = fareDistances.Count(),
+                data = fareDistances.Skip(start).Take(length).ToList()
+            });
         }
     }
 }
-

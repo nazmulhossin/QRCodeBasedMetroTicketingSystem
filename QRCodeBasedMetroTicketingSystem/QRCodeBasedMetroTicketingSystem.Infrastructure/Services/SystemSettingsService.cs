@@ -7,14 +7,14 @@ using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
-    public class SettingsService : ISettingsService
+    public class SystemSettingsService : ISystemSettingsService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICacheService _cacheService;
         private readonly IMapper _mapper;
         private const string CacheKey = "system_settings";
 
-        public SettingsService(IUnitOfWork unitOfWork, ICacheService cacheService, IMapper mapper)
+        public SystemSettingsService(IUnitOfWork unitOfWork, ICacheService cacheService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _cacheService = cacheService;

@@ -35,8 +35,10 @@ builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddScoped<IStationService, StationService>();
+builder.Services.AddScoped<ISystemSettingsService, SystemSettingsService>();
 builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
-builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<IFareCalculationService, FareCalculationService>();
+builder.Services.AddScoped<IFareAndDistanceService, FareAndDistanceService>();
 
 var app = builder.Build();
 
