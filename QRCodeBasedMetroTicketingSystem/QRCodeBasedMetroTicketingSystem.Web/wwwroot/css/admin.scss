@@ -521,7 +521,7 @@ body {
 }
 
 // Form Styels
-form {
+form, .form-group, select:has(option:checked) {
     color: var(--main-primary-text-color);
 }
 

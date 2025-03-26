@@ -1,12 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Fare and Distance";
+﻿@model FareAndDistancesViewModel
+
+@{
+    ViewData["Title"] = "Fare and Distance Table";
 }
 
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="row mb-2">
         <div class="col-12 page-header">
-            <h1 class="page-title">Fare and Distance</h1>
+            <h1 class="page-title">Fare and Distance Table</h1>
             <div class="breadcrumb">
                 <span><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Home</a></span><i class="bi bi-chevron-right"></i><span>Fare and Distance</span>
             </div>
@@ -17,35 +19,35 @@
         <div class="col-12">
             <div class="card shadow-sm p-3">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="card-title mb-0">Distance and Fare Details</h3>
-                    </div>
-
                     <!-- Search Form -->
-                    <div class="row " style="margin-bottom: 50px">
-                        <div class="col-md-5">
+                    <div class="row g-3" style="margin-bottom: 30px">
+                        <div class="col-md-4 pe-3">
                             <div class="form-group">
                                 <label>From Station</label>
-                                <select id="fromStationId" class="form-control">
-                                    <option value=""> -- Select From Station --</option>
+                                <select id="fromStationId" class="form-select my-1">
+                                    @foreach (var station in Model.StationList)
+                                    {
+                                        <option value="@station.Id">@station.Name</option>
+                                    }
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-5">
+
+                        <div class="col-md-4 ps-3">
                             <div class="form-group">
                                 <label>To Station</label>
-                                <select id="toStationId" class="form-control">
-                                    <option value="">-- Select To Station --</option>
+                                <select id="toStationId" class="form-select my-1">
+                                    <option value="" selected>< All Stations ></option>
+                                    @foreach (var station in Model.StationList)
+                                    {
+                                        <option value="@station.Id">@station.Name</option>
+                                    }
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <label>&nbsp;</label>
-                            <button id="btnSearch" class="btn btn-success w-100"><i class="bi bi-search me-1"></i> Search</button>
                         </div>
                     </div>
 
-                    <!-- Distance and Fare Table -->
+                    <!-- Fare and Distance Table -->
                     <div class="table-container">
                         <table id="data-table">
                             <thead class="thead-light">
@@ -57,7 +59,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <!-- Table body will be filled by DataTables -->
                             </tbody>
                         </table>
                     </div>
@@ -66,3 +68,68 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function filterToStationDropdown() {
+                var selectedFromStation = $('#fromStationId').val();
+
+                $('#toStationId option').each(function () {
+                    if ($(this).val() === selectedFromStation && selectedFromStation !== "") {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+
+                // Reset To Station selection if it's the same as From Station
+                if ($('#toStationId').val() === selectedFromStation) {
+                    $('#toStationId').val("");
+                }
+            }
+
+            // Apply filtering on page load
+            filterToStationDropdown();
+
+            // Apply filtering when From Station changes
+            $('#fromStationId').change(function () {
+                filterToStationDropdown();
+            });
+
+            var table = $('#data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '@Url.Action("GetFareDistanceData", "FareAndDistance", new { area = "Admin" })',
+                    type: 'POST',
+                    data: function(d) {
+                        d.fromStationId = $('#fromStationId').val();
+                        d.toStationId = $('#toStationId').val();
+                    }
+                },
+                columns: [
+                    { data: 'fromStationName', name: 'FromStationName' },
+                    { data: 'toStationName', name: 'ToStationName' },
+                    { data: 'distance', name: 'Distance' },
+                    { data: 'fare', name: 'Fare', orderable: false }
+                ],
+                language: {
+                    emptyTable: "Please select a starting station",
+                },
+                pageLength: 50,
+                lengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]]
+            });
+
+            // Reload table when From Station changes
+            $('#fromStationId').on('change', function() {
+                table.ajax.reload();
+            });
+
+            // Reload table when To Station changes
+            $('#toStationId').on('change', function() {
+                table.ajax.reload();
+            });
+        });
+    </script>
+}

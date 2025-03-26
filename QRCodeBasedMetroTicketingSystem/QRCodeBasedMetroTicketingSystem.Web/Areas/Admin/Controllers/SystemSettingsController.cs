@@ -10,10 +10,10 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class SystemSettingsController : Controller
     {
-        private readonly ISettingsService _settingsService;
+        private readonly ISystemSettingsService _settingsService;
         private readonly IMapper _mapper;
 
-        public SystemSettingsController(ISettingsService settingsService, IMapper mapper)
+        public SystemSettingsController(ISystemSettingsService settingsService, IMapper mapper)
         {
             _settingsService = settingsService;
             _mapper = mapper;

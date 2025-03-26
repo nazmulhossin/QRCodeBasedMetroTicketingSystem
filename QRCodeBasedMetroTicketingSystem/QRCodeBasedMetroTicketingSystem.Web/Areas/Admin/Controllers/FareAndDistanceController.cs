@@ -1,31 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
+using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class FareAndDistanceController : Controller
     {
-        private readonly IDistanceCalculationService _distanceCalculationService;
+        private readonly IFareAndDistanceService _fareAndDistanceService;
+        private readonly IMapper _mapper;
 
-        public FareAndDistanceController(IDistanceCalculationService distanceCalculationService)
+        public FareAndDistanceController(IFareAndDistanceService fareAndDistanceService, IMapper mapper)
         {
-            _distanceCalculationService = distanceCalculationService;
+            _fareAndDistanceService = fareAndDistanceService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<string> allDistances = new List<string>();
-            for (int i = 1; i < 10; i++)
+            var distanceAndFareDto = await _fareAndDistanceService.GetFareAndDistanceModel();
+            var viewModel = _mapper.Map<FareAndDistancesViewModel>(distanceAndFareDto);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetFareDistanceData(DataTablesRequest request, int? fromStationId, int? toStationId)
+        {
+            if (!ModelState.IsValid)
             {
-                for (int j = 1; j <= 10; j++)
-                { 
-                    decimal distance = await _distanceCalculationService.GetDistanceBetweenAsync(i, j);
-                    allDistances.Add(string.Format("from: {0} to: {1} distance: {2}", i, j, distance));
-                }
+                return BadRequest(ModelState);
             }
-            return Json(allDistances);
+
+            var response = await _fareAndDistanceService.GetFareDistanceDataTablesAsync(request, fromStationId, toStationId);
+            return Json(response);
         }
     }
 }
-
