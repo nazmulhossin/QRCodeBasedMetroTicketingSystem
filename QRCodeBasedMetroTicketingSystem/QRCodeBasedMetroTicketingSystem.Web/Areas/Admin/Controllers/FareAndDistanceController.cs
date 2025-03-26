@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.Common.Models.DataTables;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
-using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
@@ -9,40 +9,32 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class FareAndDistanceController : Controller
     {
-        private readonly IFareAndDistanceService _distanceAndFareService;
+        private readonly IFareAndDistanceService _fareAndDistanceService;
         private readonly IMapper _mapper;
 
-        public FareAndDistanceController(IFareAndDistanceService distanceAndFareService, IMapper mapper)
+        public FareAndDistanceController(IFareAndDistanceService fareAndDistanceService, IMapper mapper)
         {
-            _distanceAndFareService = distanceAndFareService;
+            _fareAndDistanceService = fareAndDistanceService;
             _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var distanceAndFareDto = await _distanceAndFareService.GetFareAndDistanceModel();
+            var distanceAndFareDto = await _fareAndDistanceService.GetFareAndDistanceModel();
             var viewModel = _mapper.Map<FareAndDistancesViewModel>(distanceAndFareDto);
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetFareDistanceData(
-            int? fromStationId,
-            int? toStationId,
-            int draw,
-        int start,
-            int length)
+        public async Task<IActionResult> GetFareDistanceData(DataTablesRequest request, int? fromStationId, int? toStationId)
         {
-            var fareDistances = await _fareCalculationService.GetFareDistancesAsync(fromStationId, toStationId);
-
-            // Prepare the result for DataTable
-            return Json(new
+            if (!ModelState.IsValid)
             {
-                draw = draw,
-                recordsTotal = fareDistances.Count(),
-                recordsFiltered = fareDistances.Count(),
-                data = fareDistances.Skip(start).Take(length).ToList()
-            });
+                return BadRequest(ModelState);
+            }
+
+            var response = await _fareAndDistanceService.GetFareDistanceDataTablesAsync(request, fromStationId, toStationId);
+            return Json(response);
         }
     }
 }
