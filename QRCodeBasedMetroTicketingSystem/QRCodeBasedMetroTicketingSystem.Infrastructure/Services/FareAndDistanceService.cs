@@ -7,7 +7,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
     public class FareAndDistanceService : IFareAndDistanceService
     {
-        public readonly IStationRepository _stationRepository;
+        private readonly IStationRepository _stationRepository;
         private readonly IFareCalculationService _fareCalculationService;
 
         public FareAndDistanceService(IStationRepository stationRepository, IFareCalculationService fareCalculationService)
