@@ -8,7 +8,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IDistanceCalculationService _distanceCalculationService;
         private readonly ISystemSettingsService _systemSettingsService;
-        public readonly IStationRepository _stationRepository;
+        private readonly IStationRepository _stationRepository;
 
         public FareCalculationService(IDistanceCalculationService distanceCalculationService, ISystemSettingsService systemSettingsService, IStationRepository stationRepository)
         {
