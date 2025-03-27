@@ -21,8 +21,8 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
         [Range(1, int.MaxValue, ErrorMessage = "QR code ticket validity time must be at least 1 minute")]
         public int QrCodeTicketValidTime { get; set; }
 
-        [Required(ErrorMessage = "Trip Time Limit is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Trip Time Limit must be at least 1 minute")]
+        [Required(ErrorMessage = "Trip time limit is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Trip time limit must be at least 1 minute")]
         public int TripTimeLimit { get; set; }
     }
 }
