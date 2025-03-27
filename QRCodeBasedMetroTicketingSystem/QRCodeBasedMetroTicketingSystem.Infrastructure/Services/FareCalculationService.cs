@@ -8,7 +8,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IDistanceCalculationService _distanceCalculationService;
         private readonly ISystemSettingsService _systemSettingsService;
-        public readonly IStationRepository _stationRepository;
+        private readonly IStationRepository _stationRepository;
 
         public FareCalculationService(IDistanceCalculationService distanceCalculationService, ISystemSettingsService systemSettingsService, IStationRepository stationRepository)
         {
@@ -78,7 +78,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             decimal baseFare = distance * farePerKm;
             baseFare = Math.Max(baseFare, minFare);
-            int roundedFare = (int)Math.Round(baseFare / 10) * 10;
+            var roundToNearest = 10;
+            int roundedFare = (int)Math.Round(baseFare / roundToNearest) * roundToNearest;
 
             return roundedFare;
         }

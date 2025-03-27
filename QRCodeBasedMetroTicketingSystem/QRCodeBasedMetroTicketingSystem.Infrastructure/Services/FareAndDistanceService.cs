@@ -41,8 +41,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             if (!string.IsNullOrEmpty(request.Search?.Value))
             {
                 fareDistances = fareDistances.Where(fd =>
-                    fd.FromStationName!.Contains(request.Search.Value, StringComparison.OrdinalIgnoreCase) ||
-                    fd.ToStationName!.Contains(request.Search.Value, StringComparison.OrdinalIgnoreCase)
+                   (fd.FromStationName?.Contains(request.Search.Value, StringComparison.OrdinalIgnoreCase) == true) ||
+                   (fd.ToStationName?.Contains(request.Search.Value, StringComparison.OrdinalIgnoreCase) == true)
                 );
             }
 

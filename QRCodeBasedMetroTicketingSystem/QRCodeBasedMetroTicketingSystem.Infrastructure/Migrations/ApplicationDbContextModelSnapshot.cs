@@ -39,7 +39,13 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<decimal>("MinFare")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("QrCodeTicketValidTime")
+                        .HasColumnType("int");
+
                     b.Property<int>("QrCodeValidTime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TripTimeLimit")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -56,7 +62,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             FarePerKm = 5.0000m,
                             MinFare = 20.0000m,
+                            QrCodeTicketValidTime = 2880,
                             QrCodeValidTime = 1440,
+                            TripTimeLimit = 120,
                             UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
