@@ -13,10 +13,13 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
         [Range(0, double.MaxValue)]
         public decimal FarePerKm { get; set; } = 5.0000m;
 
-        [Range(0, int.MaxValue)]
+        [Range(1, int.MaxValue)]
         public int QrCodeValidTime { get; set; } = 1440;
 
-        [Range(0, int.MaxValue)]
+        [Range(1, int.MaxValue)]
+        public int QrCodeTicketValidTime { get; set; } = 2880;
+
+        [Range(1, int.MaxValue)]
         public int TripTimeLimit { get; set; } = 120;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

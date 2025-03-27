@@ -20,6 +20,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     MinFare = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FarePerKm = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     QrCodeValidTime = table.Column<int>(type: "int", nullable: false),
+                    QrCodeTicketValidTime = table.Column<int>(type: "int", nullable: false),
                     TripTimeLimit = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -31,8 +32,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Settings",
-                columns: new[] { "Id", "CreatedAt", "FarePerKm", "MinFare", "QrCodeValidTime", "TripTimeLimit", "UpdatedAt" },
-                values: new object[] { 1, new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc), 5.0000m, 20.0000m, 1440, 120, new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc) });
+                columns: new[] { "Id", "CreatedAt", "FarePerKm", "MinFare", "QrCodeTicketValidTime", "QrCodeValidTime", "TripTimeLimit", "UpdatedAt" },
+                values: new object[] { 1, new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc), 5.0000m, 20.0000m, 2880, 1440, 120, new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc) });
         }
 
         /// <inheritdoc />

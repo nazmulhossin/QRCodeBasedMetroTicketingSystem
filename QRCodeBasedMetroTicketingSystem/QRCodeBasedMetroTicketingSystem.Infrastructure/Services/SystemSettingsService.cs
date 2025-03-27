@@ -55,6 +55,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 settings.MinFare = settingsDto.MinFare;
                 settings.FarePerKm = settingsDto.FarePerKm;
                 settings.QrCodeValidTime = settingsDto.QrCodeValidTime;
+                settings.QrCodeTicketValidTime = settingsDto.QrCodeTicketValidTime;
+                settings.TripTimeLimit = settingsDto.TripTimeLimit;
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
