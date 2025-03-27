@@ -12,7 +12,7 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250325075422_AddSettingsTable")]
+    [Migration("20250327071401_AddSettingsTable")]
     partial class AddSettingsTable
     {
         /// <inheritdoc />
@@ -45,6 +45,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Property<int>("QrCodeValidTime")
                         .HasColumnType("int");
 
+                    b.Property<int>("TripTimeLimit")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -60,6 +63,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                             FarePerKm = 5.0000m,
                             MinFare = 20.0000m,
                             QrCodeValidTime = 1440,
+                            TripTimeLimit = 120,
                             UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });

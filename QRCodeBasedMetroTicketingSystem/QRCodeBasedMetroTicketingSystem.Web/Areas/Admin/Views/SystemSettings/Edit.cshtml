@@ -40,6 +40,12 @@
                                 <input asp-for="QrCodeValidTime" class="form-control" step="1" min="0" required />
                                 <span asp-validation-for="QrCodeValidTime" class="text-danger"></span>
                             </div>
+
+                            <div class="col-md-6 mb-3 ps-3">
+                                <label asp-for="TripTimeLimit" class="form-label">Time Limit for a Single Trip (Minutes)</label>
+                                <input asp-for="TripTimeLimit" class="form-control" step="1" min="0" required />
+                                <span asp-validation-for="TripTimeLimit" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">

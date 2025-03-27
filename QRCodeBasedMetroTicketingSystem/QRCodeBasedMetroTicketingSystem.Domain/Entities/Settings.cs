@@ -16,6 +16,9 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
         [Range(0, int.MaxValue)]
         public int QrCodeValidTime { get; set; } = 1440;
 
+        [Range(0, int.MaxValue)]
+        public int TripTimeLimit { get; set; } = 120;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
