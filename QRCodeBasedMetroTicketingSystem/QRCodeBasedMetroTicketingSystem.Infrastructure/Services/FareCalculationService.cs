@@ -78,7 +78,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             decimal baseFare = distance * farePerKm;
             baseFare = Math.Max(baseFare, minFare);
-            int roundedFare = (int)Math.Round(baseFare / 10) * 10;
+            var roundToNearest = 10;
+            int roundedFare = (int)Math.Round(baseFare / roundToNearest) * roundToNearest;
 
             return roundedFare;
         }
