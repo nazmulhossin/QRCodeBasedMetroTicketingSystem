@@ -1,0 +1,287 @@
+:root {
+    --primary-color: #006a4e; /* Bangladesh flag green */
+    --secondary-color: #f42a41; /* Bangladesh flag red */
+    --dark-color: #333333;
+    --light-color: #f8f9fa;
+    --gray-color: #6c757d;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark-color);
+}
+
+/* Common Design */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+
+    &:hover, &:active {
+        background-color: #005a42 !important;
+        border-color: #005a42 !important;
+    }
+}
+
+.btn-outline-light:hover {
+    color: var(--primary-color);
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+
+    .navbar-toggler {
+        border: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .navbar-brand, .offcanvas-title {
+        img {
+            height: 27px;
+        }
+        
+        span {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+    }
+
+    .nav-link {
+        color: var(--dark-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+
+        &:hover {
+            color: var(--primary-color);
+        }
+
+        &.active-link {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+    }
+
+    .offcanvas {
+        width: 270px;
+        left: -25px;
+
+        .offcanvas-header {
+            .offcanvas-title {
+                img {
+                    height: 27px;
+                }
+
+                span {
+                    font-size: 1.15rem;
+                }
+            }
+        }
+    }
+    
+    .shopping-badge {
+        position: relative;
+
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background-color: var(--secondary-color);
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    
+    .balance-pill {
+        background-color: var(--light-color);
+        color: var(--primary-color);
+        font-weight: 600;
+        border: 1px solid var(--primary-color);
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+    
+        .taka-icon {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: 400;
+        }
+    }
+    
+    .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border: none;
+        padding: 0.5rem 0;
+        min-width: 200px;
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(0, 106, 78, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top: 1px solid #eee;
+        }
+    }    
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 60px 0 30px;
+
+    .footer-about {
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+    
+            img {
+                height: 33px;
+            }
+    
+            span {
+                font-weight: 700;
+                color: white;
+                margin-left: 8px;
+                font-size: 1.2rem;
+            }
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+
+            a {
+                text-decoration: none;
+                color: white;
+                background-color: rgba(255, 255, 255, 0.1);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s ease;
+    
+                &:hover {
+                    background-color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .footer-heading {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: white;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+
+        li {
+            margin-bottom: 10px;
+
+            a {
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    footer {
+        .footer-about {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        .navbar-toggler-icon {
+            height: 25px;
+            width: 25px;
+        }
+                
+        .balance-pill {
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-menu {
+            min-width: 180px;
+
+            .dropdown-item {
+                font-size: 0.95rem;
+                padding: 0.4rem 1.2rem;
+            }
+        }    
+    }
+
+    .offcanvas {
+        width: 270px;
+        
+        .offcanvas-header {
+            .offcanvas-title {
+                img {
+                    height: 27px;
+                }
+
+                span {
+                    font-size: 1.15rem;
+                }
+            }
+        }
+    }
+
+    footer {
+        text-align: center;
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    }
+}

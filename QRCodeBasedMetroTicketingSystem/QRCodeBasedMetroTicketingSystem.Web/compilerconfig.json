@@ -2,5 +2,17 @@
   {
     "outputFile": "wwwroot/css/admin.css",
     "inputFile": "wwwroot/css/admin.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/layout.css",
+    "inputFile": "wwwroot/css/layout.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/home.css",
+    "inputFile": "wwwroot/css/home.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/map-and-routes.css",
+    "inputFile": "wwwroot/css/map-and-routes.scss"
   }
 ]

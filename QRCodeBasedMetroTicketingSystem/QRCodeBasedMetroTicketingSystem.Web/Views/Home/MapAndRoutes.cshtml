@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Map & Routes";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/map-and-routes.min.css" asp-append-version="true" />
+}
+
+<section class="metro-map" id="metro-map">
+    <div class="container">
+        <div class="section-title">
+            <h2>Metro Map & Routes</h2>
+            <p>Plan your journey with our comprehensive metro map and route information.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="map-container p-1 p-md-3 p-xl-4">
+                    <img src="~images/metro-map-mrt-6.png" alt="Dhaka Metro Map" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="route-info">
+                    <h3>MRT Line 6</h3>
+                    <p>The first metro rail line in Bangladesh connecting Uttara to Motijheel.</p>
+                    <ul class="route-list mt-4">
+                        <li><span class="route-dot"></span> Uttara North</li>
+                        <li><span class="route-dot"></span> Uttara Center</li>
+                        <li><span class="route-dot"></span> Uttara South</li>
+                        <li><span class="route-dot"></span> Pallabi</li>
+                        <li><span class="route-dot"></span> Mirpur 11</li>
+                        <li><span class="route-dot"></span> Mirpur 10</li>
+                        <li><span class="route-dot"></span> Kazipara</li>
+                        <li><span class="route-dot"></span> Shewrapara</li>
+                        <li><span class="route-dot"></span> Agargaon</li>
+                        <li><span class="route-dot"></span> Bijoy Sarani</li>
+                        <li><span class="route-dot"></span> Farmgate</li>
+                        <li><span class="route-dot"></span> Karwan Bazar</li>
+                        <li><span class="route-dot"></span> Shahbag</li>
+                        <li><span class="route-dot"></span> Dhaka University</li>
+                        <li><span class="route-dot"></span> Bangladesh Secretariat</li>
+                        <li><span class="route-dot"></span> Motijheel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
