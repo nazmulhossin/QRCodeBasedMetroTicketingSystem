@@ -11,23 +11,6 @@ body {
     color: var(--dark-color);
 }
 
-/* Common Design */
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    padding: 0.5rem 1.5rem;
-    font-weight: 600;
-
-    &:hover, &:active {
-        background-color: #005a42 !important;
-        border-color: #005a42 !important;
-    }
-}
-
-.btn-outline-light:hover {
-    color: var(--primary-color);
-}
-
 /* Navbar Styles */
 .navbar {
     background-color: white;
@@ -140,6 +123,64 @@ body {
     }    
 }
 
+/* Common Design */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+
+    &:hover, &:active {
+        background-color: #005a42 !important;
+        border-color: #005a42 !important;
+    }
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color) !important;
+    font-weight: 600;
+
+    &:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white !important;
+    }
+
+    &:active {
+        background-color: #005a42 !important;
+        border-color: #005a42 !important;
+    }
+}
+
+.btn-outline-light:hover {
+    color: var(--primary-color);
+}
+
+.btn-auth {
+    padding: 0.375rem 0.75rem;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: var(--gray-color);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 /* Footer */
 footer {
     background-color: var(--dark-color);
@@ -243,11 +284,27 @@ footer {
             height: 25px;
             width: 25px;
         }
-                
+
+        .offcanvas {
+            width: 270px;
+
+            .offcanvas-header {
+                .offcanvas-title {
+                    img {
+                        height: 27px;
+                    }
+
+                    span {
+                        font-size: 1.15rem;
+                    }
+                }
+            }
+        }
+
         .balance-pill {
             font-size: 0.9rem;
         }
-        
+
         .dropdown-menu {
             min-width: 180px;
 
@@ -255,22 +312,11 @@ footer {
                 font-size: 0.95rem;
                 padding: 0.4rem 1.2rem;
             }
-        }    
-    }
+        }
 
-    .offcanvas {
-        width: 270px;
-        
-        .offcanvas-header {
-            .offcanvas-title {
-                img {
-                    height: 27px;
-                }
-
-                span {
-                    font-size: 1.15rem;
-                }
-            }
+        .btn-auth {
+            padding: 0.25rem 0.65rem;
+            font-size: 0.85rem;
         }
     }
 

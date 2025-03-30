@@ -18,29 +18,13 @@
   margin-right: auto;
 }
 
-/* Common Design */
-.section-title {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-.section-title h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-.section-title p {
-  font-size: 1.1rem;
-  color: var(--gray-color);
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* Fare Checker & Buy QR Ticket Section */
 .fare-checker-and-buy-qr-ticket {
   padding: 80px 0;
   background-color: var(--light-color);
+}
+.fare-checker-and-buy-qr-ticket h3 {
+  color: var(--primary-color);
 }
 .fare-checker-and-buy-qr-ticket .fare-and-buy-qr-form {
   background-color: white;
