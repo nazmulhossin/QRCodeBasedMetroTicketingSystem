@@ -134,6 +134,57 @@ body {
   padding: 0.375rem 0.75rem;
 }
 
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 106, 78, 0.25);
+}
+
+.form-check-input {
+  border-width: 2px;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 106, 78, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 106, 78, 0.25);
+}
+
+.form-control.is-valid:not(:focus) {
+  background-color: rgba(40, 167, 69, 0.1) !important;
+  border-color: #dee2e6 !important;
+}
+
+input:-webkit-autofill {
+  background-color: rgba(40, 167, 69, 0.1) !important;
+}
+
+.form-control.is-valid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 106, 78, 0.25);
+}
+
+.form-control.is-invalid:not(:focus), .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.form-control.is-valid {
+  background-image: none !important;
+  padding-right: 0.75rem !important;
+}
+
+.form-control.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important;
+}
+
+.input-group .form-control.is-valid, .input-group .form-control.is-invalid {
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+
 .section-title {
   text-align: center;
   margin-bottom: 3rem;
