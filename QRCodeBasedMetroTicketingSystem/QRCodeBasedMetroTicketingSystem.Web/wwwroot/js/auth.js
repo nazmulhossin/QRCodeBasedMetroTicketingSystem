@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
         } else {
-            passwordInput.type = 'password';
+            passwordInput.type = PASSWORD_TYPE;
             icon.classList.remove('fa-eye-slash');
             icon.classList.add('fa-eye');
         }
