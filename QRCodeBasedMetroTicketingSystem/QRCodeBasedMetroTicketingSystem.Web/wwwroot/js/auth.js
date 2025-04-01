@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateEmail(value) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+        if (typeof value !== 'string' || value.length > 254) return false;
+        return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,63}$/i.test(value.trim());
     }
 
     function validatePhone(value) {
