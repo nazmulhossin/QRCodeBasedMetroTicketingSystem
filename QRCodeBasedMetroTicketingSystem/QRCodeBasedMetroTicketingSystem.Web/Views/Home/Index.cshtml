@@ -1,8 +1,395 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.min.css" asp-append-version="true" />
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to Dhaka Metro Rail</h1>
+        <p>
+            Experience the future of public transportation in Dhaka, Bangladesh. Fast, convenient, and cashless
+            travel across Dhaka.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button class="btn btn-primary btn-lg px-4" data-bs-toggle="modal" data-bs-target="#generateQRModal">
+                <i class="fas fa-qrcode me-2"></i> Generate QR Ticket
+            </button>
+            <a href="#how-it-works" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-info-circle me-2"></i> Learn How It Works
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Fare Checker & QR Generator Section -->
+<section class="fare-checker-and-buy-qr-ticket" id="generate-qr">
+    <div class="container">
+        <div class="section-title">
+            <h2>Check Fare & Buy QR Ticket</h2>
+            <p>Plan your journey and generate your QR code ticket in seconds.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="fare-and-buy-qr-form">
+                    <h3 class="mb-4">Check Fare</h3>
+                    <form id="fareForm">
+                        <div class="mb-3">
+                            <label for="fromStation" class="form-label">From Station</label>
+                            <select class="form-select" id="fromStation" required>
+                                <option value="" selected disabled>Select departure station</option>
+                                <option value="uttara_north">Uttara North</option>
+                                <option value="uttara_center">Uttara Center</option>
+                                <option value="uttara_south">Uttara South</option>
+                                <option value="pallabi">Pallabi</option>
+                                <option value="mirpur_11">Mirpur 11</option>
+                                <option value="mirpur_10">Mirpur 10</option>
+                                <option value="kazipara">Kazipara</option>
+                                <option value="shewrapara">Shewrapara</option>
+                                <option value="agargaon">Agargaon</option>
+                                <option value="bijoy_sarani">Bijoy Sarani</option>
+                                <option value="farmgate">Farmgate</option>
+                                <option value="karwan_bazar">Karwan Bazar</option>
+                                <option value="shahbag">Shahbag</option>
+                                <option value="dhaka_university">Dhaka University</option>
+                                <option value="bangladesh_secretariat">Bangladesh Secretariat</option>
+                                <option value="motijheel">Motijheel</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="toStation" class="form-label">To Station</label>
+                            <select class="form-select" id="toStation" required>
+                                <option value="" selected disabled>Select destination station</option>
+                                <option value="uttara_north">Uttara North</option>
+                                <option value="uttara_center">Uttara Center</option>
+                                <option value="uttara_south">Uttara South</option>
+                                <option value="pallabi">Pallabi</option>
+                                <option value="mirpur_11">Mirpur 11</option>
+                                <option value="mirpur_10">Mirpur 10</option>
+                                <option value="kazipara">Kazipara</option>
+                                <option value="shewrapara">Shewrapara</option>
+                                <option value="agargaon">Agargaon</option>
+                                <option value="bijoy_sarani">Bijoy Sarani</option>
+                                <option value="farmgate">Farmgate</option>
+                                <option value="karwan_bazar">Karwan Bazar</option>
+                                <option value="shahbag">Shahbag</option>
+                                <option value="dhaka_university">Dhaka University</option>
+                                <option value="bangladesh_secretariat">Bangladesh Secretariat</option>
+                                <option value="motijheel">Motijheel</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Check Fare</button>
+                    </form>
+
+                    <div class="fare-result mt-4" id="fareResult">
+                        <h4>Calculated Fare</h4>
+                        <div class="fare-amount"><span class="taka-icon">৳</span><span id="fareAmount">0</span></div>
+                        <p class="mt-2">From <span id="fromStationDisplay">-</span> to <span id="toStationDisplay">-</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="fare-and-buy-qr-form">
+                    <h3 class="mb-4">Buy QR Ticket</h3>
+                    <form id="qrForm">
+                        <div class="mb-3">
+                            <label for="qrFromStation" class="form-label">From Station</label>
+                            <select class="form-select" id="qrFromStation" required>
+                                <option value="" selected disabled>Select departure station</option>
+                                <option value="uttara_north">Uttara North</option>
+                                <option value="uttara_center">Uttara Center</option>
+                                <option value="uttara_south">Uttara South</option>
+                                <option value="pallabi">Pallabi</option>
+                                <option value="mirpur_11">Mirpur 11</option>
+                                <option value="mirpur_10">Mirpur 10</option>
+                                <option value="kazipara">Kazipara</option>
+                                <option value="shewrapara">Shewrapara</option>
+                                <option value="agargaon">Agargaon</option>
+                                <option value="bijoy_sarani">Bijoy Sarani</option>
+                                <option value="farmgate">Farmgate</option>
+                                <option value="karwan_bazar">Karwan Bazar</option>
+                                <option value="shahbag">Shahbag</option>
+                                <option value="dhaka_university">Dhaka University</option>
+                                <option value="bangladesh_secretariat">Bangladesh Secretariat</option>
+                                <option value="motijheel">Motijheel</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="qrToStation" class="form-label">To Station</label>
+                            <select class="form-select" id="qrToStation" required>
+                                <option value="" selected disabled>Select destination station</option>
+                                <option value="uttara_north">Uttara North</option>
+                                <option value="uttara_center">Uttara Center</option>
+                                <option value="uttara_south">Uttara South</option>
+                                <option value="pallabi">Pallabi</option>
+                                <option value="mirpur_11">Mirpur 11</option>
+                                <option value="mirpur_10">Mirpur 10</option>
+                                <option value="kazipara">Kazipara</option>
+                                <option value="shewrapara">Shewrapara</option>
+                                <option value="agargaon">Agargaon</option>
+                                <option value="bijoy_sarani">Bijoy Sarani</option>
+                                <option value="farmgate">Farmgate</option>
+                                <option value="karwan_bazar">Karwan Bazar</option>
+                                <option value="shahbag">Shahbag</option>
+                                <option value="dhaka_university">Dhaka University</option>
+                                <option value="bangladesh_secretariat">Bangladesh Secretariat</option>
+                                <option value="motijheel">Motijheel</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Buy QR Ticket</button>
+                    </form>
+
+                    <div class="text-center mt-4" id="qrCodeContainer" style="display: none;">
+                        <h4>Your QR Ticket</h4>
+                        <div class="my-3" id="qrCode">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MRBD-USER123-TRIP456" alt="QR Code" class="img-fluid">
+                        </div>
+                        <p>Scan this QR code at the entry and exit gates</p>
+                        <p><small>Valid for today only. Expires at midnight.</small></p>
+                        <button class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-download me-2"></i> Save QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works" id="how-it-works">
+    <div class="container">
+        <div class="section-title">
+            <h2>How It Works</h2>
+            <p>Our QR-based metro ticketing system is designed to be simple and user-friendly.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Generate QR Ticket</h3>
+                    <p>Use our app or website to generate a QR code ticket for your journey.</p>
+                    <img src="~/images/generate-qr-code.jpg" alt="Generate QR Ticket" class="step-img">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Scan at Entry Gate</h3>
+                    <p>Scan your QR code at the entry gate to begin your journey. The system records your entry station.</p>
+                    <img src="~/images/scan-at-entry-gate.jpg" alt="Scan at Entry" class="step-img">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Scan at Exit Gate</h3>
+                    <p>Scan again at your destination. Fare is automatically calculated and deducted from your balance.</p>
+                    <img src="~/images/scan-at-exit-gate.jpg" alt="Scan at Exit" class="step-img">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Why Choose Dhaka Metro Rail QR Ticketing?</h2>
+            <p>Our QR-based ticketing system makes commuting in Dhaka easier, faster, and more convenient than ever before.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Quick Entry & Exit</h3>
+                    <p>Scan your QR code at entry and exit gates for seamless travel without waiting in ticket lines.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Ticketing</h3>
+                    <p>Purchase tickets anytime, anywhere using our mobile app or website. No physical ticket needed.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Automatic Fare Calculation</h3>
+                    <p>Fares are automatically calculated based on your entry and exit stations. Pay only for what you travel.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Easy Recharge</h3>
+                    <p>Top up your account balance using multiple payment methods including mobile banking and credit cards.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>Trip History</h3>
+                    <p>Access your complete travel history with details of stations, times, and fares for better expense tracking.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Eco-Friendly</h3>
+                    <p>Reduce paper waste with digital tickets and contribute to a greener Bangladesh.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Guidelines Section -->
+<section class="guidelines" id="guidelines">
+    <div class="container">
+        <div class="section-title">
+            <h2>Metro Guidelines</h2>
+            <p>Important information to ensure a safe and pleasant journey for all passengers.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="guideline-card">
+                    <h3><i class="fas fa-check-circle"></i> General Rules</h3>
+                    <ul class="guideline-list">
+                        <li>Keep your QR ticket ready for scanning at entry and exit gates.</li>
+                        <li>Maintain a minimum balance of ৳20 in your account.</li>
+                        <li>Children below 3 feet height can travel for free.</li>
+                        <li>Senior citizens and persons with disabilities have priority seating.</li>
+                        <li>Follow the queue while boarding and alighting from the train.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="guideline-card">
+                    <h3><i class="fas fa-ban"></i> Prohibited Items</h3>
+                    <ul class="guideline-list">
+                        <li>Flammable materials and explosives.</li>
+                        <li>Weapons of any kind.</li>
+                        <li>Oversized luggage that blocks pathways.</li>
+                        <li>Pets (except service animals).</li>
+                        <li>Food and beverages (except water in sealed bottles).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="guideline-card">
+                    <h3><i class="fas fa-clock"></i> Operating Hours</h3>
+                    <ul class="guideline-list">
+                        <li>Monday to Thursday: 7:00 AM - 11:00 PM</li>
+                        <li>Friday: 8:00 AM - 11:00 PM</li>
+                        <li>Saturday and Sunday: 7:00 AM - 11:00 PM</li>
+                        <li>Last train departs 30 minutes before closing time.</li>
+                        <li>Special timings during national holidays (check notifications).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="guideline-card">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Safety Information</h3>
+                    <ul class="guideline-list">
+                        <li>In case of emergency, press the emergency button in the train or on platforms.</li>
+                        <li>Follow instructions from metro staff during emergencies.</li>
+                        <li>Stand behind the yellow line on platforms.</li>
+                        <li>Hold handrails while the train is in motion.</li>
+                        <li>Report suspicious activities to metro security personnel.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Download CTA Section -->
+<section class="download-cta" id="download">
+    <div class="container">
+        <h2>Download the Dhaka Metro Rail App</h2>
+        <p>Get the full experience of our QR-based ticketing system on your smartphone. Generate tickets, check balances, and plan your journeys on the go.</p>
+        <h4>Download App</h4>
+        <div class="app-badges">
+            <div class="d-flex gap-3">
+                <a href="#" class="btn btn-outline-light">
+                    <i class="fab fa-google-play me-1"></i> Google Play
+                </a>
+                <a href="#" class="btn btn-outline-light">
+                    <i class="fab fa-app-store me-1"></i> App Store
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Generate QR Code Modal -->
+<div class="modal fade qr-modal" id="generateQRModal" tabindex="-1" aria-labelledby="generateQRModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateQRModalLabel">Generate QR Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-container">
+                    <div class="qr-code mb-3">
+                        <!-- This would be replaced with actual QR code generation -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MRBD-USER123-TRIP456"
+                             alt="QR Code" class="img-fluid">
+                    </div>
+                    <p class="mb-4">Scan this QR code at the metro station gates to begin and end your journey.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download me-2"></i> Save QR Ticket
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fa-regular fa-circle-xmark me-2"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted">If you do not save the QR ticket, it will disappear.</small>
+                <small class="text-muted">This QR code will expire in 2 hours or after use.</small>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/home.js" asp-append-version="true"></script>
+}

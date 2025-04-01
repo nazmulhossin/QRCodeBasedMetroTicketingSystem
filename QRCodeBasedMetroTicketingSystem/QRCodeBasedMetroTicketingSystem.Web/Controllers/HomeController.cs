@@ -1,31 +1,24 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using QRCodeBasedMetroTicketingSystem.Web.Models;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Controllers;
 
+[Route("")]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public IActionResult Root()
     {
-        _logger = logger;
+        return RedirectToAction("Index", "Home");
     }
 
+    [Route("Home")]
     public IActionResult Index()
     {
         return View();
     }
 
-    public IActionResult Privacy()
+    [Route("MapAndRoutes")]
+    public IActionResult MapAndRoutes()
     {
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

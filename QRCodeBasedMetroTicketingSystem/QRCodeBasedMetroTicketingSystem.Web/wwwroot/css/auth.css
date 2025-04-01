@@ -1,0 +1,65 @@
+.auth-section {
+  background-color: var(--light-color);
+  display: flex;
+  align-items: center;
+}
+.auth-section .card {
+  border-radius: 10px;
+}
+.auth-section .card .card-header {
+  background: linear-gradient(135deg, rgba(0, 106, 78, 0.9), rgba(0, 106, 78, 0.7)) !important;
+  border-bottom: none;
+}
+.auth-section a {
+  color: var(--primary-color) !important;
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-section a:hover {
+  text-decoration: underline;
+}
+.auth-section form input {
+  border-radius: 5px;
+}
+.auth-section .input-group-text {
+  font-weight: 600;
+}
+.auth-section #loginForm {
+  /* Password Toggle */
+  /* Subtle animation */
+}
+.auth-section #loginForm .form-control:not(:focus):not(:-moz-placeholder-shown) {
+  background-color: rgba(40, 167, 69, 0.1) !important;
+}
+.auth-section #loginForm .form-control:not(:focus):not(:placeholder-shown) {
+  background-color: rgba(40, 167, 69, 0.1) !important;
+}
+.auth-section #loginForm .password-container input {
+  border-radius: 5px !important;
+}
+.auth-section #loginForm .password-container .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-color);
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.3s ease-in-out;
+}
+.auth-section #loginForm .password-container .password-toggle:hover {
+  color: var(--primary-color);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.auth-section #loginForm .login-section .card {
+  animation: fadeIn 0.5s ease forwards;
+}
