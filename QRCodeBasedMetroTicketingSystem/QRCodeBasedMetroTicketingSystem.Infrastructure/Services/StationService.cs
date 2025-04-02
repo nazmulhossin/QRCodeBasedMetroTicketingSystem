@@ -29,6 +29,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return await _unitOfWork.StationRepository.StationExistsByNameAsync(stationName, excludeStationId);
         }
 
+        public async Task<List<StationSummaryDto>> GetAllStationsOrderedAsync()
+        {
+            return await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();
+        }
+
         public async Task<StationCreationDto> GetStationCreationModelAsync()
         {
             var stations = await _unitOfWork.StationRepository.GetAllStationsOrderedAsync();

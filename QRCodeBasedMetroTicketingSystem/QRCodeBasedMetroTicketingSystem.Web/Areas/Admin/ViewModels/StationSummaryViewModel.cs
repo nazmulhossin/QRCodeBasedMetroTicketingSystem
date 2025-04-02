@@ -2,7 +2,7 @@
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels
 {
-    public class StationListViewModel : StationListDto
+    public class StationSummaryViewModel : StationSummaryDto
     {
     }
 }

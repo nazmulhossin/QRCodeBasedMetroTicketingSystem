@@ -1,6 +1,6 @@
 ﻿namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
-    public class StationListDto
+    public class StationSummaryDto
     {
         public required int Id { get; set; }
         public required string Name { get; set; }

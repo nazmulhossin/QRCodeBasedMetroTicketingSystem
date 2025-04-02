@@ -7,7 +7,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
     public interface IStationRepository : IRepository<Station>
     {
         Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request);
-        Task<List<StationListDto>> GetAllStationsOrderedAsync();
+        Task<List<StationSummaryDto>> GetAllStationsOrderedAsync();
         Task<Station?> GetStationByIdAsync(int stationId);
         Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null);
         Task UpdateSubsequentStationOrdersAsync(int fromOrder, int step);
