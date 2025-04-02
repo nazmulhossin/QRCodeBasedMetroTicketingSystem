@@ -50,6 +50,12 @@ public class HomeController : Controller
         {
             var fareDistanceList = await _fareCalculationService.GetFareDistancesAsync(request.FromStationId, request.ToStationId);
             var result = fareDistanceList.FirstOrDefault();
+
+            if (result == null)
+            {
+                return NotFound(new { message = "No route available between the selected stations." });
+            }
+
             return Ok(new FareDistanceDto
             {
                 FromStationName = result.FromStationName,

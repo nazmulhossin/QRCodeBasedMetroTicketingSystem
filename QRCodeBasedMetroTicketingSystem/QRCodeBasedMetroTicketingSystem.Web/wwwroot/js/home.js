@@ -71,12 +71,12 @@ $(document).ready(function () {
                 // Handle error
                 let errorMessage = 'An error occurred while calculating the fare';
 
-                if (xhr.responseJSON && xhr.responseJSON.message) {
+                if (xhr.responseJSON?.message) {
                     errorMessage = xhr.responseJSON.message;
                 }
 
                 // Create error alert
-                let alertDiv = $(`
+                const alertDiv = $(`
                     <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                         <strong>Error!</strong> ${errorMessage}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
