@@ -8,7 +8,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Mapping
     {
         public ViewModelMappingProfile()
         {
-            CreateMap<StationListDto, StationListViewModel>().ReverseMap();
+            CreateMap<StationSummaryDto, StationSummaryViewModel>().ReverseMap();
             CreateMap<StationCreationDto, StationCreationViewModel>().ReverseMap();
             CreateMap<StationEditDto, StationEditViewModel>().ReverseMap();
             CreateMap<AdjacentStationDistanceDto, AdjacentStationDistanceViewModel>().ReverseMap();

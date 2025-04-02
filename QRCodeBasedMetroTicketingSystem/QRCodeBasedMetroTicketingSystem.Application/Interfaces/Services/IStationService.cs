@@ -8,6 +8,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
     {
         Task<DataTablesResponse<StationDto>> GetStationsDataTableAsync(DataTablesRequest request);
         Task<bool> StationExistsByNameAsync(string stationName, int? excludeStationId = null);
+        Task<List<StationSummaryDto>> GetAllStationsOrderedAsync();
         Task<StationCreationDto> GetStationCreationModelAsync();
         Task<Result> CreateStationAsync(StationCreationDto model);
         Task<StationEditDto?> GetStationEditModelAsync(int StationId);

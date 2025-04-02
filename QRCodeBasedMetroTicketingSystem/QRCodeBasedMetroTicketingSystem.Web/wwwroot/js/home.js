@@ -1,41 +1,102 @@
-// Fare Calculator
-document.getElementById('fareForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+$(document).ready(function () {
+// Filter dropdown
+    // Generic function for filtering related dropdown pairs
+    function setupPairedDropdowns(selector1, selector2) {
+        const $dropdowns = $(`${selector1}, ${selector2}`);
 
-    const fromStation = document.getElementById('fromStation').value;
-    const toStation = document.getElementById('toStation').value;
+        function filterOppositeDropdown() {
+            const $current = $(this);
+            const selectedValue = $current.val();
+            const $opposite = $current.is(selector1) ? $(selector2) : $(selector1);
 
-    // Simple fare calculation (in a real app, this would be more complex)
-    let fare = 20; // Base fare
+            $opposite.find('option').each(function () {
+                $(this).toggle(!(selectedValue && $(this).val() === selectedValue));
+            });
 
-    // Calculate fare based on distance (simplified example)
-    const stations = {
-        'uttara_north': 1,
-        'uttara_center': 2,
-        'uttara_south': 3,
-        'pallabi': 4,
-        'mirpur_11': 5,
-        'mirpur_10': 6,
-        'kazipara': 7,
-        'shewrapara': 8,
-        'agargaon': 9,
-        'bijoy_sarani': 10,
-        'farmgate': 11,
-        'karwan_bazar': 12,
-        'shahbag': 13,
-        'dhaka_university': 14,
-        'bangladesh_secretariat': 15,
-        'motijheel': 16
-    };
+            // Reset opposite dropdown if values match
+            if ($opposite.val() === selectedValue && selectedValue !== "") {
+                $opposite.val("");
+            }
+        }
 
-    const distance = Math.abs(stations[fromStation] - stations[toStation]);
-    fare += distance * 5; // 5 taka per station
+        $dropdowns.on('change', filterOppositeDropdown);
+    }
 
-    // Display the result
-    document.getElementById('fareAmount').textContent = fare;
-    document.getElementById('fromStationDisplay').textContent = fromStation.replace('_', ' ').toUpperCase();
-    document.getElementById('toStationDisplay').textContent = toStation.replace('_', ' ').toUpperCase();
-    document.getElementById('fareResult').style.display = 'block';
+    // Initialize both pairs of dropdowns with the same logic
+    setupPairedDropdowns('#fromStation', '#toStation');
+    setupPairedDropdowns('#qrFromStation', '#qrToStation');
+
+// Fare Calculation
+    $('#fareForm').submit(function (e) {
+        e.preventDefault();
+
+        const fromStationId = $('#fromStation').val();
+        const toStationId = $('#toStation').val();
+
+        if (!fromStationId || !toStationId) {
+            alert('Please select both departure and destination stations');
+            return;
+        }
+
+        if (fromStationId === toStationId) {
+            alert('Departure and destination stations cannot be the same');
+            return;
+        }
+
+        // Show loading animation on button
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalButtonText = submitBtn.text();
+        submitBtn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Calculating...');
+        submitBtn.prop('disabled', true);
+        submitBtn.addClass('disabled');
+
+        $.ajax({
+            url: '/GetFare',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ fromStationId: fromStationId, toStationId: toStationId }),
+            success: function (response) {
+                // Update the pre-defined fare result section
+                $('#fareAmount').text(response.fare);
+                $('#fromStationDisplay').text(response.fromStationName);
+                $('#toStationDisplay').text(response.toStationName);
+                $("#fareResult").show();
+
+                // Reset button state
+                submitBtn.html(originalButtonText);
+                submitBtn.prop('disabled', false);
+                submitBtn.removeClass('disabled');
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                let errorMessage = 'An error occurred while calculating the fare';
+
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                // Create error alert
+                let alertDiv = $(`
+                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                        <strong>Error!</strong> ${errorMessage}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `);
+
+                // Remove any existing alerts first
+                $('.alert').remove();
+                $('#fareForm').after(alertDiv);
+
+                // Hide the fare result section in case of error
+                $('#fareResult').hide();
+
+                // Reset button state
+                submitBtn.html(originalButtonText);
+                submitBtn.prop('disabled', false);
+                submitBtn.removeClass('disabled');
+            }
+        });
+    });
 });
 
 // QR Code Generator

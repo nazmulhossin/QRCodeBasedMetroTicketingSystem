@@ -2,6 +2,6 @@
 {
     public class FareAndDistancesDto
     {
-        public List<StationListDto> StationList { get; set; } = new List<StationListDto>();
+        public List<StationSummaryDto> StationList { get; set; } = new List<StationSummaryDto>();
     }
 }

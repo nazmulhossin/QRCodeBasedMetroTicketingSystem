@@ -66,14 +66,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return fareAndDistances;
         }
 
-        public async Task<int> GetFareAsync(int fromStationId, int toStationId)
-        {
-            var distance = await _distanceCalculationService.GetDistanceBetweenAsync(fromStationId, toStationId);
-            var systemSettings = await _systemSettingsService.GetCurrentSettingsAsync();
-
-            return CalculateFare(distance, systemSettings.FarePerKm, systemSettings.MinFare);
-        }
-
         private int CalculateFare(decimal distance, decimal farePerKm, decimal minFare)
         {
             decimal baseFare = distance * farePerKm;
