@@ -12,6 +12,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         public DbSet<Station> Stations { get; set; }
         public DbSet<StationDistance> StationDistances { get; set; }
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +52,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
                     UpdatedAt = new DateTime(2025, 03, 14, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
+
+            modelBuilder.Entity<User>()
+                .HasIndex(s => s.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(s => s.PhoneNumber)
+                .IsUnique();
         }
     }
 }
