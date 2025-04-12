@@ -276,17 +276,6 @@
         }
     }
 
-    @keyframes confetti-fall {
-        0% {
-            transform: translateY(-100px) rotate(0deg);
-            opacity: 1;
-        }
-
-        100% {
-            transform: translateY(100px) rotate(360deg);
-            opacity: 0;
-        }
-    }
     /* Responsive Adjustments */
     @media (max-width: 576px) {
         .card-body {

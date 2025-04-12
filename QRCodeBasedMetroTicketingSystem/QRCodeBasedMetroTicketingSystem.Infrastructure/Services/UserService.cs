@@ -77,7 +77,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
-                return (false, userDto, string.Empty, "Invalid email or password");
+                return (false, userDto, string.Empty, "Invalid phone number or password");
             }
 
             if (!user.IsEmailVerified)
