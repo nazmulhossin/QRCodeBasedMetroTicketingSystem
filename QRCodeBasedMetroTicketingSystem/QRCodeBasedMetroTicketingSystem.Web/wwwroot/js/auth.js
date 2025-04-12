@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signupForm');
     const loginForm = document.getElementById('loginForm');
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
 
     if (signupForm) {
         const fullName = document.getElementById('fullName');
@@ -24,6 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         const phone = document.getElementById('phone');
         phone.addEventListener('input', validateField);
+    }
+
+    if (forgotPasswordForm) {
+        const email = document.getElementById('email');
+        email.addEventListener('input', validateField);
+    }
+
+    if (resetPasswordForm) {
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        password.addEventListener('input', validateField);
+        confirmPassword.addEventListener('input', validateField);
     }
 
     // Field validation handler
@@ -71,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateNid(value) {
-        return /^\d{10,}$/.test(value.trim());
+        return /^\d{10}$|^\d{17}$/.test(value.trim());
     }
 
     function validatePassword(value) {
@@ -123,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     feedback.textContent = 'Please enter a valid Bangladeshi phone number (11 digits starting with 01)';
                     break;
                 case 'nid':
-                    feedback.textContent = 'NID must contain only numbers and be at least 10 digits long';
+                    feedback.textContent = 'NID must be either 10 or 17 digits long and contain only numbers';
                     break;
                 case 'password':
                     feedback.textContent = 'Password must be at least 8 characters with at least one letter and one number';
@@ -158,8 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // If all validations pass, submit the form
         if (isFullNameValid && isEmailValid && isPhoneValid && isNidValid && isPasswordValid && isConfirmPasswordValid && isTermsChecked) {
-            alert('Form submitted successfully!');
-            // form.submit();
+            signupForm.submit();
         }
     });
 
@@ -171,8 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFieldStatus(phone, isPhoneValid);
 
         if (isPhoneValid) {
-            alert('Form submitted successfully!');
-            // form.submit();
+            loginForm.submit();
         }
     });
 
