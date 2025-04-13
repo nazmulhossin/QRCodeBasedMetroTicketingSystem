@@ -4,7 +4,11 @@
     --dark-color: #333333;
     --light-color: #f8f9fa;
     --gray-color: #6c757d;
-    --error-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --transition: all 0.3s ease;
 }
 
 body {
@@ -30,7 +34,7 @@ body {
         img {
             height: 27px;
         }
-        
+
         span {
             font-weight: 700;
             color: var(--primary-color);
@@ -68,7 +72,7 @@ body {
             }
         }
     }
-    
+
     .shopping-badge {
         position: relative;
 
@@ -85,7 +89,7 @@ body {
             justify-content: center;
         }
     }
-    
+
     .balance-pill {
         background-color: var(--light-color);
         color: var(--primary-color);
@@ -93,13 +97,13 @@ body {
         border: 1px solid var(--primary-color);
         padding: 0.25rem 0.75rem;
         border-radius: 50px;
-    
+
         .taka-icon {
             font-family: 'Times New Roman', Times, serif;
             font-weight: 400;
         }
     }
-    
+
     .dropdown-menu {
         border-radius: 8px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -111,17 +115,27 @@ body {
             padding: 0.5rem 1.5rem;
             color: var(--dark-color);
         }
-        
+
         .dropdown-item:hover {
             background-color: rgba(0, 106, 78, 0.1);
             color: var(--primary-color);
         }
-        
+
         .dropdown-divider {
             margin: 0.5rem 0;
             border-top: 1px solid #eee;
         }
-    }    
+    }
+
+    #openUserSidebarBtn {
+        cursor: pointer;
+        display: none;
+
+        i {
+            font-size: 1.4rem;
+            color: rgba(0, 0, 0, 0.65);
+        }
+    }
 }
 
 /* Common Design */
@@ -340,6 +354,12 @@ footer {
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
+    .navbar {
+        #openUserSidebarBtn {
+            display: block;
+        }
+    }
+
     footer {
         .footer-about {
             margin-bottom: 20px;

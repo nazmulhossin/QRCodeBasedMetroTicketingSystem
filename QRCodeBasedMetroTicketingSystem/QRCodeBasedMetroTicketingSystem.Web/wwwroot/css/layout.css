@@ -4,7 +4,11 @@
   --dark-color: #333333;
   --light-color: #f8f9fa;
   --gray-color: #6c757d;
-  --error-color: #dc3545;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --transition: all 0.3s ease;
 }
 
 body {
@@ -98,6 +102,14 @@ body {
 .navbar .dropdown-menu .dropdown-divider {
   margin: 0.5rem 0;
   border-top: 1px solid #eee;
+}
+.navbar #openUserSidebarBtn {
+  cursor: pointer;
+  display: none;
+}
+.navbar #openUserSidebarBtn i {
+  font-size: 1.4rem;
+  color: rgba(0, 0, 0, 0.65);
 }
 
 /* Common Design */
@@ -286,6 +298,9 @@ footer .footer-bottom {
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
+  .navbar #openUserSidebarBtn {
+    display: block;
+  }
   footer .footer-about {
     margin-bottom: 20px;
   }
