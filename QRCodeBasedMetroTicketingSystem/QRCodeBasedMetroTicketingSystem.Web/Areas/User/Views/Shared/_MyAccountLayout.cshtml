@@ -1,0 +1,102 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/my-account.min.css" asp-append-version="true" />
+}
+
+<!-- My Account Container -->
+<div class="my-account-container py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-4 col-xl-3">
+                <div class="sidebar" id="userSidebar">
+                    <div class="sidebar-user">
+                        <img src="~/images/user.jpg" alt="user">
+                        <div>
+                            <div>Hello,</div>
+                            <div class="user-name">@(User.Identity?.Name?.Length > 20 ? User.Identity.Name.Substring(0, 20) + "..." : User.Identity?.Name)</div>
+                        </div>
+                        <button type="button" class="btn-close" id="closeUserSidebarBtn"></button>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                                <span class="text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#profile">
+                                <span class="icon"><i class="fas fa-user"></i></span>
+                                <span class="text">My Profile</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#tickets">
+                                <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                                <span class="text">My QR Tickets</span>
+                                <span class="badge">5</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#trips">
+                                <span class="icon"><i class="fas fa-subway"></i></span>
+                                <span class="text">Trip History</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#payment">
+                                <span class="icon"><i class="fas fa-credit-card"></i></span>
+                                <span class="text">Payment Methods</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#security">
+                                <span class="icon"><i class="fas fa-shield-alt"></i></span>
+                                <span class="text">Security Settings</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#notifications">
+                                <span class="icon"><i class="fas fa-bell"></i></span>
+                                <span class="text">Notifications</span>
+                                <span class="badge">3</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#help">
+                                <span class="icon"><i class="fas fa-question-circle"></i></span>
+                                <span class="text">Help & Support</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-8 col-xl-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const $sidebar = $('#userSidebar');
+
+            $('#openUserSidebarBtn').on('click', function () {
+                $sidebar.addClass('show-user-sidebar');
+            });
+
+            $('#closeUserSidebarBtn').on('click', function () {
+                $sidebar.removeClass('show-user-sidebar');
+            });
+        });
+    </script>
+}
+

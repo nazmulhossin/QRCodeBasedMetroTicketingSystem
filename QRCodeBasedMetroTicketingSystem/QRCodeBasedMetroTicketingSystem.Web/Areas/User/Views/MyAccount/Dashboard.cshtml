@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Areas/User/Views/Shared/_MyAccountLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="content-wrapper dashboard-section">
+    <div class="content-header">
+        <h2 class="content-title">Dashboard</h2>
+        <div class="content-action">
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-sync-alt me-2"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4">
+        <div class="col-6 col-md-4">
+            <div class="stats-card balance">
+                <div class="stats-icon"><i class="fas fa-wallet"></i></div>
+                <div class="stats-title">Current Balance</div>
+                <div class="stats-value"><span class="taka-icon">৳</span>500</div>
+                <div class="stats-description">Available for tickets</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="stats-card trips">
+                <div class="stats-icon"><i class="fas fa-subway"></i></div>
+                <div class="stats-title">Total Trips</div>
+                <div class="stats-value">24</div>
+                <div class="stats-description">This month</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="stats-card tickets">
+                <div class="stats-icon"><i class="fa-solid fa-ticket"></i></div>
+                <div class="stats-title">Purchased Tickets</div>
+                <div class="stats-value">5</div>
+                <div class="stats-description">Valid for use</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="#">
+            <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
+            <div class="quick-action-text">Generate QR Ticket</div>
+        </a>
+        <a href="#">
+            <div class="quick-action-icon"><i class="fas fa-wallet"></i></div>
+            <div class="quick-action-text">Add Balance</div>
+        </a>
+        <a href="#">
+            <div class="quick-action-icon"><i class="fas fa-map"></i></div>
+            <div class="quick-action-text">View Metro Map</div>
+        </a>
+        <a href="#">
+            <div class="quick-action-icon"><i class="fas fa-calculator"></i></div>
+            <div class="quick-action-text">Fare Calculator</div>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+        <div class="activity-header">
+            <h3>Recent Activity</h3>
+            <a href="#" class="arrow-card-action">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <ul class="activity-list">
+            <li class="activity-item">
+                <div class="activity-icon trip"><i class="fas fa-subway"></i></div>
+                <div class="activity-content">
+                    <div class="activity-text">Completed trip from Agargaon to Uttara North using Rapid Pass</div>
+                    <div class="activity-time">Today, 09:45 AM</div>
+                </div>
+                <div class="activity-amount debit">-<small class="taka-icon">৳</small>60</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon trip"><i class="fas fa-subway"></i></div>
+                <div class="activity-content">
+                    <div class="activity-text">Completed trip from Uttara North to Agargaon using Ticket</div>
+                    <div class="activity-time">Today, 09:45 AM</div>
+                </div>
+                <div class="activity-amount">-</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon ticket"><i class="fa-solid fa-ticket"></i></div>
+                <div class="activity-content">
+                    <div class="activity-text">Purchased Ticket for Uttara North to Agargaon</div>
+                    <div class="activity-time">Today, 10:30 AM</div>
+                </div>
+                <div class="activity-amount debit">-<small class="taka-icon">৳</small>60</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon payment"><i class="fas fa-wallet"></i></div>
+                <div class="activity-content">
+                    <div class="activity-text">Added balance via bKash</div>
+                    <div class="activity-time">Yesterday, 05:20 PM</div>
+                </div>
+                <div class="activity-amount credit">+<small class="taka-icon">৳</small>500</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon refund"><i class="fas fa-undo"></i></div>
+                <div class="activity-content">
+                    <div class="activity-text">Refund for cancelled ticket</div>
+                    <div class="activity-time">Yesterday, 02:15 PM</div>
+                </div>
+                <div class="activity-amount credit">+<small class="taka-icon">৳</small>60</div>
+            </li>
+        </ul>
+    </div>
+</div>

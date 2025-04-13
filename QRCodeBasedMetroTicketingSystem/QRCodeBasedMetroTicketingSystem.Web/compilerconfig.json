@@ -18,5 +18,9 @@
   {
     "outputFile": "wwwroot/css/auth.css",
     "inputFile": "wwwroot/css/auth.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/my-account.css",
+    "inputFile": "wwwroot/css/my-account.scss"
   }
 ]

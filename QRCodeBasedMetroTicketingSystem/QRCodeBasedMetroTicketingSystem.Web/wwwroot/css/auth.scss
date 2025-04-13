@@ -313,7 +313,7 @@
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        color: var(--error-color);
+        color: var(--danger-color);
         font-size: 4rem;
         animation: shake 0.8s ease-in-out;
     }
@@ -325,7 +325,7 @@
         margin-top: 20px;
 
         h5 {
-            color: var(--error-color);
+            color: var(--danger-color);
             font-size: 1rem;
             margin-bottom: 15px;
         }
