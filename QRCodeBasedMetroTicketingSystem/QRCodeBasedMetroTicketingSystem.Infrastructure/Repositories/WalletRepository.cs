@@ -23,7 +23,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 
         public async Task CreateAsync(Wallet wallet)
         {
-            await _context.Wallets.AddAsync(wallet);
+            await _dbSet.AddAsync(wallet);
         }
     }
 }

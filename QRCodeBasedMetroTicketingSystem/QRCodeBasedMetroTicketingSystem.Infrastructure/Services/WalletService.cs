@@ -26,25 +26,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 // Create a new wallet if it doesn't exist
                 wallet = new Wallet { UserId = userId };
                 await _unitOfWork.WalletRepository.CreateAsync(wallet);
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            var transactions = await _unitOfWork.TransactionRepository.GetByWalletIdAsync(wallet.Id, 5);
+            var transactions = await _unitOfWork.TransactionRepository.GetByWalletIdAsync(wallet.Id, 10);
+            var walletDto = _mapper.Map<WalletDto>(wallet);
+            walletDto.RecentTransactions = _mapper.Map<List<TransactionDto>>(transactions);
 
-            return new WalletDto
-            {
-                Id = wallet.Id,
-                Balance = wallet.Balance,
-                RecentTransactions = transactions.Select(t => new TransactionDto
-                {
-                    Id = t.Id,
-                    Amount = t.Amount,
-                    Type = t.Type.ToString(),
-                    PaymentMethod = t.PaymentMethod.ToString(),
-                    Status = t.Status.ToString(),
-                    TransactionReference = t.TransactionReference,
-                    CreatedAt = t.CreatedAt
-                }).ToList()
-            };
+            return walletDto;
         }
 
         public async Task<decimal> GetBalanceAsync(int userId)
