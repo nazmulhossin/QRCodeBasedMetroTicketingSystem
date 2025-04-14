@@ -14,6 +14,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         public DbSet<Settings> Settings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

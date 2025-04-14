@@ -139,6 +139,16 @@ body {
 }
 
 /* Common Design */
+.taka-icon {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+small.taka-icon {
+    font-size: 0.8rem;
+}
+
+// Button styles
 .btn-primary {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
