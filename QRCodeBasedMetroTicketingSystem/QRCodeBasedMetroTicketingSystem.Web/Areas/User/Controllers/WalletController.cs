@@ -35,5 +35,15 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> GetBalance()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var wallet = await _walletService.GetWalletByUserIdAsync(userId.Value);
+            return Json(new { balance = wallet.Balance });
+        }
     }
 }

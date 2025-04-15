@@ -43,13 +43,16 @@
                 <div class="d-flex align-items-center">
                     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("User"))
                     {
-                        <a class="nav-link shopping-badge" href="#">
+                        <a class="nav-link shopping-badge me-3" href="#">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span class="badge rounded-pill">5</span>
                         </a>
-                        <a class="nav-link" href="#">
-                            <span class="balance-pill">Balance: <span class="taka-icon">৳</span>500</span>
-                        </a>
+                        <button id="balanceBtn" class="balance-btn me-3">
+                            <span class="balance-container">
+                                <span class="taka-icon">৳</span>
+                                <span id="balanceText" class="balanceText">Tap for Balance</span>
+                            </span>
+                        </button>
                         <div class="dropdown">
                             <button class="nav-link dropdown-toggle d-flex align-items-center ps-0 ps-sm-2 pe-0" id="profileDropdown"
                                role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
@@ -160,22 +163,7 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        const dropdownElement = document.getElementById('profileDropdown');
-        if (dropdownElement) {
-            window.handleKeyDown = function (event) {
-                const dropdown = new bootstrap.Dropdown(dropdownElement);
-
-               // Add keyboard support (Enter/Space to toggle)
-               dropdownElement.addEventListener('keydown', function (event) {
-                   if (event.key === 'Enter' || event.key === ' ') {
-                       event.preventDefault();
-                       dropdown.toggle();
-                   }
-               });
-            };
-        }
-    </script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

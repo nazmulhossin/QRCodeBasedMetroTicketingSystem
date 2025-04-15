@@ -72,17 +72,53 @@ body {
   align-items: center;
   justify-content: center;
 }
-.navbar .balance-pill {
+.navbar .balance-btn {
   background-color: var(--light-color);
   color: var(--primary-color);
   font-weight: 600;
   border: 1px solid var(--primary-color);
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 17px;
+  min-width: 160px;
 }
-.navbar .balance-pill .taka-icon {
-  font-family: "Times New Roman", Times, serif;
-  font-weight: 400;
+.navbar .balance-btn .balance-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.navbar .balance-btn .balance-container .taka-icon {
+  background-color: var(--primary-color);
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar .balance-btn .balance-container.blink {
+  animation: blink-animation 1s ease-in-out infinite;
+}
+@keyframes blink-animation {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .navbar .dropdown-menu {
   border-radius: 8px;
