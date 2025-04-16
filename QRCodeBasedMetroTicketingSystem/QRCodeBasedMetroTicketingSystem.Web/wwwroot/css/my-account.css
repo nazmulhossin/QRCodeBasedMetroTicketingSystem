@@ -383,10 +383,9 @@
 .my-wallet-section .wallet-balance-card .content .actions .add-balance-btn {
   background-color: rgba(255, 255, 255, 0.2);
   color: var(--white);
-  border: none;
   padding: 0.75rem 1.6rem;
   font-weight: 500;
-  cursor: pointer;
+  width: fit-content;
   transition: var(--transition);
   display: flex;
   align-items: center;

@@ -55,7 +55,7 @@
                         </button>
                         <div class="dropdown">
                             <button class="nav-link dropdown-toggle d-flex align-items-center ps-0 ps-sm-2 pe-0" id="profileDropdown"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
                                 <i class="fa-solid fa-user me-2"></i> 
                                 <span class="d-none d-sm-inline">
                                     @(User.Identity?.Name?.Length > 15 ? User.Identity.Name.Substring(0, 15) + "..." : User.Identity?.Name)
@@ -76,7 +76,17 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                        @if (Context.GetRouteValue("area")?.ToString() == "User")
+                        {
+                            @if (Context.GetRouteValue("controller")?.ToString() != "Wallet")
+                            {
+                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                            }
+                            else if (Context.GetRouteValue("controller")?.ToString() == "Wallet" && Context.GetRouteValue("action")?.ToString() == "Index")
+                            {
+                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                            }
+                        }
                     }
                     else
                     {

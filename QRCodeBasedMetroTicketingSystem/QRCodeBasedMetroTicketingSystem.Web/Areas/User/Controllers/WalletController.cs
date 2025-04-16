@@ -45,5 +45,10 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             var wallet = await _walletService.GetWalletByUserIdAsync(userId.Value);
             return Json(new { balance = wallet.Balance });
         }
+
+        public IActionResult AddBalance()
+        {
+            return View();
+        }
     }
 }

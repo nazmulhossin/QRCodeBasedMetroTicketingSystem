@@ -1,0 +1,136 @@
+﻿@model AddBalanceViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Add Balance";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/payment.min.css" asp-append-version="true" />
+}
+
+<div class="container payment-section select-amount py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Step 1: Amount Selection -->
+            <div class="card step-content active" id="step1Content">
+                <div class="card-header">
+                    <h5>Add Balance to Your Walle</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-area="User" asp-controller="Wallet" asp-action="AddBalance" class="amount-form mb-3">
+                        <div>
+                            <label asp-for="Amount" class="form-label">Enter Amount</label>
+                            <div class="amount-input-wrapper">
+                                <span class="amount-currency taka-icon">৳</span>
+                                <input type="number" asp-for="Amount" class="form-control amount-input" id="balanceAmount" placeholder="0" min="100" max="10000" value="100">
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+                            <div class="form-info mt-3">
+                                <i class="fas fa-info-circle"></i><span>Minimum <small class="taka-icon">৳</small>100, Maximum <small class="taka-icon">৳</small>10,000 per transaction</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Choose Payment Method</label>
+                            <div class="row payment-options g-3">
+                                <div class="col-md-2 form-check payment-option">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="bkash" value="BKash" checked />
+                                    <label class="form-check-label" for="bkash">
+                                        <img src="~/images/bKash-Logo.png" alt="bKash" height="30" />
+                                    </label>
+                                </div>
+                                <div class="col-md-2 form-check payment-option">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="nagad" value="Nagad" />
+                                    <label class="form-check-label" for="nagad">
+                                        <img src="~/images/Nagad-Logo.png" alt="Nagad" height="30" />
+                                    </label>
+                                </div>
+                                <div class="col-md-2 form-check payment-option">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="roket" value="Roket" />
+                                    <label class="form-check-label" for="roket">
+                                        <img src="~/images/rocket-logo.png" alt="Nagad" height="30" />
+                                    </label>
+                                </div>
+                                <div class="col-md-2 form-check payment-option">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="visa-card" value="VisaCard" />
+                                    <label class="form-check-label" for="visa-card">
+                                        <img src="~/images/visa-logo.png" alt="Visa Card" height="30" />
+                                    </label>
+                                </div>
+                                <div class="col-md-2 form-check payment-option">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="mastercard" value="Mastercard" />
+                                    <label class="form-check-label" for="mastercard">
+                                        <img src="~/images/mastercard-logo.png" alt="Mastercard" height="30" />
+                                    </label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Continue to Payment</button>
+                            <a asp-area="User" asp-controller="Wallet" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Transaction Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Transaction Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="transaction-summary">
+                        <div class="transaction-row">
+                            <div class="transaction-label">Amount</div>
+                            <div class="transaction-value" id="summaryAmount"><span class="taka-icon">৳</span>500</div>
+                        </div>
+                        <div class="transaction-row">
+                            <div class="transaction-label">Fee</div>
+                            <div class="transaction-value"><span class="taka-icon">৳</span>0</div>
+                        </div>
+                        <div class="transaction-divider"></div>
+                        <div class="transaction-row total">
+                            <div class="transaction-label">Total</div>
+                            <div class="transaction-value" id="summaryTotal"><span class="taka-icon">৳</span>500</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="help-card">
+                <h5>Need Help?</h5>
+                <p>If you're having trouble adding balance to your account, please contact our support team.</p>
+                <button class="btn btn-outline-primary w-100">
+                    <i class="fas fa-headset me-2"></i> Contact Support
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Update summary amount
+            function updateSummaryAmount() {
+                const amount = $('#balanceAmount').val();
+                $('#summaryAmount').html(`<span class="taka-icon">৳</span>${amount}`);
+                $('#summaryTotal').html(`<span class="taka-icon">৳</span>${amount}`);
+            }
+
+            // Initialize on page load
+            updateSummaryAmount();
+
+            // Amount input change
+            $('#balanceAmount').on('input', function () {
+                updateSummaryAmount();
+            });
+        });
+    </script>
+}
