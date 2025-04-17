@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "My Wallet";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
 }
 
 <div class="content-wrapper my-wallet-section">
@@ -19,7 +20,7 @@
         <div class="pattern"></div>
         <div class="content">
             <div class="label">Current Balance</div>
-            <div class="amount"><span class="taka-icon">৳</span>@Model.Balance.ToString("N2")</div>
+            <div class="amount"><span class="taka-icon">৳</span>@Model.Balance</div>
             <div class="actions">
                 <a asp-area="User" asp-controller="Wallet" asp-action="AddBalance" class="btn add-balance-btn"><i class="fas fa-plus"></i> Add Balance</a>
             </div>
@@ -63,7 +64,7 @@
                         }
                         <div class="content">
                             <div class="text">@transaction.Description</div>
-                            <div class="time">@transaction.Date.ToString("MMM dd, yyyy h:mm tt")</div>
+                            <div class="time">@TimeZoneInfo.ConvertTimeFromUtc(transaction.Date, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
                         </div>
                         @if (transaction.Type == "TopUp" || transaction.Type == "Refund")
                         {

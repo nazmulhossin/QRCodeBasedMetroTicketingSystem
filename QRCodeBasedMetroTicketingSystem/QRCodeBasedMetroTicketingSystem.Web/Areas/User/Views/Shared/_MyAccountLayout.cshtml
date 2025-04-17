@@ -91,18 +91,6 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            const $sidebar = $('#userSidebar');
-
-            $('#openUserSidebarBtn').on('click', function () {
-                $sidebar.addClass('show-user-sidebar');
-            });
-
-            $('#closeUserSidebarBtn').on('click', function () {
-                $sidebar.removeClass('show-user-sidebar');
-            });
-        });
-    </script>
+    <script src="~/js/my-account.js" asp-append-version="true"></script>
 }
 

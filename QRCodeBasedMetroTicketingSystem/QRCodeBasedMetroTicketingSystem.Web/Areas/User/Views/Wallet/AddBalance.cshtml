@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-lg-8">
             <!-- Step 1: Amount Selection -->
-            <div class="card step-content active" id="step1Content">
+            <div class="card">
                 <div class="card-header">
                     <h5>Add Balance to Your Walle</h5>
                 </div>
@@ -47,8 +47,8 @@
                                     </label>
                                 </div>
                                 <div class="col-md-2 form-check payment-option">
-                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="roket" value="Roket" />
-                                    <label class="form-check-label" for="roket">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="rocket" value="Rocket" />
+                                    <label class="form-check-label" for="Rocket">
                                         <img src="~/images/rocket-logo.png" alt="Nagad" height="30" />
                                     </label>
                                 </div>
@@ -59,7 +59,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-2 form-check payment-option">
-                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="mastercard" value="Mastercard" />
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="mastercard" value="MasterCard" />
                                     <label class="form-check-label" for="mastercard">
                                         <img src="~/images/mastercard-logo.png" alt="Mastercard" height="30" />
                                     </label>
@@ -115,6 +115,7 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/layout.js"></script>
     <script>
         $(document).ready(function () {
             // Update summary amount

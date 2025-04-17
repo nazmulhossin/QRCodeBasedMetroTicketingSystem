@@ -187,6 +187,10 @@
   font-size: 1rem;
   flex-shrink: 0;
 }
+.history-card .history-list li .icon.top-up {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success-color);
+}
 .history-card .history-list li .icon.ticket {
   background-color: rgba(255, 193, 7, 0.1);
   color: var(--warning-color);
@@ -194,10 +198,6 @@
 .history-card .history-list li .icon.trip {
   background-color: rgba(23, 162, 184, 0.1);
   color: var(--info-color);
-}
-.history-card .history-list li .icon.payment {
-  background-color: rgba(40, 167, 69, 0.1);
-  color: var(--success-color);
 }
 .history-card .history-list li .icon.refund {
   background-color: rgba(244, 42, 65, 0.1);

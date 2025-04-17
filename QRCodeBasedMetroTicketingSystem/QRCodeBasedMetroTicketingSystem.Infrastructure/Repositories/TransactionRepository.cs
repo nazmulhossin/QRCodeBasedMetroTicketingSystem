@@ -29,7 +29,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Transaction>> GetByWalletIdAsync(int walletId, int limit = 10)
         {
             return await _dbSet
-                .Where(t => t.WalletId == walletId)
+                .Where(t => t.WalletId == walletId && t.Status != TransactionStatus.Canceled)
                 .OrderByDescending(t => t.CreatedAt)
                 .Take(limit)
                 .ToListAsync();

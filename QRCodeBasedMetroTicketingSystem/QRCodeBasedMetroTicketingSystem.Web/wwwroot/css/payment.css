@@ -60,7 +60,7 @@
   margin-bottom: 1.25rem;
 }
 
-/* Step 1: Enter amount */
+/* Enter amount form styles*/
 .amount-form .form-label {
   font-weight: 500;
 }
@@ -79,16 +79,7 @@
   font-size: 1.25rem;
   font-weight: 500;
 }
-.amount-form .payment-options {
-  margin-left: 0;
-}
-.amount-form .payment-options .payment-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.form-info {
+.amount-form .form-info {
   display: flex;
   align-items: center;
   padding: 0.75rem;
@@ -98,8 +89,148 @@
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
 }
-
-.form-info i {
+.amount-form .form-info i {
   margin-right: 0.5rem;
   font-size: 1rem;
+}
+.amount-form .payment-options {
+  margin-left: 0;
+}
+.amount-form .payment-options .payment-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Payment Status Styles*/
+.payment-status {
+  /* Success Icon */
+  /* Error Icon */
+  /* Transaction Details Styles */
+  /* Possible Reasons Styles */
+}
+.payment-status .success-icon {
+  width: 90px;
+  height: 90px;
+  background-color: rgba(0, 106, 78, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: var(--primary-color);
+  font-size: 3.5rem;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+.payment-status .success-icon::after {
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border: 2px dashed var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.payment-status .error-icon {
+  width: 110px;
+  height: 110px;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: var(--danger-color);
+  font-size: 3.8rem;
+  animation: shake 0.8s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+.payment-status .payment-status-title {
+  margin-bottom: 0.75rem;
+}
+.payment-status .payment-status-title.success {
+  color: var(--primary-color);
+}
+.payment-status .payment-status-title.error {
+  color: var(--danger-color);
+}
+.payment-status .payment-status-message {
+  color: var(--gray-color);
+  margin-bottom: 1.5rem;
+}
+.payment-status .transaction-details {
+  background-color: var(--light-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+.payment-status .transaction-details h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--dark-color);
+}
+.payment-status .transaction-details .details-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.payment-status .transaction-details .details-row:last-child {
+  margin-bottom: 0;
+}
+.payment-status .transaction-details .details-row .details-label {
+  color: var(--gray-color);
+}
+.payment-status .transaction-details .details-row .details-value {
+  font-weight: 500;
+}
+.payment-status .transaction-details .details-row .details-value.transaction-id {
+  font-family: monospace;
+}
+.payment-status .possible-reasons {
+  background-color: rgba(220, 53, 69, 0.05);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+.payment-status .possible-reasons h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--danger-color);
+}
+.payment-status .possible-reasons ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+.payment-status .possible-reasons ul li {
+  margin-bottom: 10px;
+  color: var(--gray-color);
+}
+.payment-status .possible-reasons ul li:last-child {
+  margin-bottom: 0;
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
@@ -25,6 +26,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             {
                 wallet = new Wallet { UserId = userId };
                 await _unitOfWork.WalletRepository.CreateAsync(wallet);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             // Create a pending transaction
@@ -36,57 +38,88 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 PaymentMethod = paymentMethod,
                 Status = TransactionStatus.Pending,
                 TransactionReference = Guid.NewGuid().ToString(),
-                Description = $"Adding {amount:C} via {paymentMethod}"
+                Description = $"Adding ৳{amount} via {paymentMethod}"
             };
 
             await _unitOfWork.TransactionRepository.CreateAsync(transaction);
+            await _unitOfWork.SaveChangesAsync();
 
-            // In a real application, here you would integrate with the actual payment gateway
-            // For bKash, Nagad, or card payment
-
+            // In the real application, here we should integrate with the actual payment gateway (For bKash, Nagad, or card payment)
             // For demo purposes, we'll just return the transaction reference
             return transaction.TransactionReference;
         }
 
         public async Task<bool> VerifyPaymentAsync(string transactionReference, PaymentMethod paymentMethod)
         {
-            // In a real application, you would verify the payment with the payment gateway
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                // In a real application, we should verify the payment with the payment gateway
+                // For demo purposes, we will just simulate a successful payment
+                var transaction = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
 
-            // For demo purposes, we'll just simulate a successful payment
-            var transaction = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
-            //var transaction = transactions.FirstOrDefault();
+                if (transaction == null)
+                {
+                    return false;
+                }
 
-            if (transaction == null)
+                // Update transaction status
+                transaction.Status = TransactionStatus.Completed;
+
+                var wallet = await _unitOfWork.WalletRepository.GetByIdAsync(transaction.WalletId);
+                if (wallet == null)
+                {
+                    return false;
+                }
+
+                // Update wallet balance
+                wallet.Balance += transaction.Amount;
+
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return true;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return false;
+            }
+        }
+
+        public async Task<bool> CancelPaymentAsync(string transactionReference)
+        {
+            try
+            {
+                var transaction = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
+                if (transaction == null)
+                {
+                    return false;
+                }
+
+                // Only allow cancellation if the transaction is still pending
+                if (transaction.Status != TransactionStatus.Pending)
+                {
+                    return false;
+                }
+
+                // Update transaction status to cancelled
+                transaction.Status = TransactionStatus.Canceled;
+                transaction.Description += " (Canceled)";
+
+                await _unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch
             {
                 return false;
             }
-
-            // Update transaction status
-            transaction.Status = TransactionStatus.Completed;
-            //await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
-
-            // Update wallet balance
-            var wallet = await _unitOfWork.WalletRepository.GetByIdAsync(transaction.WalletId);
-            wallet.Balance += transaction.Amount;
-            //await _unitOfWork.WalletRepository.UpdateAsync(wallet);
-
-            return true;
         }
-    }
 
-    // Implementation of specific payment gateways
-    public class BKashPaymentService
-    {
-        // Implementation for bKash payment gateway
-    }
-
-    public class NagadPaymentService
-    {
-        // Implementation for Nagad payment gateway
-    }
-
-    public class CardPaymentService
-    {
-        // Implementation for credit/debit card payment gateway
+        public async Task<TransactionDto?> GetTransactionByReferenceAsync(string transactionReference)
+        {
+            var result = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
+            return _mapper.Map<TransactionDto>(result);
+        }
     }
 }

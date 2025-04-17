@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
+using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
@@ -13,14 +14,12 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
     {
         private readonly IWalletService _walletService;
         private readonly IPaymentService _paymentService;
-        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public WalletController(IWalletService walletService, IPaymentService paymentService, IUserService userService, IMapper mapper)
+        public WalletController(IWalletService walletService, IPaymentService paymentService, IMapper mapper)
         {
             _walletService = walletService;
             _paymentService = paymentService;
-            _userService = userService;
             _mapper = mapper;
         }
 
@@ -47,6 +46,87 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
         }
 
         public IActionResult AddBalance()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddBalance(AddBalanceViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            // Initiate payment process
+            var transactionReference = await _paymentService.InitiatePaymentAsync(userId.Value, model.Amount, model.PaymentMethod);
+
+            // Redirect to payment gateway based on the selected payment method
+            return RedirectToAction("ProcessPayment", new { transactionReference });
+        }
+
+        public async Task<IActionResult> ProcessPayment(string transactionReference)
+        {
+            if (string.IsNullOrEmpty(transactionReference))
+            {
+                return RedirectToAction("AddBalance");
+            }
+
+            // In the real application, we should redirect to the actual payment gateway
+            // For demo purposes, we will just show a payment simulation view
+            var transaction = await _paymentService.GetTransactionByReferenceAsync(transactionReference);
+            var viewModels = _mapper.Map<TransactionViewModel>(transaction);
+
+            return View(viewModels);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CompletePayment(string transactionReference, PaymentMethod paymentMethod)
+        {
+            // Verify payment with payment gateway
+            var success = await _paymentService.VerifyPaymentAsync(transactionReference, paymentMethod);
+
+            if (success)
+            {
+                return RedirectToAction("PaymentSuccess", new { transactionReference });
+            }
+
+            return RedirectToAction("PaymentFailed");
+        }
+
+        public async Task<IActionResult> CancelPayment(string transactionReference)
+        {
+            // Cancel pending transaction
+            var success = await _paymentService.CancelPaymentAsync(transactionReference);
+
+            if (success)
+            {
+                return RedirectToAction("AddBalance");
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> PaymentSuccess(string transactionReference)
+        {
+            if (string.IsNullOrEmpty(transactionReference))
+            {
+                return RedirectToAction("PaymentFailed");
+            }
+
+            var transaction = await _paymentService.GetTransactionByReferenceAsync(transactionReference);
+            var viewModels = _mapper.Map<TransactionViewModel>(transaction);
+
+            return View(viewModels);
+        }
+
+        public IActionResult PaymentFailed()
         {
             return View();
         }

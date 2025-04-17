@@ -1,0 +1,102 @@
+﻿@model TransactionViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Payment Success";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/payment.min.css" asp-append-version="true" />
+}
+
+<div class="container payment-section payment-status py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Payment Successful</h5>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Success Icon -->
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+
+                    <h4 class="payment-status-title success mt-4">Payment Successful!</h4>
+
+                    @if (Model.Type == "TopUp")
+                    {
+                        <p class="payment-status-message">Your wallet has been topped up with <span class="taka-icon">৳</span>@Model.Amount</p>
+                    }
+                    else
+                    {
+                        <p class="payment-status-message">You have paid <span class="taka-icon">৳</span>@Model.Amount for QR Ticket</p>
+                    }
+
+                    <div class="transaction-details">
+                        <h5>Transaction Details:</h5>
+                        <div class="details-row">
+                            <div class="details-label">Transaction ID</div>
+                            <div class="details-value transaction-id">@Model.TransactionReference</div>
+                        </div>
+                        <div class="details-row">
+                            <div class="details-label">Date & Time</div>
+                            <div class="details-value">@TimeZoneInfo.ConvertTimeFromUtc(Model.Date, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
+                        </div>
+                        <div class="details-row">
+                            <div class="details-label">Payment Method</div>
+                            <div class="details-value">@Model.PaymentMethod</div>
+                        </div>
+                        <div class="details-row">
+                            <div class="details-label">Amount</div>
+                            <div class="details-value"><span class="taka-icon">৳</span>@Model.Amount</div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="btn btn-primary">Return to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Transaction Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Transaction Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="transaction-summary">
+                        <div class="transaction-row">
+                            <div class="transaction-label">Amount</div>
+                            <div class="transaction-value"><span class="taka-icon">৳</span>@Model.Amount</div>
+                        </div>
+                        <div class="transaction-row">
+                            <div class="transaction-label">Fee</div>
+                            <div class="transaction-value"><span class="taka-icon">৳</span>0</div>
+                        </div>
+                        <div class="transaction-divider"></div>
+                        <div class="transaction-row total">
+                            <div class="transaction-label">Total</div>
+                            <div class="transaction-value"><span class="taka-icon">৳</span>@Model.Amount</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="help-card">
+                <h5>Need Help?</h5>
+                <p>If you're having trouble adding balance to your account, please contact our support team.</p>
+                <button class="btn btn-outline-primary w-100">
+                    <i class="fas fa-headset me-2"></i> Contact Support
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/layout.js"></script>
+}
