@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Ticket Scanner - Dhaka Metro Rail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/scanner.min.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="scanner-container">
+        <div class="header">
+            <h2>Uttara South Station Ticket Scanner</h2>
+        </div>
+
+        <div class="scanner-sections col-xl-6">
+            <div class="scan-section">
+                <div id="scannerStatus" class="alert alert-info mt-3 w-100">Starting scanner...</div>
+                <h4 class="mb-3">Scan QR Code</h4>
+                <div class="video-container">
+                    <video id="video" autoplay playsinline></video>
+                    <div class="scan-overlay">
+                        <div class="scan-area">
+                            <div class="scan-corner top-left"></div>
+                            <div class="scan-corner top-right"></div>
+                            <div class="scan-corner bottom-left"></div>
+                            <div class="scan-corner bottom-right"></div>
+                            <div class="scan-line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scan-instructions">Position the QR code inside the box</div>
+            </div>
+
+            <div class="status-section">
+                <h4>Ticket Status</h4>
+                <div id="statusCard" class="status-card status-waiting">
+                    <h5 id="statusTitle">
+                        <i id="statusIcon" class="fas fa-spinner"></i>
+                    </h5>
+                    <p id="statusMessage">Please scan a QR code to validate a ticket</p>
+                </div>
+
+                <div id="ticketInfo" class="ticket-info" style="display: none;">
+                    <h5>Ticket Details</h5>
+                    <div class="ticket-data">
+                        <div class="ticket-row">
+                            <span>Ticket ID:</span>
+                            <span id="ticketId">-</span>
+                        </div>
+                        <div class="ticket-row">
+                            <span>User ID:</span>
+                            <span id="userId">-</span>
+                        </div>
+                        <div class="ticket-row">
+                            <span>Status:</span>
+                            <span id="ticketStatus">-</span>
+                        </div>
+                        <div class="ticket-row">
+                            <span>Scanned at:</span>
+                            <span id="scanTime">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="~/lib/jsQR.min.js"></script>
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js" integrity="sha512-V8Nt2yzf+o5HFL/H9N0U4yW2+XdiTuaZoq1IOjTOsbBBxBU/chdEMDfHXQ3UQDEa2mKXkPWHr+AYYjJUI0/MpA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@
+    <script src="~/js/scanner.js"></script>
+</body>
+</html>
+

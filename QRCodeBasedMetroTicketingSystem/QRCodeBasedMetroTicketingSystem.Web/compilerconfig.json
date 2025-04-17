@@ -24,6 +24,10 @@
     "inputFile": "wwwroot/css/my-account.scss"
   },
   {
+    "outputFile": "wwwroot/css/Scanner.css",
+    "inputFile": "wwwroot/css/Scanner.scss"
+  },
+  {
     "outputFile": "wwwroot/css/payment.css",
     "inputFile": "wwwroot/css/payment.scss"
   }
