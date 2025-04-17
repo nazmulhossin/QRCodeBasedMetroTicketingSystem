@@ -22,5 +22,9 @@
   {
     "outputFile": "wwwroot/css/my-account.css",
     "inputFile": "wwwroot/css/my-account.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/Scanner.css",
+    "inputFile": "wwwroot/css/Scanner.scss"
   }
 ]
