@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function processQRCode(token) {
         try {
-            const response = await fetch('/ticket/scan', {
+            const response = await fetch('/System/Scanner/ScanTicket', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ Token: token })
