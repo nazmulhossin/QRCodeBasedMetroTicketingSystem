@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
@@ -87,14 +86,18 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CompletePayment(string transactionReference, PaymentMethod paymentMethod)
+        public async Task<IActionResult> CompletePayment(CompletePaymentViewModel model)
         {
-            // Verify payment with payment gateway
-            var success = await _paymentService.VerifyPaymentAsync(transactionReference, paymentMethod);
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("PaymentFailed");
+            }
 
+            // Verify payment with payment gateway
+            var success = await _paymentService.VerifyPaymentAsync(model.TransactionReference, model.PaymentMethod);
             if (success)
             {
-                return RedirectToAction("PaymentSuccess", new { transactionReference });
+                return RedirectToAction("PaymentSuccess", new { model.TransactionReference });
             }
 
             return RedirectToAction("PaymentFailed");
