@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/css/layout.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QRCodeBasedMetroTicketingSystem.Web.styles.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -43,16 +42,19 @@
                 <div class="d-flex align-items-center">
                     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("User"))
                     {
-                        <a class="nav-link shopping-badge" href="#">
+                        <a class="nav-link shopping-badge me-3" href="#">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span class="badge rounded-pill">5</span>
                         </a>
-                        <a class="nav-link" href="#">
-                            <span class="balance-pill">Balance: <span class="taka-icon">৳</span>500</span>
-                        </a>
+                        <button id="balanceBtn" class="balance-btn me-3">
+                            <span class="balance-container">
+                                <span class="taka-icon">৳</span>
+                                <span id="balanceText" class="balanceText">Tap for Balance</span>
+                            </span>
+                        </button>
                         <div class="dropdown">
                             <button class="nav-link dropdown-toggle d-flex align-items-center ps-0 ps-sm-2 pe-0" id="profileDropdown"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
                                 <i class="fa-solid fa-user me-2"></i> 
                                 <span class="d-none d-sm-inline">
                                     @(User.Identity?.Name?.Length > 15 ? User.Identity.Name.Substring(0, 15) + "..." : User.Identity?.Name)
@@ -60,13 +62,8 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
                                 <li><a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="dropdown-item"><i class="fas fa-user me-2"></i> My Account</a></li>
+                                <li><a asp-area="User" asp-controller="Wallet" asp-action="Index" class="dropdown-item"><i class="fas fa-wallet me-2"></i> My Wallet</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-history me-2"></i> Trip History</a></li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-money-bill-transfer me-2"></i> Recharge
-                                        History
-                                    </a>
-                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -78,7 +75,17 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                        @if (Context.GetRouteValue("area")?.ToString() == "User")
+                        {
+                            @if (Context.GetRouteValue("controller")?.ToString() != "Wallet")
+                            {
+                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                            }
+                            else if (Context.GetRouteValue("controller")?.ToString() == "Wallet" && Context.GetRouteValue("action")?.ToString() == "Index")
+                            {
+                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                            }
+                        }
                     }
                     else
                     {
@@ -165,22 +172,7 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        const dropdownElement = document.getElementById('profileDropdown');
-        if (dropdownElement) {
-            window.handleKeyDown = function (event) {
-                const dropdown = new bootstrap.Dropdown(dropdownElement);
-
-               // Add keyboard support (Enter/Space to toggle)
-               dropdownElement.addEventListener('keydown', function (event) {
-                   if (event.key === 'Enter' || event.key === ' ') {
-                       event.preventDefault();
-                       dropdown.toggle();
-                   }
-               });
-            };
-        }
-    </script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

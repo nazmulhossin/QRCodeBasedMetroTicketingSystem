@@ -48,6 +48,12 @@
                             </a>
                         </li>
                         <li class="menu-item">
+                            <a asp-area="User" asp-controller="Wallet" asp-action="Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-wallet"></i></span>
+                                <span class="text">My Wallet</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
                             <a href="#payment">
                                 <span class="icon"><i class="fas fa-credit-card"></i></span>
                                 <span class="text">Payment Methods</span>
@@ -85,18 +91,6 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            const $sidebar = $('#userSidebar');
-
-            $('#openUserSidebarBtn').on('click', function () {
-                $sidebar.addClass('show-user-sidebar');
-            });
-
-            $('#closeUserSidebarBtn').on('click', function () {
-                $sidebar.removeClass('show-user-sidebar');
-            });
-        });
-    </script>
+    <script src="~/js/my-account.js" asp-append-version="true"></script>
 }
 

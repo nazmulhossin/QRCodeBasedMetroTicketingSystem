@@ -1,0 +1,276 @@
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+
+    .card-header {
+        background-color: white;
+        border-bottom: 1px solid var(--gray-light);
+        padding: 1rem 1.5rem;
+
+        h5 {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+}
+
+/* Transaction Summary Styles*/
+.transaction-summary {
+    background-color: var(--light-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    .transaction-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+
+        .transaction-label {
+            color: var(--gray-color);
+        }
+
+        .transaction-value {
+            font-weight: 500;
+        }
+
+        &.total {
+            font-weight: 600;
+        }
+    }
+
+    .transaction-divider {
+        height: 1px;
+        background-color: var(--gray-light);
+        margin: 0.5rem 0;
+    }
+}
+
+/* Help Card Styles*/
+.help-card {
+    background-color: var(--light-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+
+    h5 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: var(--gray-color);
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* Enter amount form styles*/
+.amount-form {
+    .form-label {
+        font-weight: 500;
+    }
+
+    .amount-input-wrapper {
+        position: relative;
+
+        .amount-currency {
+            position: absolute;
+            left: 0.8rem;
+            top: 55%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+        }
+
+        .amount-input {
+            padding-left: 2rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+    }
+
+    .form-info {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background-color: rgba(23, 162, 184, 0.1);
+        color: var(--info-color);
+        border-radius: 8px;
+        margin-bottom: 1.25rem;
+        font-size: 0.875rem;
+
+        i {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+    }
+
+    .payment-options {
+        margin-left: 0;
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+}
+
+/* Payment Status Styles*/
+.payment-status {
+    /* Success Icon */
+    .success-icon {
+        width: 90px;
+        height: 90px;
+        background-color: rgba(0, 106, 78, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: var(--primary-color);
+        font-size: 3.5rem;
+        position: relative;
+        animation: pulse 2s infinite;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+    /* Error Icon */
+    .error-icon {
+        width: 110px;
+        height: 110px;
+        background-color: rgba(220, 53, 69, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: var(--danger-color);
+        font-size: 3.8rem;
+        animation: shake 0.8s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        10%, 30%, 50%, 70%, 90% {
+            transform: translateX(-5px);
+        }
+
+        20%, 40%, 60%, 80% {
+            transform: translateX(5px);
+        }
+    }
+
+    .payment-status-title {
+        margin-bottom: 0.75rem;
+
+        &.success {
+            color: var(--primary-color);
+        }
+
+        &.error {
+            color: var(--danger-color);
+        }
+    }
+
+    .payment-status-message {
+        color: var(--gray-color);
+        margin-bottom: 1.5rem;
+    }
+    /* Transaction Details Styles */
+    .transaction-details {
+        background-color: var(--light-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+
+        h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .details-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .details-label {
+                color: var(--gray-color);
+            }
+
+            .details-value {
+                font-weight: 500;
+
+                &.transaction-id {
+                    font-family: monospace;
+                }
+            }
+        }
+    }
+    /* Possible Reasons Styles */
+    .possible-reasons {
+        background-color: rgba(220, 53, 69, 0.05);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+
+        h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--danger-color);
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+
+            li {
+                margin-bottom: 10px;
+                color: var(--gray-color);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

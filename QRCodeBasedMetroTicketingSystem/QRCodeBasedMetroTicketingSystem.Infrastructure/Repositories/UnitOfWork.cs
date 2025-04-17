@@ -17,20 +17,26 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public ISettingsRepository SettingsRepository { get; }
         public IUserRepository UserRepository { get; }
         public IUserTokenRepository UserTokenRepository { get; }
+        public IWalletRepository WalletRepository { get; }
+        public ITransactionRepository TransactionRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db,
                           IStationRepository stationRepository,
                           IStationDistanceRepository stationDistanceRepository,
                           ISettingsRepository settingsRepository,
                           IUserRepository userRepository,
-                          IUserTokenRepository userTokenRepository)
+                          IUserTokenRepository userTokenRepository,
+                          IWalletRepository walletRepository,
+                          ITransactionRepository transactionRepository)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
-            StationRepository = stationRepository ?? throw new ArgumentNullException(nameof(stationRepository));
-            StationDistanceRepository = stationDistanceRepository ?? throw new ArgumentNullException(nameof(stationDistanceRepository));
-            SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _db = db;
+            StationRepository = stationRepository;
+            StationDistanceRepository = stationDistanceRepository;
+            SettingsRepository = settingsRepository;
             UserRepository = userRepository;
             UserTokenRepository = userTokenRepository;
+            WalletRepository = walletRepository;
+            TransactionRepository = transactionRepository;
         }
 
         public async Task<int> SaveChangesAsync()

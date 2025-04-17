@@ -13,6 +13,8 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Mapping
             CreateMap<SettingsDto, Settings>().ReverseMap();
             CreateMap<RegisterUserDto, User>().ReverseMap();
             CreateMap<UserDto, User>().ReverseMap();
+            CreateMap<WalletDto, Wallet>().ReverseMap();
+            CreateMap<TransactionDto, Transaction>().ReverseMap();
         }
     }
 }

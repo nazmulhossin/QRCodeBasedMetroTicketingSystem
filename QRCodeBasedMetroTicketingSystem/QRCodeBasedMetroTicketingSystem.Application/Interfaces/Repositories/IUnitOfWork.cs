@@ -7,6 +7,8 @@
         ISettingsRepository SettingsRepository { get; }
         IUserRepository UserRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        ITransactionRepository TransactionRepository { get; }
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

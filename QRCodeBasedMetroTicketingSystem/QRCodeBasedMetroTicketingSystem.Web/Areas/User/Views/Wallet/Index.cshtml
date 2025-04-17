@@ -1,0 +1,86 @@
+﻿@model WalletViewModel
+
+@{
+    ViewData["Title"] = "My Wallet";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
+}
+
+<div class="content-wrapper my-wallet-section">
+    <div class="content-header">
+        <h2 class="content-title">My Wallet</h2>
+        <div class="content-action">
+            <button class="btn btn-outline-primary refresh-btn">
+                <i class="fas fa-sync-alt me-2"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Wallet Balance Card -->
+    <div class="wallet-balance-card">
+        <div class="pattern"></div>
+        <div class="content">
+            <div class="label">Current Balance</div>
+            <div class="amount"><span class="taka-icon">৳</span>@Model.Balance</div>
+            <div class="actions">
+                <a asp-area="User" asp-controller="Wallet" asp-action="AddBalance" class="btn add-balance-btn"><i class="fas fa-plus"></i> Add Balance</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="history-card">
+        <div class="history-header">
+            <h3>Recent Transactions</h3>
+            <a href="#" class="arrow-card-action">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <ul class="history-list">
+            @if (Model.RecentTransactions.Any())
+            {
+                @foreach (var transaction in Model.RecentTransactions)
+                {
+                    <li>
+                        @if (transaction.Type == "TopUp")
+                        {
+                            <div class="icon top-up"><i class="fas fa-wallet"></i></div>
+                        }
+                        else if (transaction.Type == "Payment")
+                        {
+                            if (transaction.PaymentFor == "RapidPass")
+                            {
+                                <div class="icon trip"><i class="fas fa-subway"></i></div>
+                            }
+                            else
+                            {
+                                <div class="icon ticket"><i class="fa-solid fa-ticket"></i></div>
+                            }
+                        }
+                        else if (transaction.Type == "Refund")
+                        {
+                            <div class="icon refund"><i class="fas fa-undo"></i></div>
+                        }
+                        else
+                        {
+                            <div class="icon penalty"><i class="fa-solid fa-xmark"></i></div>
+                        }
+                        <div class="content">
+                            <div class="text">@transaction.Description</div>
+                            <div class="time">@TimeZoneInfo.ConvertTimeFromUtc(transaction.Date, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
+                        </div>
+                        @if (transaction.Type == "TopUp" || transaction.Type == "Refund")
+                        {
+                            <div class="amount credit">+<small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                        else
+                        {
+                            <div class="amount debit">-<small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                    </li>
+                }
+            }
+            else
+            {
+                <li>No transactions found</li>
+            }
+        </ul>
+    </div>
+</div>

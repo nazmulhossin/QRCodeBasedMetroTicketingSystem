@@ -141,11 +141,97 @@
   }
 }
 
+/* Common Styles */
+/* History (i.e., Transaction History or Recent Activity) Styles*/
+.history-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-top: 25px;
+}
+.history-card .history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.history-card .history-header h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0;
+}
+.history-card .history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.history-card .history-list li {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+.history-card .history-list li:last-child {
+  border-bottom: none;
+}
+.history-card .history-list li .icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.history-card .history-list li .icon.top-up {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success-color);
+}
+.history-card .history-list li .icon.ticket {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--warning-color);
+}
+.history-card .history-list li .icon.trip {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: var(--info-color);
+}
+.history-card .history-list li .icon.refund {
+  background-color: rgba(244, 42, 65, 0.1);
+  color: var(--secondary-color);
+}
+.history-card .history-list li .content {
+  flex-grow: 1;
+}
+.history-card .history-list li .content .text {
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+.history-card .history-list li .content .time {
+  font-size: 0.85rem;
+  color: var(--gray-color);
+}
+.history-card .history-list li .amount {
+  font-weight: 600;
+  margin-left: auto;
+  padding-left: 15px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.history-card .history-list li .amount.credit {
+  color: var(--success-color);
+}
+.history-card .history-list li .amount.debit {
+  color: var(--danger-color);
+}
+
 /* Dashboard Overview Styles*/
 .dashboard-section {
   /* Stats Cards */
   /* Quick Actions */
-  /* Recent Activity */
   /* Responsive Adjustments */
 }
 .dashboard-section .stats-card {
@@ -248,92 +334,66 @@
   font-weight: 500;
   font-size: 0.9rem;
 }
-.dashboard-section .activity-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin-top: 25px;
-}
-.dashboard-section .activity-card .activity-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.dashboard-section .activity-card .activity-header h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--dark-color);
-  margin: 0;
-}
-.dashboard-section .activity-card .activity-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.dashboard-section .activity-card .activity-list .activity-item {
-  display: flex;
-  align-items: flex-start;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-}
-.dashboard-section .activity-card .activity-list .activity-item:last-child {
-  border-bottom: none;
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-icon.ticket {
-  background-color: rgba(255, 193, 7, 0.1);
-  color: var(--warning-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-icon.trip {
-  background-color: rgba(23, 162, 184, 0.1);
-  color: var(--info-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-icon.payment {
-  background-color: rgba(40, 167, 69, 0.1);
-  color: var(--success-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-icon.refund {
-  background-color: rgba(244, 42, 65, 0.1);
-  color: var(--secondary-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-content {
-  flex-grow: 1;
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-content .activity-text {
-  font-size: 0.95rem;
-  margin-bottom: 5px;
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-content .activity-time {
-  font-size: 0.85rem;
-  color: var(--gray-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-amount {
-  font-weight: 600;
-  margin-left: auto;
-  padding-left: 15px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-amount.credit {
-  color: var(--success-color);
-}
-.dashboard-section .activity-card .activity-list .activity-item .activity-amount.debit {
-  color: var(--danger-color);
-}
 @media (max-width: 576px) {
   .dashboard-section .stats-card {
     padding: 15px;
   }
+}
+
+/* My Wallet Styles*/
+.my-wallet-section {
+  /* Wallet Balance Card */
+}
+.my-wallet-section .wallet-balance-card {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.my-wallet-section .wallet-balance-card .pattern {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.1;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.my-wallet-section .wallet-balance-card .content {
+  position: relative;
+  z-index: 1;
+}
+.my-wallet-section .wallet-balance-card .content .label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+.my-wallet-section .wallet-balance-card .content .amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+.my-wallet-section .wallet-balance-card .content .amount .taka-icon {
+  font-weight: 600;
+}
+.my-wallet-section .wallet-balance-card .content .actions .add-balance-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  padding: 0.75rem 1.6rem;
+  font-weight: 500;
+  width: fit-content;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.my-wallet-section .wallet-balance-card .content .actions .add-balance-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.my-wallet-section .wallet-balance-card .content .actions .add-balance-btn i {
+  margin-right: 0.5rem;
 }
