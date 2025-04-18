@@ -22,19 +22,19 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var settingsDto = await _settingsService.GetCurrentSettingsAsync();
-            var viewModel = _mapper.Map<SettingsViewModel>(settingsDto);
+            var viewModel = _mapper.Map<SystemSettingsViewModel>(settingsDto);
             return View(viewModel);
         }
 
         public async Task<IActionResult> Edit()
         {
             var settingsDto = await _settingsService.GetCurrentSettingsAsync();
-            var viewModel = _mapper.Map<SettingsViewModel>(settingsDto);
+            var viewModel = _mapper.Map<SystemSettingsViewModel>(settingsDto);
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(SettingsViewModel viewModel)
+        public async Task<IActionResult> Edit(SystemSettingsViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {

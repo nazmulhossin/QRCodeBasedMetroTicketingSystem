@@ -14,7 +14,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 
         public IStationRepository StationRepository { get; }
         public IStationDistanceRepository StationDistanceRepository { get; }
-        public ISystemSettingsRepository SettingsRepository { get; }
+        public ISystemSettingsRepository SystemSettingsRepository { get; }
         public IUserRepository UserRepository { get; }
         public IUserTokenRepository UserTokenRepository { get; }
         public IWalletRepository WalletRepository { get; }
@@ -32,7 +32,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             _db = db;
             StationRepository = stationRepository;
             StationDistanceRepository = stationDistanceRepository;
-            SettingsRepository = settingsRepository;
+            SystemSettingsRepository = settingsRepository;
             UserRepository = userRepository;
             UserTokenRepository = userTokenRepository;
             WalletRepository = walletRepository;

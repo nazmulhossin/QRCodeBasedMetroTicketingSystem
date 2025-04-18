@@ -12,8 +12,8 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250407155816_AddUserTokensTable")]
-    partial class AddUserTokensTable
+    [Migration("20250418075956_AddMoreTables")]
+    partial class AddMoreTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,53 +24,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Settings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("FarePerKm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinFare")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("QrCodeTicketValidTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QrCodeValidTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripTimeLimit")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            FarePerKm = 5.0000m,
-                            MinFare = 20.0000m,
-                            QrCodeTicketValidTime = 2880,
-                            QrCodeValidTime = 1440,
-                            TripTimeLimit = 120,
-                            UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
-                });
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", b =>
                 {
@@ -151,6 +104,104 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.HasIndex("Station2Id");
 
                     b.ToTable("StationDistances");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.SystemSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FarePerKm")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MaxTripDurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("MinFare")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("QrTicketValidityMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RapidPassQrCodeValidityMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TimeLimitPenaltyFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FarePerKm = 5.0000m,
+                            MaxTripDurationMinutes = 120,
+                            MinFare = 20.0000m,
+                            QrTicketValidityMinutes = 2880,
+                            RapidPassQrCodeValidityMinutes = 1440,
+                            TimeLimitPenaltyFee = 100.00m,
+                            UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("PaymentFor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionReference")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", b =>
@@ -235,6 +286,34 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.ToTable("UserTokens");
                 });
 
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Wallets");
+                });
+
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.StationDistance", b =>
                 {
                     b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", "Station1")
@@ -252,6 +331,39 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Navigation("Station1");
 
                     b.Navigation("Station2");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", "Wallet")
+                        .WithMany("Transactions")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", b =>
+                {
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", "User")
+                        .WithOne("Wallet")
+                        .HasForeignKey("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Wallet")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

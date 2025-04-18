@@ -31,33 +31,32 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             }
 
             // Cache miss - Fetch settings from the database
-            var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
-            settings ??= new SystemSettings(); // Default settings
+            var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+            systemSettings ??= new SystemSettings(); // Default settings
 
-            var settingsDto = _mapper.Map<SystemSettingsDto>(settings);
-            await _cacheService.SetAsync(CacheKey, settingsDto);
+            var systemSettingsDto = _mapper.Map<SystemSettingsDto>(systemSettings);
+            await _cacheService.SetAsync(CacheKey, systemSettingsDto);
 
-            return settingsDto;
+            return systemSettingsDto;
         }
 
-        public async Task<Result> UpdateSettingsAsync(SystemSettingsDto settingsDto)
+        public async Task<Result> UpdateSettingsAsync(SystemSettingsDto systemSettingsDto)
         {
+            await _unitOfWork.BeginTransactionAsync();
             try
             {
-                await _unitOfWork.BeginTransactionAsync();
-
-                var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
-                if (settings == null)
+                var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+                if (systemSettings == null)
                 {
                     return Result.Failure("An error occurred while updating the settings.");
                 }
 
-                settings.MinFare = settingsDto.MinFare;
-                settings.FarePerKm = settingsDto.FarePerKm;
-                settings.RapidPassQrCodeValidityMinutes = settingsDto.RapidPassQrCodeValidityMinutes;
-                settings.QrTicketValidityMinutes = settingsDto.QrTicketValidityMinutes;
-                settings.MaxTripDurationMinutes = settingsDto.MaxTripDurationMinutes;
-                settings.TimeLimitPenaltyFee = settingsDto.TimeLimitPenaltyFee;
+                systemSettings.MinFare = systemSettingsDto.MinFare;
+                systemSettings.FarePerKm = systemSettingsDto.FarePerKm;
+                systemSettings.RapidPassQrCodeValidityMinutes = systemSettingsDto.RapidPassQrCodeValidityMinutes;
+                systemSettings.QrTicketValidityMinutes = systemSettingsDto.QrTicketValidityMinutes;
+                systemSettings.MaxTripDurationMinutes = systemSettingsDto.MaxTripDurationMinutes;
+                systemSettings.TimeLimitPenaltyFee = systemSettingsDto.TimeLimitPenaltyFee;
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
