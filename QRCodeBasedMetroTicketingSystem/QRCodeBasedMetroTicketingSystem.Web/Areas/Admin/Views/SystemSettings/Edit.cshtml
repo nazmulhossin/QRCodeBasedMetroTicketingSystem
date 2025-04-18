@@ -1,4 +1,4 @@
-﻿@model SettingsViewModel
+﻿@model SystemSettingsViewModel
 
 @{
     ViewData["Title"] = "Edit System Settings";
@@ -20,39 +20,44 @@
             <div class="card shadow-sm p-3">
                 <div class="card-body">
                     <form asp-area="Admin" asp-controller="SystemSettings" asp-action="Edit" method="POST">
-                        <div class="row">
-                            <div class="col-md-6 mb-3 pe-3">
+                        <div class="row mb-3">
+                            <div class="col-md-6 pe-3">
                                 <label asp-for="MinFare" class="form-label">Minimum Fare (TK)</label>
                                 <input asp-for="MinFare" class="form-control" step="0.000001" min="0" required />
                                 <span asp-validation-for="MinFare" class="text-danger"></span>
                             </div>
 
-                            <div class="col-md-6 mb-3 ps-3">
+                            <div class="col-md-6 ps-3">
                                 <label asp-for="FarePerKm" class="form-label">Fare Per Kilometer (TK)</label>
                                 <input asp-for="FarePerKm" class="form-control" step="0.000001" min="0" required />
                                 <span asp-validation-for="FarePerKm" class="text-danger"></span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3 pe-3">
-                                <label asp-for="QrCodeValidTime" class="form-label">QR Code Valid Time (Minutes)</label>
-                                <input asp-for="QrCodeValidTime" class="form-control" step="1" min="1" required />
-                                <span asp-validation-for="QrCodeValidTime" class="text-danger"></span>
+                        <div class="row mb-3">
+                            <div class="col-md-6 pe-3">
+                                <label asp-for="RapidPassQrCodeValidityMinutes" class="form-label">Rapid Pass QR Code Validity (minutes)</label>
+                                <input asp-for="RapidPassQrCodeValidityMinutes" class="form-control" step="1" min="1" required />
+                                <span asp-validation-for="RapidPassQrCodeValidityMinutes" class="text-danger"></span>
                             </div>
 
-                            <div class="col-md-6 mb-3 ps-3">
-                                <label asp-for="QrCodeTicketValidTime">QR Code Ticket Valid Time (Minutes)</label>
-                                <input asp-for="QrCodeTicketValidTime" class="form-control" step="1" min="1" required/>
-                                <span asp-validation-for="QrCodeTicketValidTime" class="text-danger"></span>
+                            <div class="col-md-6 ps-3">
+                                <label asp-for="QrTicketValidityMinutes">QR Ticket Validity (minutes)</label>
+                                <input asp-for="QrTicketValidityMinutes" class="form-control" step="1" min="1" required />
+                                <span asp-validation-for="QrTicketValidityMinutes" class="text-danger"></span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3 pe-3">
-                                <label asp-for="TripTimeLimit" class="form-label">Time Limit for a Single Trip (Minutes)</label>
-                                <input asp-for="TripTimeLimit" class="form-control" step="1" min="1" required />
-                                <span asp-validation-for="TripTimeLimit" class="text-danger"></span>
+                        <div class="row mb-3">
+                            <div class="col-md-6 pe-3">
+                                <label asp-for="MaxTripDurationMinutes" class="form-label">Maximum Trip Duration (minutes)</label>
+                                <input asp-for="MaxTripDurationMinutes" class="form-control" step="1" min="1" required />
+                                <span asp-validation-for="MaxTripDurationMinutes" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 ps-3">
+                                <label asp-for="TimeLimitPenaltyFee" class="form-label">Time Limit Penalty Fee (Tk)</label>
+                                <input asp-for="TimeLimitPenaltyFee" class="form-control" step="1" min="0" required />
+                                <span asp-validation-for="TimeLimitPenaltyFee" class="text-danger"></span>
                             </div>
                         </div>
 

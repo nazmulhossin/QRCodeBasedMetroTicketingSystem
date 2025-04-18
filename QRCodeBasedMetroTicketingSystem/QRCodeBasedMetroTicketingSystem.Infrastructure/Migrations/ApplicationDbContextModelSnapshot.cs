@@ -22,53 +22,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Settings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("FarePerKm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinFare")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("QrCodeTicketValidTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QrCodeValidTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripTimeLimit")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            FarePerKm = 5.0000m,
-                            MinFare = 20.0000m,
-                            QrCodeTicketValidTime = 2880,
-                            QrCodeValidTime = 1440,
-                            TripTimeLimit = 120,
-                            UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
-                });
-
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", b =>
                 {
                     b.Property<int>("Id")
@@ -148,6 +101,57 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.HasIndex("Station2Id");
 
                     b.ToTable("StationDistances");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.SystemSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FarePerKm")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MaxTripDurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("MinFare")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("QrTicketValidityMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RapidPassQrCodeValidityMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TimeLimitPenaltyFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FarePerKm = 5.0000m,
+                            MaxTripDurationMinutes = 120,
+                            MinFare = 20.0000m,
+                            QrTicketValidityMinutes = 2880,
+                            RapidPassQrCodeValidityMinutes = 1440,
+                            TimeLimitPenaltyFee = 100.00m,
+                            UpdatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Transaction", b =>

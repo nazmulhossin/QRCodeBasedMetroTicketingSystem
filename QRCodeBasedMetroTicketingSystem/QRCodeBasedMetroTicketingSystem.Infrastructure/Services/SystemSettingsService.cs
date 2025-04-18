@@ -21,42 +21,42 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<SettingsDto> GetCurrentSettingsAsync()
+        public async Task<SystemSettingsDto> GetCurrentSettingsAsync()
         {
             // Try to get settings from cache
-            var cachedSettings = await _cacheService.GetAsync<SettingsDto>(CacheKey);
+            var cachedSettings = await _cacheService.GetAsync<SystemSettingsDto>(CacheKey);
             if (cachedSettings != null)
             {
                 return cachedSettings;
             }
 
             // Cache miss - Fetch settings from the database
-            var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
-            settings ??= new Settings(); // Default settings
+            var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+            systemSettings ??= new SystemSettings(); // Default settings
 
-            var settingsDto = _mapper.Map<SettingsDto>(settings);
-            await _cacheService.SetAsync(CacheKey, settingsDto);
+            var systemSettingsDto = _mapper.Map<SystemSettingsDto>(systemSettings);
+            await _cacheService.SetAsync(CacheKey, systemSettingsDto);
 
-            return settingsDto;
+            return systemSettingsDto;
         }
 
-        public async Task<Result> UpdateSettingsAsync(SettingsDto settingsDto)
+        public async Task<Result> UpdateSettingsAsync(SystemSettingsDto systemSettingsDto)
         {
+            await _unitOfWork.BeginTransactionAsync();
             try
             {
-                await _unitOfWork.BeginTransactionAsync();
-
-                var settings = await _unitOfWork.SettingsRepository.GetCurrentSettingsAsync();
-                if (settings == null)
+                var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+                if (systemSettings == null)
                 {
                     return Result.Failure("An error occurred while updating the settings.");
                 }
 
-                settings.MinFare = settingsDto.MinFare;
-                settings.FarePerKm = settingsDto.FarePerKm;
-                settings.QrCodeValidTime = settingsDto.QrCodeValidTime;
-                settings.QrCodeTicketValidTime = settingsDto.QrCodeTicketValidTime;
-                settings.TripTimeLimit = settingsDto.TripTimeLimit;
+                systemSettings.MinFare = systemSettingsDto.MinFare;
+                systemSettings.FarePerKm = systemSettingsDto.FarePerKm;
+                systemSettings.RapidPassQrCodeValidityMinutes = systemSettingsDto.RapidPassQrCodeValidityMinutes;
+                systemSettings.QrTicketValidityMinutes = systemSettingsDto.QrTicketValidityMinutes;
+                systemSettings.MaxTripDurationMinutes = systemSettingsDto.MaxTripDurationMinutes;
+                systemSettings.TimeLimitPenaltyFee = systemSettingsDto.TimeLimitPenaltyFee;
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
@@ -64,10 +64,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
                 return Result.Success("System settings detail updated successfully.");
             }
-            catch (Exception ex)
+            catch
             {
                 await _unitOfWork.RollbackTransactionAsync();
-                return Result.Failure($"An error occurred while updating the settings: {ex.Message}");
+                return Result.Failure("An error occurred while updating the settings.");
             }
         }
     }  

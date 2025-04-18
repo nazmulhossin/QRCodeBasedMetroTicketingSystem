@@ -5,7 +5,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
 {
     public interface ISystemSettingsService
     {
-        Task<SettingsDto> GetCurrentSettingsAsync();
-        Task<Result> UpdateSettingsAsync(SettingsDto settingsDto);
+        Task<SystemSettingsDto> GetCurrentSettingsAsync();
+        Task<Result> UpdateSettingsAsync(SystemSettingsDto settingsDto);
     }
 }

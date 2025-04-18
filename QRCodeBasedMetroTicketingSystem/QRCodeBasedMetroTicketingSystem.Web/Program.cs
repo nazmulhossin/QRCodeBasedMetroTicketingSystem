@@ -52,7 +52,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStationRepository, StationRepository>();
 builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
-builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+builder.Services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();

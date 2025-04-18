@@ -5,18 +5,18 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 {
-    public class SettingsRepository : Repository<Settings>, ISettingsRepository
+    public class SystemSettingsRepository : Repository<SystemSettings>, ISystemSettingsRepository
     {
-        public SettingsRepository(ApplicationDbContext context) : base(context)
+        public SystemSettingsRepository(ApplicationDbContext context) : base(context)
         {
         }
 
-        public async Task<Settings?> GetCurrentSettingsAsync()
+        public async Task<SystemSettings?> GetCurrentSettingsAsync()
         {
             return await _dbSet.FirstOrDefaultAsync();
         }
 
-        public async Task UpdateSettingsAsync(Settings settings)
+        public async Task UpdateSettingsAsync(SystemSettings settings)
         {
             _dbSet.Update(settings);
         }
