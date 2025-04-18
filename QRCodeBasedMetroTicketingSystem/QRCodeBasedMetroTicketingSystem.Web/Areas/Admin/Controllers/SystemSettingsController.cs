@@ -41,7 +41,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
                 return View(viewModel);
             }
 
-            var settingsDto = _mapper.Map<SettingsDto>(viewModel);
+            var settingsDto = _mapper.Map<SystemSettingsDto>(viewModel);
             var result = await _settingsService.UpdateSettingsAsync(settingsDto);
 
             if (result.IsSuccess)

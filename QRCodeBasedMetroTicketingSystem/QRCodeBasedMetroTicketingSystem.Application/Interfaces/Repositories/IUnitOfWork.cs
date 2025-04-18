@@ -4,7 +4,7 @@
     {
         IStationRepository StationRepository { get; }
         IStationDistanceRepository StationDistanceRepository { get; }
-        ISettingsRepository SettingsRepository { get; }
+        ISystemSettingsRepository SettingsRepository { get; }
         IUserRepository UserRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
         IWalletRepository WalletRepository { get; }
