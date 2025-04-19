@@ -4,7 +4,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
 {
     public interface ISystemSettingsRepository : IRepository<SystemSettings>
     {
-        Task<SystemSettings?> GetCurrentSettingsAsync();
+        Task<SystemSettings?> GetSystemSettingsAsync();
         Task UpdateSettingsAsync(SystemSettings settings);
     }
 }

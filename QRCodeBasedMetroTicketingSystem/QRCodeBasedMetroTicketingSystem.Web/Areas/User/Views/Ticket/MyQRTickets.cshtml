@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "My QR Ticket";
+}
+
+<div class="content-wrapper my-qr-ticket-section">
+    <div class="content-header">
+        <h2 class="content-title">My QR Tickets</h2>
+    </div>
+
+    <div class="ticket-card active">
+        <div class="ticket-header">
+            <h3 class="ticket-title">Uttara North to Agargaon</h3>
+            <span class="ticket-status active">Active</span>
+        </div>
+        <div class="ticket-details">
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">From</div>
+                <div class="ticket-info-value">Uttara North</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">To</div>
+                <div class="ticket-info-value">Agargaon</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">Valid Until</div>
+                <div class="ticket-info-value">Today, 11:30 PM</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">Fare</div>
+                <div class="ticket-info-value"><span class="taka-icon">৳</span>60</div>
+            </div>
+        </div>
+        <div class="ticket-actions">
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-download me-2"></i> Download
+            </button>
+            <button class="btn btn-primary" id="showQrTicketBtn">
+                <i class="fas fa-qrcode me-2"></i> Show QR
+            </button>
+        </div>
+    </div>
+
+    <div class="ticket-card expired">
+        <div class="ticket-header">
+            <h3 class="ticket-title">Mirpur 10 to Agargaon</h3>
+            <span class="ticket-status expired">Expired</span>
+        </div>
+        <div class="ticket-details">
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">Ticket ID</div>
+                <div class="ticket-info-value">MR-2023-06-14-003</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">From</div>
+                <div class="ticket-info-value">Mirpur 10</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">To</div>
+                <div class="ticket-info-value">Agargaon</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">Valid Until</div>
+                <div class="ticket-info-value">Yesterday, 11:30 PM</div>
+            </div>
+            <div class="ticket-info-row">
+                <div class="ticket-info-label">Fare</div>
+                <div class="ticket-info-value"><span class="taka-icon">৳</span>40</div>
+            </div>
+        </div>
+        <div class="ticket-actions">
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-download me-2"></i> Download
+            </button>
+            <button class="btn btn-primary" id="showQrTicketBtn">
+                <i class="fas fa-qrcode me-2"></i> QR Ticket
+            </button>
+        </div>
+    </div>
+</div>

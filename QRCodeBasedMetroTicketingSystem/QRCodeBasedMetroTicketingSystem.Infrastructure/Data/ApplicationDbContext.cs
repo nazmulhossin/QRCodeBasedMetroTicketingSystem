@@ -16,6 +16,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Trip> Trips { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +65,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
             modelBuilder.Entity<User>()
                 .HasIndex(s => s.PhoneNumber)
                 .IsUnique();
+
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

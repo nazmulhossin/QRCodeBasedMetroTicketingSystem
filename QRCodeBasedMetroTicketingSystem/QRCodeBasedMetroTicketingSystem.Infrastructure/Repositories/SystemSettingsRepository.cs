@@ -11,7 +11,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         {
         }
 
-        public async Task<SystemSettings?> GetCurrentSettingsAsync()
+        public async Task<SystemSettings?> GetSystemSettingsAsync()
         {
             return await _dbSet.FirstOrDefaultAsync();
         }
