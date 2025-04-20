@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
@@ -19,6 +17,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public IUserTokenRepository UserTokenRepository { get; }
         public IWalletRepository WalletRepository { get; }
         public ITransactionRepository TransactionRepository { get; }
+        public ITicketRepository TicketRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db,
                           IStationRepository stationRepository,
@@ -27,7 +26,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                           IUserRepository userRepository,
                           IUserTokenRepository userTokenRepository,
                           IWalletRepository walletRepository,
-                          ITransactionRepository transactionRepository)
+                          ITransactionRepository transactionRepository,
+                          ITicketRepository ticketRepository)
         {
             _db = db;
             StationRepository = stationRepository;
@@ -37,6 +37,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             UserTokenRepository = userTokenRepository;
             WalletRepository = walletRepository;
             TransactionRepository = transactionRepository;
+            TicketRepository = ticketRepository;
         }
 
         public async Task<int> SaveChangesAsync()

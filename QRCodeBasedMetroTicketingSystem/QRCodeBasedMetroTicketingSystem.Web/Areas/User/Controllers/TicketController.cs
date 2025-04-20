@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
 
@@ -10,10 +12,12 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
     public class TicketController : Controller
     {
         private readonly ITicketService _ticketService;
+        private readonly IMapper _mapper;
 
-        public TicketController(ITicketService ticketService)
+        public TicketController(ITicketService ticketService, IMapper mapper)
         {
             _ticketService = ticketService;
+            _mapper = mapper;
         }
 
         public IActionResult MyQrTickets()
@@ -41,9 +45,68 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> SelectPaymentMethod()
+        public IActionResult SelectPaymentOption(BuyTicketViewModel model)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> ContinuePayment(PaymentOptionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            // Purchase QR ticket
+            var transactionReference = await _ticketService.InitiatePurchaseQRTicketAsync(
+                userId.Value,
+                model.OriginStationId,
+                model.DestinationStationId,
+                model.PaymentOption.ToString());
+
+            if (model.PaymentOption == PaymentOption.AccountBalance)
+            {
+                return RedirectToAction("ConfirmPurchase", new { transactionReference });
+            }
+
+            return RedirectToAction("ConfirmPurchase", new { transactionReference });
+        }
+
+        public async Task<IActionResult> ConfirmPurchase(string transactionReference)
+        {
+            var isSuccess = await _ticketService.CompleteQRTicketPurchaseAsync(transactionReference);
+            if(isSuccess)
+            {
+                return RedirectToAction("TicketPurchaseSuccessful", new { transactionReference });
+            }
+
+            return RedirectToAction("TicketPurchaseFailed", new { transactionReference });
+        }
+
+        public async Task<IActionResult> TicketPurchaseSuccessful(string transactionReference)
+        {
+            var ticket = await _ticketService.GetTicketByReferenceAsync(transactionReference);
+            var viewModel = _mapper.Map<PurchaseStatusViewModel>(ticket);
+            viewModel.TransactionId = transactionReference;
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> TicketPurchaseFailed(string transactionReference)
+        {
+            var ticket = await _ticketService.GetTicketByReferenceAsync(transactionReference);
+            var viewModel = _mapper.Map<PurchaseStatusViewModel>(ticket);
+
+            return View(viewModel);
         }
     } 
 }

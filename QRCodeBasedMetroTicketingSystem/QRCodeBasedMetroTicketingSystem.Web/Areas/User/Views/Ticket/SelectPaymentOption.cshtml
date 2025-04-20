@@ -1,0 +1,101 @@
+﻿@model BuyTicketViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Select Payment Option";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/buy-qr-ticket.min.css" asp-append-version="true" />
+}
+
+<div class="container buy-qr-ticket select-payment-option">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Select Payment Option</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-area="User" asp-controller="Ticket" asp-action="ContinuePayment" method="post">
+                        <input type="hidden" name="OriginStationId" value="@Model.OriginStationId" />
+                        <input type="hidden" name="DestinationStationId" value="@Model.DestinationStationId" />
+
+                        <div class="payment-form mt-4">
+                            <!-- Account Balance Option -->
+                            <div class="payment-method-option mb-4" id="balanceOptionContainer">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentOption" id="balanceOption" value="AccountBalance">
+                                    <label class="payment-method-label w-100" for="balanceOption">
+                                        <div class="payment-icon">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        <div class="payment-option-content">
+                                            <div class="payment-title">Account Balance</div>
+                                            <div class="payment-description">Pay using your existing account balance</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Online Payment Option -->
+                            <div class="payment-method-option" id="onlineOptionContainer">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentOption" id="onlineOption" value="OnlinePayment">
+                                    <label class="payment-method-label w-100" for="onlineOption">
+                                        <div class="payment-icon">
+                                            <i class="fas fa-credit-card"></i>
+                                        </div>
+                                        <div class="payment-option-content">
+                                            <div class="payment-title">Online Payment</div>
+                                            <div class="payment-description">Pay using bKash, Nagad, Rocket, Visa Card or Mastercard</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <a href="/home#fare-checker-and-buy-qr-ticket" class="btn btn-outline-danger">Cancle</a>
+                                <button type="submit" class="btn btn-primary" id="continueBtn" disabled>
+                                    Continue <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const $balanceOption = $('#balanceOption');
+            const $onlineOption = $('#onlineOption');
+            const $balanceContainer = $('#balanceOptionContainer');
+            const $onlineContainer = $('#onlineOptionContainer');
+            const $continueBtn = $('#continueBtn');
+
+            function handlePaymentSelection() {
+                const isSelected = $balanceOption.is(':checked') || $onlineOption.is(':checked');
+                $continueBtn.prop('disabled', !isSelected);
+
+                $balanceContainer.toggleClass('selected', $balanceOption.is(':checked'));
+                $onlineContainer.toggleClass('selected', $onlineOption.is(':checked'));
+            }
+
+            $balanceOption.on('change', handlePaymentSelection);
+            $onlineOption.on('change', handlePaymentSelection);
+
+            $balanceContainer.on('click', function () {
+                $balanceOption.prop('checked', true).trigger('change');
+            });
+
+            $onlineContainer.on('click', function () {
+                $onlineOption.prop('checked', true).trigger('change');
+            });
+        });
+    </script>
+}

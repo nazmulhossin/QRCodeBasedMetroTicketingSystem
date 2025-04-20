@@ -21,6 +21,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Mapping
             CreateMap<WalletDto, WalletViewModel>().ReverseMap();
             CreateMap<TransactionDto, TransactionViewModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<TicketDto, PurchaseStatusViewModel>().ReverseMap();
         }
     }
 }

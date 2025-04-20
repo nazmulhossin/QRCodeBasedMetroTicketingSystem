@@ -11,14 +11,14 @@
 
 <div class="container buy-qr-ticket ticket-summary">
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <h5>Ticket Summary</h5>
                 </div>
                 <div class="card-body">
-                    <div class="ticket-summary mt-3">
-                        <div class="summary-route">
+                    <div class="ticket-details-container mt-3">
+                        <div class="ticket-route">
                             <div class="station">
                                 <div class="station-name">@Model.OriginStationName</div>
                                 <div class="station-label">From</div>
@@ -30,29 +30,29 @@
                             </div>
                         </div>
 
-                        <div class="summary-details">
-                            <div class="detail-item">
+                        <div class="ticket-details">
+                            <div class="ticket-detail-row">
                                 <div class="detail-label">Ticket Type</div>
                                 <div class="detail-value">@Model.TicketType</div>
                             </div>
-                            <div class="detail-item">
+                            <div class="ticket-detail-row">
                                 <div class="detail-label">Fare</div>
                                 <div class="detail-value"><span class="taka-icon">৳</span>@Model.Fare</div>
                             </div>
                         </div>
-                        <div class="summary-total">
+                        <div class="ticket-total">
                             <div class="total-label">Total Amount</div>
                             <div class="total-value"><span class="taka-icon">৳</span>@Model.Fare</div>
                         </div>
                     </div>
 
-                    <form asp-area="User" asp-controller="Ticket" asp-action="" method="post">
-                        <input name="OriginStationId" value="@Model.OriginStationId" hidden />
-                        <input name="DestinationStationId" value="@Model.DestinationStationId" hidden />
+                    <form asp-area="User" asp-controller="Ticket" asp-action="SelectPaymentOption" method="post">
+                        <input type="hidden" name="OriginStationId" value="@Model.OriginStationId" />
+                        <input type="hidden" name="DestinationStationId" value="@Model.DestinationStationId" />
 
                         <!-- Action Buttons -->
                         <div class="action-buttons">
-                            <a href="/home#fare-checker-and-buy-qr-ticket" class="btn btn-outline-secondary">Cancle</a>
+                            <a href="/home#fare-checker-and-buy-qr-ticket" class="btn btn-outline-danger">Cancle</a>
                             <button type="submit" class="btn btn-primary">Continue to Payment</button>
                         </div>
                     </form>

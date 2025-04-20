@@ -40,8 +40,8 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var wallet = await _walletService.GetWalletByUserIdAsync(userId.Value);
-            return Json(new { balance = wallet.Balance });
+            var balance = await _walletService.GetBalanceByUserIdAsync(userId.Value);
+            return Json(new { balance });
         }
 
         public IActionResult AddBalance()

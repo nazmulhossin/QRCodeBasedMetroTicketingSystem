@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     // Initialize both pairs of dropdowns with the same logic
     setupPairedDropdowns('#fromStation', '#toStation');
-    setupPairedDropdowns('#qrFromStation', '#qrToStation');
+    setupPairedDropdowns('#buyQrTicketFromStation', '#buyQrTicketToStation');
 
 // Fare Calculation
     $('#fareForm').submit(function (e) {
