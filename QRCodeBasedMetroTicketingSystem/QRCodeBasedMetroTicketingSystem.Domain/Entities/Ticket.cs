@@ -59,6 +59,7 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
         Active,
         Used,
         Expired,
-        Cancelled
+        Cancelled,
+        Pending
     }
 }

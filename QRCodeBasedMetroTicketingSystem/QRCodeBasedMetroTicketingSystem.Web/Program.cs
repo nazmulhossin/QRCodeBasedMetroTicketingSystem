@@ -72,6 +72,7 @@ builder.Services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 // Add authorization
 builder.Services.AddAuthorization();

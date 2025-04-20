@@ -24,5 +24,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _paymentService = paymentService;
             _systemSettingsService = systemSettingsService;
         }
+
+        public async Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int OriginStationId, int DestinationStationId)
+        {
+            var originStation = await _unitOfWork.StationRepository.GetStationByIdAsync(OriginStationId);
+            var destinationStation = await _unitOfWork.StationRepository.GetStationByIdAsync(DestinationStationId);
+            var fare = await _fareCalculationService.GetFareAsync(OriginStationId, DestinationStationId);
+
+            return (originStation.Name, destinationStation.Name, fare);
+        }
     }
 }
