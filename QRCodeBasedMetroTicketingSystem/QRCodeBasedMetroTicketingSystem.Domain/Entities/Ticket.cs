@@ -50,16 +50,17 @@ namespace QRCodeBasedMetroTicketingSystem.Domain.Entities
 
     public enum TicketType
     {
-        QRTicket,    // Prepaid
-        RapidPass    // Postpaid
+        QRTicket = 0,    // Prepaid
+        RapidPass = 1    // Postpaid
     }
 
     public enum TicketStatus
     {
-        Active,
-        Used,
-        Expired,
-        Cancelled,
-        Pending
+        Pending = 0,
+        Active = 1,
+        InUse = 2,
+        Used = 3,
+        Expired = 4,
+        Cancelled = 5
     }
 }

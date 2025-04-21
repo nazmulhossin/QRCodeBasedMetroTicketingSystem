@@ -1,4 +1,6 @@
-﻿@{
+﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -35,7 +37,7 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a asp-area="User" asp-controller="Ticket" asp-action="MyQRTickets" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyQRTickets" ? "active" : "")">
+                            <a asp-area="User" asp-controller="Ticket" asp-action="MyQRTickets" asp-route-status="@TicketStatus.Active" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyQrTickets" ? "active" : "")">
                                 <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
                                 <span class="text">My QR Tickets</span>
                                 <span class="badge">5</span>

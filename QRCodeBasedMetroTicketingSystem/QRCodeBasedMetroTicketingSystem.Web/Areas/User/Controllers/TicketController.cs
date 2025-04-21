@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
+using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
@@ -20,9 +21,16 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult MyQrTickets()
+        public async Task<IActionResult> MyQrTickets(TicketStatus status = TicketStatus.Active)
         {
-            return View();
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var tickets = await _ticketService.GetQrTicketsByStatusAsync(userId.Value, status);
+            var viewModel = _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> TicketSummary(BuyTicketViewModel model)

@@ -3,6 +3,7 @@ using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
+using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -31,6 +32,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _stationService = stationService;
             _systemSettingsService = systemSettingsService;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<TicketDto>> GetQrTicketsByStatusAsync(int userId, TicketStatus status)
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetQrTicketsByStatusAsync(userId, status);
+            return _mapper.Map<IEnumerable<TicketDto>>(tickets);
         }
 
         public async Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int originStationId, int destinationStationId)
