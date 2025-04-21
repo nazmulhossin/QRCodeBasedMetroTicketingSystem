@@ -67,7 +67,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 return Unauthorized();
 
             // Purchase QR ticket
-            var transactionReference = await _ticketService.InitiatePurchaseQRTicketAsync(
+            var (transactionReference, amount) = await _ticketService.InitiatePurchaseQRTicketAsync(
                 userId.Value,
                 model.OriginStationId,
                 model.DestinationStationId,
@@ -78,7 +78,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 return RedirectToAction("ConfirmPurchase", new { transactionReference });
             }
 
-            return RedirectToAction("ConfirmPurchase", new { transactionReference });
+            return RedirectToAction("EnterPaymentDetails", "Payment", new { transactionReference, amount });
         }
 
         public async Task<IActionResult> ConfirmPurchase(string transactionReference)

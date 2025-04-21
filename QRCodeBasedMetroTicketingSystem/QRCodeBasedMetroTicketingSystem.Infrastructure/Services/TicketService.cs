@@ -42,7 +42,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return (originStation.Name, destinationStation.Name, fare);
         }
 
-        public async Task<string?> InitiatePurchaseQRTicketAsync(int userId, int originStationId, int destinationStationId, string paymentOption)
+        public async Task<(string TransactionReference, decimal Amount)> InitiatePurchaseQRTicketAsync(int userId, int originStationId, int destinationStationId, string paymentOption)
         {
             var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
             int fare = await _fareCalculationService.GetFareAsync(originStationId, destinationStationId);
@@ -56,7 +56,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 WalletId = wallet.Id,
                 Amount = fare,
                 Type = TransactionType.Payment,
-                PaymentMethod = PaymentMethod.AccountBalance,
                 PaymentFor = PaymentItem.QRTicket,
                 Status = TransactionStatus.Pending,
                 TransactionReference = Guid.NewGuid().ToString(),
@@ -96,7 +95,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             ticket.QRCodeData = GenerateQRCodeDataAsync(ticket.Id, userId, TicketType.QRTicket);
             await _unitOfWork.SaveChangesAsync();
 
-            return transaction.TransactionReference;
+            return (transaction.TransactionReference, fare);
         }
 
         public async Task<bool> CompleteQRTicketPurchaseAsync(string transactionReference)
@@ -121,7 +120,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
             ticket.Status = TicketStatus.Active;
             transaction.Status = TransactionStatus.Completed;
-            await _unitOfWork.SaveChangesAsync();
+
+            if (transaction.PaymentMethod == PaymentMethod.AccountBalance)
+            {
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             return true;
         }

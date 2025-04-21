@@ -10,15 +10,27 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ITicketService _ticketService;
 
-        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, ITicketService ticketService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _ticketService = ticketService;
         }
 
-        public async Task<string> InitiatePaymentAsync(int userId, decimal amount, PaymentMethod paymentMethod)
+        public async Task<string> InitiatePaymentAsync(int userId, decimal amount, PaymentMethod paymentMethod, string? transactionReference)
         {
+            // A non-null transactionReference indicates that a transaction has already been initiated for purchasing a QR ticket
+            if (transactionReference != null)
+            {
+                var existTransaction = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
+                existTransaction.PaymentMethod = paymentMethod;
+                await _unitOfWork.SaveChangesAsync();
+
+                return transactionReference;
+            }
+
             // Get or create wallet
             var wallet = await _unitOfWork.WalletRepository.GetByUserIdAsync(userId);
 
@@ -38,7 +50,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 PaymentMethod = paymentMethod,
                 Status = TransactionStatus.Pending,
                 TransactionReference = Guid.NewGuid().ToString(),
-                Description = $"Adding ৳{amount} via {paymentMethod}"
+                Description = $"Top-up ৳{amount} via {paymentMethod}"
             };
 
             await _unitOfWork.TransactionRepository.CreateAsync(transaction);
@@ -63,17 +75,30 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     return false;
                 }
 
-                // Update transaction status
-                transaction.Status = TransactionStatus.Completed;
-
-                var wallet = await _unitOfWork.WalletRepository.GetByIdAsync(transaction.WalletId);
-                if (wallet == null)
+                if (transaction.PaymentFor == PaymentItem.QRTicket)
                 {
-                    return false;
-                }
+                    // If the payment is for QR ticket manage transaction at ticket service
+                    var isSuccess = await _ticketService.CompleteQRTicketPurchaseAsync(transactionReference);
 
-                // Update wallet balance
-                wallet.Balance += transaction.Amount;
+                    if (!isSuccess)
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        return false;
+                    }   
+                }
+                else
+                {
+                    // Update transaction status
+                    transaction.Status = TransactionStatus.Completed;
+                    var wallet = await _unitOfWork.WalletRepository.GetByIdAsync(transaction.WalletId);
+                    if (wallet == null)
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        return false;
+                    }
+                    // Update wallet balance
+                    wallet.Balance += transaction.Amount;
+                }
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
