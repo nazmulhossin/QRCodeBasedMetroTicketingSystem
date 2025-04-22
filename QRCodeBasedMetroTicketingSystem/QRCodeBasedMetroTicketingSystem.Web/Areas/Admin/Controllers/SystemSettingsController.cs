@@ -21,14 +21,14 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var settingsDto = await _settingsService.GetCurrentSettingsAsync();
+            var settingsDto = await _settingsService.GetSystemSettingsAsync();
             var viewModel = _mapper.Map<SystemSettingsViewModel>(settingsDto);
             return View(viewModel);
         }
 
         public async Task<IActionResult> Edit()
         {
-            var settingsDto = await _settingsService.GetCurrentSettingsAsync();
+            var settingsDto = await _settingsService.GetSystemSettingsAsync();
             var viewModel = _mapper.Map<SystemSettingsViewModel>(settingsDto);
             return View(viewModel);
         }

@@ -30,5 +30,9 @@
   {
     "outputFile": "wwwroot/css/payment.css",
     "inputFile": "wwwroot/css/payment.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/buy-qr-ticket.css",
+    "inputFile": "wwwroot/css/buy-qr-ticket.scss"
   }
 ]

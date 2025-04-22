@@ -154,6 +154,56 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Ticket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DestinationStationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("FareAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("OriginStationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QRCodeData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinationStationId");
+
+                    b.HasIndex("OriginStationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tickets");
+                });
+
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -199,6 +249,55 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.HasIndex("WalletId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Trip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EntryStationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EntryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExitStationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ExitTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("FareAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionReference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryStationId");
+
+                    b.HasIndex("ExitStationId");
+
+                    b.HasIndex("TicketId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", b =>
@@ -330,6 +429,29 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Navigation("Station2");
                 });
 
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Ticket", b =>
+                {
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", "DestinationStation")
+                        .WithMany()
+                        .HasForeignKey("DestinationStationId");
+
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", "OriginStation")
+                        .WithMany()
+                        .HasForeignKey("OriginStationId");
+
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DestinationStation");
+
+                    b.Navigation("OriginStation");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", "Wallet")
@@ -341,6 +463,39 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                     b.Navigation("Wallet");
                 });
 
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Trip", b =>
+                {
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", "EntryStation")
+                        .WithMany()
+                        .HasForeignKey("EntryStationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Station", "ExitStation")
+                        .WithMany()
+                        .HasForeignKey("ExitStationId");
+
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.Ticket", "Ticket")
+                        .WithOne("Trip")
+                        .HasForeignKey("QRCodeBasedMetroTicketingSystem.Domain.Entities.Trip", "TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("EntryStation");
+
+                    b.Navigation("ExitStation");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Wallet", b =>
                 {
                     b.HasOne("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", "User")
@@ -350,6 +505,11 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.Ticket", b =>
+                {
+                    b.Navigation("Trip");
                 });
 
             modelBuilder.Entity("QRCodeBasedMetroTicketingSystem.Domain.Entities.User", b =>

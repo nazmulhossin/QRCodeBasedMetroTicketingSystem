@@ -19,7 +19,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
         public async Task<IEnumerable<FareDistanceDto>> GetFareDistancesAsync(int fromStationId, int? toStationId)
         {
-            var systemSettings = await _systemSettingsService.GetCurrentSettingsAsync();
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
             var stationList = await _stationRepository.GetAllStationsOrderedAsync();
 
             // Result list to store fare and distance information
@@ -64,6 +64,21 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             }
 
             return fareAndDistances;
+        }
+
+        public async Task<int> GetFareAsync(int fromStationId, int toStationId)
+        {
+            var fromStation = await _stationRepository.GetStationByIdAsync(fromStationId);
+            var toStation = await _stationRepository.GetStationByIdAsync(toStationId);
+
+            if (fromStation == null || toStation == null)
+            {
+                return 0;
+            }
+
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+            var distance = await _distanceCalculationService.GetDistanceBetweenAsync(fromStationId, toStationId);
+            return CalculateFare(distance, systemSettings.FarePerKm, systemSettings.MinFare);
         }
 
         private int CalculateFare(decimal distance, decimal farePerKm, decimal minFare)

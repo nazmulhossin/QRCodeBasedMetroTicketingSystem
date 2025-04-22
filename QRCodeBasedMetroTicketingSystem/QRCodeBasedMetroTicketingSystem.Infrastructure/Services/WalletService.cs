@@ -36,7 +36,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return walletDto;
         }
 
-        public async Task<decimal> GetBalanceAsync(int userId)
+        public async Task<decimal> GetBalanceByUserIdAsync(int userId)
         {
             var wallet = await _unitOfWork.WalletRepository.GetByUserIdAsync(userId);
 
@@ -50,38 +50,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return wallet.Balance;
         }
 
-        public async Task<bool> AddBalanceAsync(int userId, decimal amount, PaymentMethod paymentMethod, string transactionReference)
-        {
-            var wallet = await _unitOfWork.WalletRepository.GetByUserIdAsync(userId);
-
-            if (wallet == null)
-            {
-                wallet = new Wallet { UserId = userId };
-                await _unitOfWork.WalletRepository.CreateAsync(wallet);
-            }
-
-            // Create a transaction record
-            var transaction = new Transaction
-            {
-                WalletId = wallet.Id,
-                Amount = amount,
-                Type = TransactionType.TopUp,
-                PaymentMethod = paymentMethod,
-                Status = TransactionStatus.Completed,
-                TransactionReference = transactionReference,
-                Description = $"Added {amount:C} via {paymentMethod}"
-            };
-
-            await _unitOfWork.TransactionRepository.CreateAsync(transaction);
-
-            // Update wallet balance
-            wallet.Balance += amount;
-            //await _unitOfWork.WalletRepository.UpdateAsync(wallet);
-
-            return true;
-        }
-
-        public async Task<bool> DeductBalanceAsync(int userId, decimal amount, TransactionType type, string description)
+        public async Task<bool> DeductBalanceAsync(int userId, decimal amount)
         {
             var wallet = await _unitOfWork.WalletRepository.GetByUserIdAsync(userId);
 
@@ -90,22 +59,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 return false;
             }
 
-            // Create a transaction record
-            var transaction = new Transaction
-            {
-                WalletId = wallet.Id,
-                Amount = amount,
-                Type = type,
-                PaymentMethod = PaymentMethod.System,
-                Status = TransactionStatus.Completed,
-                Description = description
-            };
-
-            await _unitOfWork.TransactionRepository.CreateAsync(transaction);
-
             // Update wallet balance
             wallet.Balance -= amount;
-            //await _unitOfWork.WalletRepository.UpdateAsync(wallet);
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

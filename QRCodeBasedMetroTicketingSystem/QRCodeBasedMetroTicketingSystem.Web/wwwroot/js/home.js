@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     // Initialize both pairs of dropdowns with the same logic
     setupPairedDropdowns('#fromStation', '#toStation');
-    setupPairedDropdowns('#qrFromStation', '#qrToStation');
+    setupPairedDropdowns('#buyQrTicketFromStation', '#buyQrTicketToStation');
 
 // Fare Calculation
     $('#fareForm').submit(function (e) {
@@ -97,15 +97,4 @@ $(document).ready(function () {
             }
         });
     });
-});
-
-// QR Code Generator
-document.getElementById('qrForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // In a real app, this would generate a unique QR code
-    document.getElementById('qrCodeContainer').style.display = 'block';
-
-    // Scroll to QR code
-    document.getElementById('qrCodeContainer').scrollIntoView({ behavior: 'smooth' });
 });

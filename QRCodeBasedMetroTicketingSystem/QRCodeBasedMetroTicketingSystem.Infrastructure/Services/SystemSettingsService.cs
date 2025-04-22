@@ -21,7 +21,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<SystemSettingsDto> GetCurrentSettingsAsync()
+        public async Task<SystemSettingsDto> GetSystemSettingsAsync()
         {
             // Try to get settings from cache
             var cachedSettings = await _cacheService.GetAsync<SystemSettingsDto>(CacheKey);
@@ -31,7 +31,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             }
 
             // Cache miss - Fetch settings from the database
-            var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+            var systemSettings = await _unitOfWork.SystemSettingsRepository.GetSystemSettingsAsync();
             systemSettings ??= new SystemSettings(); // Default settings
 
             var systemSettingsDto = _mapper.Map<SystemSettingsDto>(systemSettings);
@@ -45,7 +45,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var systemSettings = await _unitOfWork.SystemSettingsRepository.GetCurrentSettingsAsync();
+                var systemSettings = await _unitOfWork.SystemSettingsRepository.GetSystemSettingsAsync();
                 if (systemSettings == null)
                 {
                     return Result.Failure("An error occurred while updating the settings.");

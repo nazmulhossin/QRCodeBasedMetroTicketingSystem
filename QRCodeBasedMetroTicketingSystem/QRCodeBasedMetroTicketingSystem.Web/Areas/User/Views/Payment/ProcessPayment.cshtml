@@ -87,14 +87,14 @@
 
                         <div class="d-grid gap-2">
                             <!-- Complete Payment Form -->
-                            <form asp-area="User" asp-controller="Wallet" asp-action="CompletePayment" method="post">
+                            <form asp-area="User" asp-controller="Payment" asp-action="CompletePayment" method="post">
                                 <input type="hidden" name="transactionReference" value="@Model.TransactionReference" />
                                 <input type="hidden" name="paymentMethod" value="@Model.PaymentMethod" />
                                 <button type="submit" class="btn btn-primary w-100">Complete Payment</button>
                             </form>
 
                             <!-- Cancel Payment Form -->
-                            <form asp-area="User" asp-controller="Wallet" asp-action="CancelPayment" method="post">
+                            <form asp-area="User" asp-controller="Payment" asp-action="CancelPayment" method="post">
                                 <input type="hidden" name="transactionReference" value="@Model.TransactionReference" />
                                 <button type="submit" class="btn btn-outline-danger w-100">Cancel</button>
                             </form>

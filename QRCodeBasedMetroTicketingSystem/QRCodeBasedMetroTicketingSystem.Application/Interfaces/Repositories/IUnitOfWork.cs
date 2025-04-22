@@ -9,6 +9,7 @@
         IUserTokenRepository UserTokenRepository { get; }
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
+        ITicketRepository TicketRepository { get; }
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -42,9 +43,9 @@
                 <div class="d-flex align-items-center">
                     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("User"))
                     {
-                        <a class="nav-link shopping-badge me-3" href="#">
+                        <a asp-area="User" asp-controller="Ticket" asp-action="MyQRTickets" asp-route-status="@TicketStatus.Active" class="nav-link shopping-badge me-3">
                             <i class="fa-solid fa-cart-shopping"></i>
-                            <span class="badge rounded-pill">5</span>
+                            @await Component.InvokeAsync("MyQrTicketCount")
                         </a>
                         <button id="balanceBtn" class="balance-btn me-3">
                             <span class="balance-container">
@@ -75,17 +76,7 @@
                                 </li>
                             </ul>
                         </div>
-                        @if (Context.GetRouteValue("area")?.ToString() == "User")
-                        {
-                            @if (Context.GetRouteValue("controller")?.ToString() != "Wallet")
-                            {
-                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
-                            }
-                            else if (Context.GetRouteValue("controller")?.ToString() == "Wallet" && Context.GetRouteValue("action")?.ToString() == "Index")
-                            {
-                                <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
-                            }
-                        }
+                        <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
                     }
                     else
                     {
@@ -127,10 +118,10 @@
                 <div class="col-sm-6 col-lg-2">
                     <h4 class="footer-heading">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#guidelines">Metro Guidelines</a></li>
+                        <li><a href="/Home">Home</a></li>
+                        <li><a href="/Home#how-it-works">How It Works</a></li>
+                        <li><a href="/Home#features">Features</a></li>
+                        <li><a href="/Home#guidelines">Metro Guidelines</a></li>
                     </ul>
                 </div>
 
