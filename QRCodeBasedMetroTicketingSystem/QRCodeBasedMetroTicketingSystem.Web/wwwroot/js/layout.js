@@ -13,6 +13,13 @@
         });
     }
 
+    // Show open sidebar icon when sidebar available
+    if ($('#userSidebar').length) {
+        $('#openUserSidebarBtn').show();
+    } else {
+        $('#openUserSidebarBtn').hide();
+    }
+
     // Show the balance at the header
     let balanceTimeout = null; // Track the timeout
 

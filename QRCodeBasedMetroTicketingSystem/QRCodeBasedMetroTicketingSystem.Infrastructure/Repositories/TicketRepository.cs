@@ -31,5 +31,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
         }
+
+        public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
+        {
+            return await _dbSet.CountAsync(t => t.UserId == userId && (t.Status == TicketStatus.Active || t.Status == TicketStatus.InUse));
+        }
     }
 }

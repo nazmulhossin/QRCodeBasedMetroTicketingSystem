@@ -523,6 +523,11 @@
                     color: var(--success-color);
                 }
 
+                &.inuse {
+                    background-color: rgba(255, 193, 7, 0.1);
+                    color: var(--warning-color);
+                }
+
                 &.expired {
                     background-color: rgba(108, 117, 125, 0.1);
                     color: var(--gray-color);

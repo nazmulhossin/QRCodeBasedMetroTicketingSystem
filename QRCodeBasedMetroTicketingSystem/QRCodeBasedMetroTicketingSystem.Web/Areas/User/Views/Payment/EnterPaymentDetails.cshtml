@@ -27,11 +27,11 @@
                                 <span class="amount-currency taka-icon">৳</span>
                                 @if (Model.TransactionReference == null)
                                 {
-                                    <input type="number" asp-for="Amount" class="form-control amount-input" id="balanceAmount" placeholder="0" min="100" max="10000" value="@Model.Amount">
+                                    <input type="number" asp-for="Amount" class="form-control amount-input" id="balanceAmount" placeholder="0" min="20" max="10000" value="@Model.Amount">
                                 }
                                 else
                                 {
-                                    <input type="number" asp-for="Amount" class="form-control amount-input" id="balanceAmount" placeholder="0" min="100" max="10000" value="@Model.Amount" readonly>
+                                    <input type="number" asp-for="Amount" class="form-control amount-input" id="balanceAmount" placeholder="0" min="20" max="10000" value="@Model.Amount" readonly>
                                 }
                                 <span asp-validation-for="Amount" class="text-danger"></span>
                             </div>

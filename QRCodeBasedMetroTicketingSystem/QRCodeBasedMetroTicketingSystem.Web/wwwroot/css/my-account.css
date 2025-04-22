@@ -448,6 +448,10 @@
   background-color: rgba(40, 167, 69, 0.1);
   color: var(--success-color);
 }
+.my-qr-ticket-section .ticket-card .ticket-header .ticket-status.inuse {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--warning-color);
+}
 .my-qr-ticket-section .ticket-card .ticket-header .ticket-status.expired {
   background-color: rgba(108, 117, 125, 0.1);
   color: var(--gray-color);
