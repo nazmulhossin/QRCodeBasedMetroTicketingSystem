@@ -34,5 +34,9 @@
   {
     "outputFile": "wwwroot/css/buy-qr-ticket.css",
     "inputFile": "wwwroot/css/buy-qr-ticket.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/admin-auth.css",
+    "inputFile": "wwwroot/css/admin-auth.scss"
   }
 ]

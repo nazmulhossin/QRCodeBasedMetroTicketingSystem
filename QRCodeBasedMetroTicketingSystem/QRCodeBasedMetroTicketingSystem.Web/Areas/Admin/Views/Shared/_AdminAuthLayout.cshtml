@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Dhaka Metro Rail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/admin-auth.min.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container-fluid p-0 d-flex flex-column min-vh-100">
+        <!-- Header -->
+        <header>
+            <div class="d-flex align-items-center justify-content-center logo-container">
+                <img src="~/images/metro-logo.png" alt="Logo" class="sidebar-logo me-3">
+                <span class="title">DHAKA METRO RAIL</span>
+            </div>
+        </header>
+
+        <main>
+            @RenderBody()
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white text-center py-3">
+            <p class="mb-0">Copyright &copy; 2025 - 2025 by <a href="https://github.com/Learnathon-By-Geeky-Solutions/netninjas" target="_blank" style="margin-left: 5px;"> NetNinjas</a>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="~/js/admin-auth.js"></script>
+</body>
+</html>
