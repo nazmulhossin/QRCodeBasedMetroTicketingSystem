@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "My QR Ticket";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
 }
 
 <div class="content-wrapper my-qr-ticket-section">
@@ -48,7 +49,7 @@
                 </div>
                 <div class="ticket-info-row">
                     <div class="ticket-info-label">Valid Until</div>
-                    <div class="ticket-info-value">@ticket.ExpiryTime.ToString("MMM d, yyyy h:mm tt")</div>
+                    <div class="ticket-info-value">@TimeZoneInfo.ConvertTimeFromUtc(ticket.ExpiryTime, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
                 </div>
                 <div class="ticket-info-row">
                     <div class="ticket-info-label">Fare</div>
@@ -59,7 +60,7 @@
                 <button class="btn btn-outline-primary">
                     <i class="fas fa-download me-2"></i> Download
                 </button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generateQRModal">
+                <button class="btn btn-primary show-qr-ticket-btn" data-ticket-id="@ticket.Id">
                     <i class="fas fa-qrcode me-2"></i> Show QR
                 </button>
             </div>
@@ -79,20 +80,18 @@
             <div class="modal-body">
                 <div class="qr-code-container text-center">  
                     <div class="qr-code mb-3">
-                        <!-- This would be replaced with actual QR code generation -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MRBD-USER123-TRIP456"
-                             alt="QR Code" class="img-fluid">
+                        <img src="" alt="QR Code" class="img-fluid" id="qrCodeImage">
                     </div>
-                    <p class="mt-5">Scan this QR code at the entry gate <span class="station-name">(Uttara)</span> and the exit gate <span class="station-name">(Mirpur-10)</span></p>
+                    <p>Scan this QR code at the entry gate <span class="station-name" id="originStationName">(Uttara)</span> and the exit gate <span class="station-name" id="destinationStationName">(Mirpur-10)</span></p>
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary">
-                            <i class="fas fa-download me-2"></i> Save QR Ticket
+                            <i class="fas fa-download me-2"></i> Download QR Ticket
                         </button>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <small class="text-muted">This QR code will expire in 2 hours or after use.</small>
+                <small class="text-muted" id="expiryInfo"></small>
             </div>
         </div>
     </div>

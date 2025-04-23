@@ -74,6 +74,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IQRCodeService, QRCodeService>();
 
 // Add authorization
 builder.Services.AddAuthorization();

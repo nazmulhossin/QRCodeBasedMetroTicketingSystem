@@ -483,6 +483,11 @@
   font-size: 0.9rem;
 }
 
+.qr-modal .modal-content .qr-code-container .qr-code {
+  width: 80%;
+  height: 80%;
+  margin: 0 auto 20px;
+}
 .qr-modal .modal-content .qr-code-container .station-name {
   font-weight: 600;
   color: var(--primary-color);

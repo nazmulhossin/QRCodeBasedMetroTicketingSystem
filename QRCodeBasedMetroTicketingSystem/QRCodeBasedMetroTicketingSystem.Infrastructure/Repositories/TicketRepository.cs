@@ -21,6 +21,15 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             return await _dbSet.FirstOrDefaultAsync(t => t.TransactionReference == transactionReference);
         }
 
+        public async Task<Ticket?> GetTicketByIdAsync(int ticketId)
+        {
+            return await _dbSet
+                .AsSplitQuery()
+                .Include(t => t.OriginStation)
+                .Include(t => t.DestinationStation)
+                .FirstOrDefaultAsync(t => t.Id == ticketId);
+        }
+
         public async Task<IEnumerable<Ticket>> GetQrTicketsByStatusAsync(int userId, TicketStatus status)
         {
             return await _dbSet
@@ -28,7 +37,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .Include(t => t.OriginStation)
                 .Include(t => t.DestinationStation)
                 .Where(t => t.UserId == userId && t.Status == status)
-                .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
         }
 
