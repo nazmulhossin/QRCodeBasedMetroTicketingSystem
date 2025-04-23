@@ -1,5 +1,6 @@
 ﻿/* My Account Styles */
 .my-account-container {
+  min-height: 95vh;
   /* Content Area Styles */
   /* Responsive Adjustments*/
 }
@@ -82,7 +83,6 @@
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   padding: 25px;
-  height: 100%;
 }
 .my-account-container .content-wrapper .content-header {
   display: flex;
@@ -481,4 +481,15 @@
 .my-qr-ticket-section .ticket-card .ticket-actions .btn {
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
+}
+
+.qr-modal .modal-content .qr-code-container .qr-code {
+  width: 80%;
+  height: 80%;
+  margin: 0 auto 20px;
+}
+.qr-modal .modal-content .qr-code-container .station-name {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
 }

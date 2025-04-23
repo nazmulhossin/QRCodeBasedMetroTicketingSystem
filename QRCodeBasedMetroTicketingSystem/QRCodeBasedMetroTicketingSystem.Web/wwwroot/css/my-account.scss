@@ -1,5 +1,7 @@
 /* My Account Styles */
 .my-account-container {
+    min-height: 95vh;
+
     .sidebar {
         background-color: white;
         border-radius: 10px;
@@ -92,7 +94,6 @@
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         padding: 25px;
-        height: 100%;
 
         .content-header {
             display: flex;
@@ -565,6 +566,22 @@
                 padding: 0.4rem 1rem;
                 font-size: 0.9rem;
             }
+        }
+    }
+}
+
+.qr-modal .modal-content {
+    .qr-code-container {
+        .qr-code {
+            width: 80%;
+            height: 80%;
+            margin: 0 auto 20px;
+        }
+
+        .station-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
         }
     }
 }

@@ -3,9 +3,6 @@ using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
@@ -13,24 +10,27 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFareCalculationService _fareCalculationService;
-        private readonly IWalletService _walletService;
         private readonly IStationService _stationService;
         private readonly ISystemSettingsService _systemSettingsService;
+        private readonly IWalletService _walletService;
+        private readonly IQRCodeService _qrCodeService;
         private readonly IMapper _mapper;
 
         public TicketService(
             IUnitOfWork unitOfWork,
             IFareCalculationService fareCalculationService,
-            IWalletService walletService,
             IStationService stationService,
             ISystemSettingsService systemSettingsService,
+            IWalletService walletService,
+            IQRCodeService qrCodeService,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _fareCalculationService = fareCalculationService;
-            _walletService = walletService;
             _stationService = stationService;
             _systemSettingsService = systemSettingsService;
+            _walletService = walletService;
+            _qrCodeService = qrCodeService;
             _mapper = mapper;
         }
 
@@ -38,6 +38,12 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             var tickets = await _unitOfWork.TicketRepository.GetQrTicketsByStatusAsync(userId, status);
             return _mapper.Map<IEnumerable<TicketDto>>(tickets);
+        }
+
+        public async Task<TicketDto?> GetTicketByIdAsync(int ticketId)
+        {
+            var tickets = await _unitOfWork.TicketRepository.GetTicketByIdAsync(ticketId);
+            return _mapper.Map<TicketDto>(tickets);
         }
 
         public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
@@ -97,14 +103,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             };
 
             // Generate QR code data
-            ticket.QRCodeData = GenerateQRCodeDataAsync(0, userId, TicketType.QRTicket);
+            ticket.QRCodeData = _qrCodeService.GenerateQRCodeData(ticket);
 
             // Save ticket to database
             await _unitOfWork.TicketRepository.CreateTicketAsync(ticket);
             await _unitOfWork.SaveChangesAsync();
 
             // Update the QR code with the actual ticket ID
-            ticket.QRCodeData = GenerateQRCodeDataAsync(ticket.Id, userId, TicketType.QRTicket);
+            ticket.QRCodeData = _qrCodeService.GenerateQRCodeData(ticket);
             await _unitOfWork.SaveChangesAsync();
 
             return (transaction.TransactionReference, fare);
@@ -153,22 +159,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             ticketDto.DestinationStationName = destinationStation.Name;
 
             return ticketDto;
-        }
-
-        private static string GenerateQRCodeDataAsync(int ticketId, int userId, TicketType type)
-        {
-            // Create a unique, secure QR code data
-            var timestamp = DateTime.UtcNow.Ticks;
-            var dataToHash = $"{ticketId}|{userId}|{type}|{timestamp}";
-
-            using (var sha256 = SHA256.Create())
-            {
-                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(dataToHash));
-                var hash = BitConverter.ToString(hashBytes).Replace("-", "").Substring(0, 16);
-
-                // Format: TicketId|UserId|TicketType|Hash|Timestamp
-                return $"{ticketId}|{userId}|{(int)type}|{hash}|{timestamp}";
-            }
         }
     }
 }
