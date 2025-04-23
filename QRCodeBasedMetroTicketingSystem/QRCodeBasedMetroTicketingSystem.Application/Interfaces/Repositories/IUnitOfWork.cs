@@ -2,6 +2,7 @@
 {
     public interface IUnitOfWork : IDisposable
     {
+        IAdminRepository AdminRepository { get; }
         IStationRepository StationRepository { get; }
         IStationDistanceRepository StationDistanceRepository { get; }
         ISystemSettingsRepository SystemSettingsRepository { get; }
