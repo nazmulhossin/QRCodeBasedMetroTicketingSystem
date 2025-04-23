@@ -12,7 +12,7 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250423105204_AddedAdminTable")]
+    [Migration("20250423143732_AddedAdminTable")]
     partial class AddedAdminTable
     {
         /// <inheritdoc />
@@ -38,14 +38,16 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 

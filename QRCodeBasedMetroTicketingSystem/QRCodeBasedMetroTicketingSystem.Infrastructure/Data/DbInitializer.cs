@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
@@ -15,12 +16,13 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
             try
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
+                var configuration = services.GetRequiredService<IConfiguration>();
 
                 // Ensure database is created and migrations are applied
                 await context.Database.MigrateAsync();
 
                 // Seed admin if none exists
-                await SeedAdminAsync(context);
+                await SeedAdminAsync(context, configuration);
             }
             catch (Exception ex)
             {
@@ -29,7 +31,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
             }
         }
 
-        private static async Task SeedAdminAsync(ApplicationDbContext context)
+        private static async Task SeedAdminAsync(ApplicationDbContext context, IConfiguration configuration)
         {
             // Check if admin already exists
             if (await context.Admins.AnyAsync())
@@ -37,11 +39,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
                 return; // Admin already exists, do nothing
             }
 
-            string password = "admin123";
             var admin = new Admin
             {
-                Email = "admin@gmail.com",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                Email = configuration["AdminSettings:DefaultEmail"]!,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(configuration["AdminSettings:DefaultPassword"]),
                 CreatedAt = DateTime.UtcNow
             };
 
