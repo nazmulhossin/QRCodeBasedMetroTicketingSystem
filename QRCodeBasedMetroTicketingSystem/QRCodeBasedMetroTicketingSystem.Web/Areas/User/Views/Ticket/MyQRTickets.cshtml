@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="ticket-actions">
-                <button class="btn btn-outline-primary">
+                <button class="btn btn-outline-primary download-ticket" data-ticket-id="@ticket.Id">
                     <i class="fas fa-download me-2"></i> Download
                 </button>
                 <button class="btn btn-primary show-qr-ticket-btn" data-ticket-id="@ticket.Id">
@@ -75,7 +75,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="generateQRModalLabel">QR Ticket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close close-qr-modal-btn" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="qr-code-container text-center">  
@@ -84,7 +84,7 @@
                     </div>
                     <p>Scan this QR code at the entry gate <span class="station-name" id="originStationName">(Uttara)</span> and the exit gate <span class="station-name" id="destinationStationName">(Mirpur-10)</span></p>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary download-ticket" id="downloadQRBtn">
                             <i class="fas fa-download me-2"></i> Download QR Ticket
                         </button>
                     </div>

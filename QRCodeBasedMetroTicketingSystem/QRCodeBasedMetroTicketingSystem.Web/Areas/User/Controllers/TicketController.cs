@@ -120,7 +120,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> GetQRCode(int ticketId)
+        public async Task<IActionResult> GetTicketDetailsWithQRCode(int ticketId)
         {
             var userId = User.GetUserId();
             if (userId == null)
@@ -136,6 +136,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 
             return Json(new
             {
+                ticketId = ticket.Id,
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 originStationName = ticket.OriginStationName,
                 destinationStationName = ticket.DestinationStationName,
