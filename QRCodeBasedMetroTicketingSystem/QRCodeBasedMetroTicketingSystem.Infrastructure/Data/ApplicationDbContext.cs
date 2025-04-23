@@ -9,6 +9,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         {
         }
 
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<Station> Stations { get; set; }
         public DbSet<StationDistance> StationDistances { get; set; }
         public DbSet<SystemSettings> SystemSettings { get; set; }
@@ -22,6 +23,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Admin>()
+                .HasIndex(a => a.Email)
+                .IsUnique();
 
             modelBuilder.Entity<Station>()
                 .HasIndex(s => s.Name)
