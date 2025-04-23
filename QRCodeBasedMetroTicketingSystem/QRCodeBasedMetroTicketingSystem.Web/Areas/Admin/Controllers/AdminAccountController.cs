@@ -4,6 +4,7 @@ using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 using System.Security.Claims;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
 {
@@ -61,6 +62,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         }
 
+        [Authorize(AuthenticationSchemes = AuthSchemes.AdminScheme, Roles = ApplicationRoles.Admin)]
         public async Task<IActionResult> Logout()
         {
             // Sign out from the admin scheme
