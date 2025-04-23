@@ -8,6 +8,7 @@ using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Mapping;
+using QRCodeBasedMetroTicketingSystem.Web.Models;
 using QRCodeBasedMetroTicketingSystem.Web.Services;
 using StackExchange.Redis;
 
@@ -29,17 +30,28 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 // Cookie Configuration
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    // Default schemes
+    options.DefaultAuthenticateScheme = AuthSchemes.UserScheme;
+    options.DefaultSignInScheme = AuthSchemes.UserScheme;
+    options.DefaultChallengeScheme = AuthSchemes.UserScheme;
 })
-.AddCookie(options =>
+.AddCookie(AuthSchemes.UserScheme, options =>
 {
-    options.Cookie.Name = "MetroAuthCookie";
+    options.Cookie.Name = "MetroUserAuthCookie";
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
+})
+.AddCookie(AuthSchemes.AdminScheme, options =>
+{
+    options.Cookie.Name = "MetroAdminAuthCookie";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.LoginPath = "/Admin/AdminAccount/Login";
+    options.LogoutPath = "/Admin/AdminAccount/Logout";
 });
 
 // Register AutoMapper
@@ -50,6 +62,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 
 // Register repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IStationRepository, StationRepository>();
 builder.Services.AddScoped<IStationDistanceRepository, StationDistanceRepository>();
 builder.Services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
@@ -61,6 +74,7 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IStationService, StationService>();
 builder.Services.AddScoped<ISystemSettingsService, SystemSettingsService>();
 builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
@@ -87,6 +101,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// Seed database
+await DbInitializer.InitializeAsync(app.Services);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

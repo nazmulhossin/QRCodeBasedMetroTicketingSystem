@@ -17,21 +17,21 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(string userId, string name, string role, string? phoneNumber = null, string? email = null)
+        public string GenerateToken(string Id, string? name, string role, string? phoneNumber = null, string? email = null)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.Name, name),
+                new Claim(JwtRegisteredClaimNames.Sub, Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, role)
             };
 
             if (phoneNumber != null)
             {
+                claims.Add(new Claim(JwtRegisteredClaimNames.Name, name));
                 claims.Add(new Claim(ClaimTypes.MobilePhone, phoneNumber));
             }
 

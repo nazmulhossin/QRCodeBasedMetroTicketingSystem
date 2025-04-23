@@ -10,6 +10,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         private IDbContextTransaction? _transaction;
         private bool _disposed = false;
 
+        public IAdminRepository AdminRepository { get; }
         public IStationRepository StationRepository { get; }
         public IStationDistanceRepository StationDistanceRepository { get; }
         public ISystemSettingsRepository SystemSettingsRepository { get; }
@@ -20,6 +21,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public ITicketRepository TicketRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db,
+                          IAdminRepository adminRepository,
                           IStationRepository stationRepository,
                           IStationDistanceRepository stationDistanceRepository,
                           ISystemSettingsRepository settingsRepository,
@@ -30,6 +32,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                           ITicketRepository ticketRepository)
         {
             _db = db;
+            AdminRepository = adminRepository;
             StationRepository = stationRepository;
             StationDistanceRepository = stationDistanceRepository;
             SystemSettingsRepository = settingsRepository;
