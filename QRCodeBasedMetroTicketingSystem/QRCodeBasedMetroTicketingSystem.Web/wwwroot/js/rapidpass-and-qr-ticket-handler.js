@@ -3,12 +3,12 @@
 
     // Show QR Ticket
     $('.show-qr-ticket-btn').click(function () {
-        var btn = $(this);
-        var ticketId = $(this).data('ticket-id');
+        const btn = $(this);
+        const ticketId = $(this).data('ticket-id');
         qrModal.hide();
 
         // Save original button text and show loading
-        var originalText = btn.html();
+        const originalText = btn.html();
         btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Showing...');
         btn.prop('disabled', true);
 
@@ -18,6 +18,7 @@
             data: { ticketId: ticketId },
             success: function (data) {
                 $('#qrCodeImage').attr('src', data.qrCodeImage);
+                $('#infoMessage').html(`Scan this QR code at the entry gate <span class="station-name">(${data.originStationName})</span> and the exit gate <span class="station-name">(${data.destinationStationName})</span>`);
                 $('#originStationName').text(data.originStationName);
                 $('#destinationStationName').text(data.destinationStationName);
                 $('#downloadQRBtn').attr('data-ticket-id', data.ticketId);
@@ -97,11 +98,11 @@
 
     // Download QR Ticket and RapidPass QR code as PDF (when clicking the download button on the ticket card or clicking the download button in the modal)
     $('.download-ticket').on('click', function () {
-        var btn = $(this);
+        const btn = $(this);
         const ticketId = $(this).data('ticket-id');
 
         // Save original button text and show loading
-        var originalText = btn.html();
+        const originalText = btn.html();
         btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Downloading...');
         btn.prop('disabled', true);
 
@@ -143,12 +144,12 @@
         doc.setFontSize(11);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor('#333333');
-        doc.text('From: ' + ticketData.originStationName, 10, 112);
-        doc.text('To: ' + ticketData.destinationStationName, 10, 118);
-        doc.text('Valid Until: ' + ticketData.expiryTime, 10, 124);
+        doc.text(`From: ${ticketData.originStationName}`, 10, 112);
+        doc.text(`To: ${ticketData.destinationStationName}`, 10, 118);
+        doc.text(`Valid Until: ${ticketData.expiryTime}`, 10, 124);
 
         // Save PDF
-        doc.save('metro-ticket-' + ticketData.ticketId + '-' + ticketData.originStationName + ' to ' + ticketData.destinationStationName + '.pdf');
+        doc.save(`metro-ticket-${ticketData.ticketId}-${ticketData.originStationName} to ${ticketData.destinationStationName}.pdf`);
     }
 
     // Helper function to hide loading animation
