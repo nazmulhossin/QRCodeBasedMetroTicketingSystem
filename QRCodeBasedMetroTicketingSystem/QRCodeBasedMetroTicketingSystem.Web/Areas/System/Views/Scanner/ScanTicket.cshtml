@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "~/Areas/System/Views/Shared/_ScannerLayout.cshtml";
+    ViewData["Title"] = "Scanning QR Code";
+    var stationId = ViewBag.StationId;
+    var stationName = ViewBag.StationName;
+}
+
+<div class="container scanner-container py-4">
+    <div class="header mb-5">
+        <h2 class="text-center" data-station-id="@stationId">Ticket Scanner – @stationName Station</h2>
+    </div>
+
+    <div class="row justify-content-center g-5">
+        <!-- QR Scanner Section -->
+        <div class="col-lg-5">
+            <div class="card scan-section h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">Scan QR Code</h4>
+
+                    <div class="video-container mb-4">
+                        <video id="video" class="rounded border" autoplay playsinline></video>
+
+                        <div class="scan-overlay">
+                            <div class="scan-area">
+                                <div class="scan-corner top-left"></div>
+                                <div class="scan-corner top-right"></div>
+                                <div class="scan-corner bottom-left"></div>
+                                <div class="scan-corner bottom-right"></div>
+                                <div class="scan-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-danger text-center" id="scanInstruction">
+                        Scanning will begin shortly. Please wait...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Status & Fare Info Section -->
+        <div class="col-lg-5">
+            <div class="card scan-status h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-3">Scan Status</h4>
+
+                    <div id="statusCard" class="status-card status-waiting mb-5">
+                        <div class="mb-2"><i id="statusIcon" class="fas fa-spinner fa-spin"></i></div>
+                        <h5 id="statusTitle"></h5>
+                    </div>
+
+                    <div id="journeyInfo" class="journey-info mt-5 d-none">
+                        <h5>Journey Details</h5>
+                        <div class="journey-data">
+                            <div class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <div class="fw-semibold text-muted">From</div>
+                                    <div id="fromStationName">Uttara</div>
+                                    <div class="fw-semibold" id="fromTime">20 Apr 07:40 PM</div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-semibold text-muted">To</div>
+                                    <div id="toStationName">Mirpur-11</div>
+                                    <div class="fw-semibold" id="toTime">20 Apr 07:55 PM</div>
+                                </div>
+                            </div>
+                            <div class="fare-info d-flex justify-content-between">
+                                <span class="fw-semibold">Fare:</span>
+                                <span id="fare"><span class="taka-icon">৳</span><span id="fareAmount">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jsQR.min.js"></script>
+    <script src="~/js/scanner.js"></script>
+}
