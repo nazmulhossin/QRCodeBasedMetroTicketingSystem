@@ -29,9 +29,13 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 new Claim(ClaimTypes.Role, role)
             };
 
-            if (phoneNumber != null)
+            if (name != null)
             {
                 claims.Add(new Claim(JwtRegisteredClaimNames.Name, name));
+            }
+
+            if (phoneNumber != null)
+            {
                 claims.Add(new Claim(ClaimTypes.MobilePhone, phoneNumber));
             }
 

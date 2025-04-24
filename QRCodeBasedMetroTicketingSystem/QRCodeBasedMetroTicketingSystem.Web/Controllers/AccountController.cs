@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Models;
@@ -133,25 +132,16 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Controllers
                 };
 
                 // Sign in using cookie authentication
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var identity = new ClaimsIdentity(claims, AuthSchemes.UserScheme);
                 var principal = new ClaimsPrincipal(identity);
-
                 await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    AuthSchemes.UserScheme,
                     principal,
                     new AuthenticationProperties
                     {
                         IsPersistent = model.RememberMe,
                         ExpiresUtc = DateTime.UtcNow.AddDays(30)
                     });
-
-                Response.Cookies.Append(CookieNames.JwtToken, result.Token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddHours(1)
-                });
 
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
@@ -166,11 +156,8 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Logout()
         {
-            // Sign out of cookie authentication
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Clear the JWT token cookie
-            Response.Cookies.Delete(CookieNames.JwtToken);
+            // Sign out from the user scheme
+            await HttpContext.SignOutAsync(AuthSchemes.UserScheme);
 
             return RedirectToAction("Index", "Home");
         }
