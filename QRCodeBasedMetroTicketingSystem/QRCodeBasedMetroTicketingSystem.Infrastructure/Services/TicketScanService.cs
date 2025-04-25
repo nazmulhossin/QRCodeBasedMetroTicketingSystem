@@ -1,35 +1,35 @@
-﻿using Azure;
-using Microsoft.Extensions.Configuration;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
+﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
-using static System.Collections.Specialized.BitVector32;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
     public class TicketScanService : ITicketScanService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
         private readonly IWalletService _walletService;
+        private readonly IPaymentService _paymentService;
         private readonly IQRCodeService _qrCodeService;
+        private readonly ITimeService _timeService;
         private readonly IFareCalculationService _fareCalculationService;
         private readonly ISystemSettingsService _systemSettingsService;
+        private readonly string successMessage = "GO! GO!";
 
         public TicketScanService(
             IUnitOfWork unitOfWork,
-            IConfiguration configuration,
             IWalletService walletService,
+            IPaymentService paymentService,
             IQRCodeService qrCodeService,
+            ITimeService timeService,
             IFareCalculationService fareCalculationService,
             ISystemSettingsService systemSettingsService)
         {
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
             _walletService = walletService;
+            _paymentService = paymentService;
             _qrCodeService = qrCodeService;
+            _timeService = timeService;
             _fareCalculationService = fareCalculationService;
             _systemSettingsService = systemSettingsService;
         }
@@ -80,28 +80,34 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             }
 
             // Get system settings for validations
-            var settings = await _unitOfWork.SystemSettingsRepository.GetSystemSettingsAsync();
-            if (settings == null)
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+            if (systemSettings == null)
             {
-                return defaultInvalidResponse;
+                return new ScanTicketResponseDto { IsValid = false, Message = "Server Error!" };
             }
 
             // Handle both ticket types
             if (ticket.Type == TicketType.QRTicket)
             {
-                return await HandleQRTicketScanAsync(ticket, station, settings);
+                return await HandleQRTicketScanAsync(ticket, station, systemSettings, defaultInvalidResponse);
             }
             else // RapidPass
             {
-                return await HandleRapidPassScanAsync(ticket, station, settings);
+                return await HandleRapidPassScanAsync(ticket, station, systemSettings, defaultInvalidResponse);
             }
         }
 
-        private async Task<ScanTicketResponseDto> HandleQRTicketScanAsync(Ticket ticket, Station station, SystemSettings settings)
+        private async Task<ScanTicketResponseDto> HandleQRTicketScanAsync(Ticket ticket, Station station, SystemSettingsDto systemSettings, ScanTicketResponseDto defaultInvalidResponse)
         {
             // If the ticket is Active, this is an entry scan
             if (ticket.Status == TicketStatus.Active)
             {
+                // Check if the ticket's origin station matches the scanned station
+                if (ticket.OriginStationId != station.Id)
+                {
+                    return defaultInvalidResponse;
+                }
+
                 // Create new trip
                 var trip = new Trip
                 {
@@ -112,40 +118,34 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     Status = TripStatus.InProgress
                 };
 
-                // Update ticket status
-                ticket.Status = TicketStatus.InUse;
+                await _unitOfWork.TripRepository.CreateTripAsync(trip); // Save trip
+                ticket.Status = TicketStatus.InUse;   // Update ticket status
+                await _unitOfWork.SaveChangesAsync(); // Save changes
 
-                // Save changes
-                await _ticketRepository.UpdateAsync(ticket);
-                await _unitOfWork.AddAsync(trip);
-                await _unitOfWork.SaveChangesAsync();
-
-                return new ScanTicketResponseDto
-                {
-                    IsValid = true,
-                    Message = "Entry successful"
-                };
+                return new ScanTicketResponseDto { IsValid = true, Message = successMessage };
             }
             // If the ticket is InUse, this is an exit scan
             else if (ticket.Status == TicketStatus.InUse)
             {
-                // Find active trip
-                var trip = await _ticketRepository.GetActiveTrip(ticket.Id);
+                // Check if the ticket's destination station matches the scanned station
+                if (ticket.DestinationStationId != station.Id)
+                {
+                    return defaultInvalidResponse;
+                }
+
+                // Find active(in-progress) trip
+                var trip = await _unitOfWork.TripRepository.GetActiveTripByTicketIdAsync(ticket.Id);
                 if (trip == null)
                 {
-                    return new ScanTicketResponseDto { IsValid = false, Message = "No active trip found for this ticket" };
+                    return defaultInvalidResponse;
                 }
 
                 // Check time limit
                 var tripDuration = DateTime.UtcNow - trip.EntryTime;
-                if (tripDuration.TotalMinutes > settings.MaxTripDurationMinutes)
+                if (tripDuration.TotalMinutes > systemSettings.MaxTripDurationMinutes)
                 {
-                    // Apply penalty logic if implemented
-                    return new ScanTicketResponseDto { IsValid = false, Message = $"Trip duration exceeded maximum allowed time of {settings.MaxTripDurationMinutes} minutes" };
+                    return new ScanTicketResponseDto { IsValid = false, Message = $"Trip duration exceeded" };
                 }
-
-                // For QR Ticket, fare is prepaid
-                var entryStation = await _stationRepository.GetByIdAsync(trip.EntryStationId);
 
                 // Update trip
                 trip.ExitStationId = station.Id;
@@ -156,45 +156,38 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 ticket.Status = TicketStatus.Used;
 
                 // Save changes
-                await _ticketRepository.UpdateAsync(ticket);
-                await _unitOfWork.UpdateAsync(trip);
                 await _unitOfWork.SaveChangesAsync();
 
                 return new ScanTicketResponseDto
                 {
                     IsValid = true,
-                    Message = "Exit successful",
+                    Message = successMessage,
                     TripSummary = new TripSummaryDto
                     {
-                        OriginStationName = entryStation.Name,
-                        DestinationStationName = station.Name,
-                        EntryTime = trip.EntryTime,
-                        ExitTime = trip.ExitTime.Value,
-                        FareAmount = ticket.FareAmount.Value
+                        EntryStationName = trip.EntryStation.Name,
+                        ExitStationName = station.Name,
+                        EntryTime = _timeService.FormatAsBdTime(trip.EntryTime),
+                        ExitTime = _timeService.FormatAsBdTime(trip.ExitTime.Value)
                     }
                 };
             }
             else
             {
                 // Ticket is either pending, used, expired, or cancelled
-                return new ScanTicketResponseDto
-                {
-                    IsValid = false,
-                    Message = $"Ticket is in invalid state: {ticket.Status}"
-                };
+                return defaultInvalidResponse;
             }
         }
 
-        private async Task<ScanTicketResponseDto> HandleRapidPassScanAsync(Ticket ticket, Station station, SystemSettings settings)
+        private async Task<ScanTicketResponseDto> HandleRapidPassScanAsync(Ticket ticket, Station station, SystemSettingsDto systemSettings, ScanTicketResponseDto defaultInvalidResponse)
         {
             // Check if RapidPass is Active
             if (ticket.Status == TicketStatus.Active)
             {
                 // Check user wallet balance
-                var userWallet = await _walletService.GetWalletByUserIdAsync(ticket.UserId);
-                if (userWallet.Balance < settings.MinFare)
+                var userWalletBalance = await _walletService.GetBalanceByUserIdAsync(ticket.UserId);
+                if (userWalletBalance < systemSettings.MinFare)
                 {
-                    return new ScanTicketResponseDto { IsValid = false, Message = "Insufficient balance for entry" };
+                    return new ScanTicketResponseDto { IsValid = false, Message = "Insufficient Balance" };
                 }
 
                 // Create new trip
@@ -207,60 +200,42 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                     Status = TripStatus.InProgress
                 };
 
-                // Update ticket status
-                ticket.Status = TicketStatus.InUse;
+                await _unitOfWork.TripRepository.CreateTripAsync(trip); // Save trip
+                ticket.Status = TicketStatus.InUse;   // Update ticket status
+                await _unitOfWork.SaveChangesAsync(); // Save changes
 
-                // Save changes
-                await _ticketRepository.UpdateAsync(ticket);
-                await _unitOfWork.AddAsync(trip);
-                await _unitOfWork.SaveChangesAsync();
-
-                return new ScanTicketResponseDto
-                {
-                    IsValid = true,
-                    Message = "Entry successful"
-                };
+                return new ScanTicketResponseDto { IsValid = true, Message = successMessage };
             }
             // For exit scan with RapidPass
             else if (ticket.Status == TicketStatus.InUse)
             {
-                // Find active trip
-                var trip = await _ticketRepository.GetActiveTrip(ticket.Id);
+                // Find active(in-progress) trip
+                var trip = await _unitOfWork.TripRepository.GetActiveTripByTicketIdAsync(ticket.Id);
                 if (trip == null)
                 {
-                    return new ScanTicketResponseDto { IsValid = false, Message = "No active trip found for this pass" };
-                }
-
-                // Check time limit
-                var tripDuration = DateTime.UtcNow - trip.EntryTime;
-                if (tripDuration.TotalMinutes > settings.MaxTripDurationMinutes)
-                {
-                    // Apply time limit penalty
-                    // Implementation depends on your business logic
+                    return defaultInvalidResponse;
                 }
 
                 // Calculate fare
-                var entryStation = await _stationRepository.GetByIdAsync(trip.EntryStationId);
-                decimal fareAmount = await _fareCalculationService.CalculateFareAsync(trip.EntryStationId, station.Id);
+                decimal fareAmount = await _fareCalculationService.GetFareAsync(trip.EntryStationId, station.Id);
 
-                // Check if user has enough balance
-                var userWallet = await _walletService.GetWalletByUserIdAsync(ticket.UserId);
-                if (userWallet.Balance < fareAmount)
+                // Description for transaction
+                var description = $"Paid for Rapid Pass from {trip.EntryStationId} to {station.Id}";
+
+                // Check time limit
+                var tripDuration = DateTime.UtcNow - trip.EntryTime;
+                if (tripDuration.TotalMinutes > systemSettings.MaxTripDurationMinutes)
                 {
-                    return new ScanTicketResponseDto { IsValid = false, Message = "Insufficient balance for exit" };
+                    // Apply time limit penalty
+                    fareAmount += systemSettings.TimeLimitPenaltyFee;
+                    description += "(with penalty applied)";
                 }
 
                 // Process payment
-                var paymentResult = await _walletService.ProcessPaymentAsync(
-                    ticket.UserId,
-                    fareAmount,
-                    PaymentItem.RapidPass,
-                    $"Trip from {entryStation.Name} to {station.Name}"
-                );
-
+                var paymentResult = await _paymentService.PayWithAccountBalanceAsync(ticket.UserId, fareAmount,PaymentItem.RapidPass, description);
                 if (!paymentResult.Success)
                 {
-                    return new ScanTicketResponseDto { IsValid = false, Message = paymentResult.Message };
+                    return new ScanTicketResponseDto { IsValid = false, Message = "Insufficient Balance" };
                 }
 
                 // Update trip
@@ -270,24 +245,22 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 trip.Status = TripStatus.Completed;
                 trip.TransactionReference = paymentResult.TransactionReference;
 
-                // Update ticket status back to Active for future use
-                ticket.Status = TicketStatus.Active;
+                // Update ticket status
+                ticket.Status = TicketStatus.Used;
 
                 // Save changes
-                await _ticketRepository.UpdateAsync(ticket);
-                await _unitOfWork.UpdateAsync(trip);
                 await _unitOfWork.SaveChangesAsync();
 
                 return new ScanTicketResponseDto
                 {
                     IsValid = true,
-                    Message = "Exit successful",
+                    Message = successMessage,
                     TripSummary = new TripSummaryDto
                     {
-                        OriginStationName = entryStation.Name,
-                        DestinationStationName = station.Name,
-                        EntryTime = trip.EntryTime,
-                        ExitTime = trip.ExitTime.Value,
+                        EntryStationName = trip.EntryStation.Name,
+                        ExitStationName = station.Name,
+                        EntryTime = _timeService.FormatAsBdTime(trip.EntryTime),
+                        ExitTime = _timeService.FormatAsBdTime(trip.ExitTime.Value),
                         FareAmount = fareAmount
                     }
                 };
@@ -295,11 +268,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             else
             {
                 // Ticket is either pending, used, expired, or cancelled
-                return new ScanTicketResponseDto
-                {
-                    IsValid = false,
-                    Message = $"Rapid Pass is in invalid state: {ticket.Status}"
-                };
+                return defaultInvalidResponse;
             }
         }
     }

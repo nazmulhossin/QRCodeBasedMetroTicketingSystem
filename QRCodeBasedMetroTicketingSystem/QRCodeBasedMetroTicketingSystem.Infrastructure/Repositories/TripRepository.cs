@@ -21,7 +21,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             return await _dbSet
                 .AsSplitQuery()
                 .Include(t => t.EntryStation)
-                .Include(t => t.ExitStation)
                 .FirstOrDefaultAsync(t =>
                     t.TicketId == ticketId &&
                     t.Status == TripStatus.InProgress);

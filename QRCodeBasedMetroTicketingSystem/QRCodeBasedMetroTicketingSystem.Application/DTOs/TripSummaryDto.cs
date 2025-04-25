@@ -2,10 +2,10 @@
 {
     public class TripSummaryDto
     {
-        public string? OriginStationName { get; set; }
-        public string? DestinationStationName { get; set; }
-        public DateTime EntryTime { get; set; }
-        public DateTime ExitTime { get; set; }
+        public string? EntryStationName { get; set; }
+        public string? ExitStationName { get; set; }
+        public string? EntryTime { get; set; }
+        public string? ExitTime { get; set; }
         public decimal FareAmount { get; set; }
     }
 }

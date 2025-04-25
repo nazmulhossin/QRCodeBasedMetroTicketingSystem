@@ -110,40 +110,50 @@ document.addEventListener('DOMContentLoaded', async function () {
                 statusIcon.className = 'fa-solid fa-check text-success';
 
                 // Show journey info if available
-                if (result.Trip) {
-                    showJourneyInfo(result.Trip);
+                if (result.tripSummary) {
+                    journeyInfo.classList.remove('d-none');
+                    showJourneyInfo(result.tripSummary);
                 }
+
+                // Reset scanner UI
+                resetScannerUI(4000);
 
             } else {
                 // Error case
                 statusCard.className = 'status-card status-error';
                 statusTitle.textContent = result.message;
-
-                // Add cross icon
                 statusIcon.className = 'fa-solid fa-xmark text-danger';
-                journeyInfo.classList.remove('d-none');
+                resetScannerUI();
             }
-
-            // Reset scanner UI
-            setTimeout(() => {
-                statusCard.className = 'status-card status-scanning';
-                statusIcon.className = 'fa-solid fa-expand';
-                statusTitle.textContent = 'Scan Your QR Code';
-            }, 1500);
         } catch (err) {
             // Exception handling
             statusCard.className = 'status-card status-error';
+            statusIcon.className = 'fa-solid fa-triangle-exclamation';
             statusTitle.textContent = 'System Error';
         }
     }
 
+    // Helper function to show journey information
     function showJourneyInfo(trip) {
-        document.getElementById('fromStationName').textContent = trip.EntryStationName;
-        document.getElementById('fromTime').textContent = trip.EntryTime;
-        document.getElementById('toStationName').textContent = trip.ExitStationName;
-        document.getElementById('toTime').textContent = trip.ExitTime;
-        document.getElementById('fareAmount').textContent = trip.FareAmount;
-        journeyInfo.classList.remove('d-none')
+        document.getElementById('fromStationName').textContent = trip.entryStationName;
+        document.getElementById('fromTime').textContent = trip.entryTime;
+        document.getElementById('toStationName').textContent = trip.exitStationName;
+        document.getElementById('toTime').textContent = trip.exitTime;
+
+        if (trip.fareAmount > 1) {
+            document.getElementById('fare').textContent = trip.fareAmount;
+            alert(trip.fareAmount);
+        } 
+    }
+
+    // Helper function to reset scanner UI
+    function resetScannerUI(delay = 2000) {
+        setTimeout(() => {
+            statusCard.className = 'status-card status-scanning';
+            statusIcon.className = 'fa-solid fa-expand';
+            statusTitle.textContent = 'Scan Your QR Code';
+            journeyInfo.classList.add('d-none');
+        }, delay);
     }
 
     // Stop scanner when page is unloaded
