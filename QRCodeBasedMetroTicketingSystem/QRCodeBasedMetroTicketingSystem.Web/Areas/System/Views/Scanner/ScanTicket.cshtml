@@ -1,13 +1,13 @@
-﻿@{
+﻿@model SelectStationViewModel
+
+@{
     Layout = "~/Areas/System/Views/Shared/_ScannerLayout.cshtml";
     ViewData["Title"] = "Scanning QR Code";
-    var stationId = ViewBag.StationId;
-    var stationName = ViewBag.StationName;
 }
 
 <div class="container scanner-container py-4">
     <div class="header mb-5">
-        <h2 class="text-center" data-station-id="@stationId">Ticket Scanner – @stationName Station</h2>
+        <h2 class="text-center" data-station-id="@Model.StationId">Ticket Scanner – @Model.StationName Station</h2>
     </div>
 
     <div class="row justify-content-center g-5">
@@ -78,5 +78,5 @@
 
 @section Scripts {
     <script src="~/lib/jsQR.min.js"></script>
-    <script src="~/js/scanner.js"></script>
+    <script src="~/js/scanner.js" asp-append-version="true"></script>
 }

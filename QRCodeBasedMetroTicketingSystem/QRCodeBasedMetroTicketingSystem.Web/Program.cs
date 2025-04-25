@@ -71,6 +71,7 @@ builder.Services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
@@ -89,6 +90,7 @@ builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IQRCodeService, QRCodeService>();
+builder.Services.AddScoped<ITicketScanService, TicketScanService>();
 
 // Add authorization
 builder.Services.AddAuthorization();

@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const statusIcon = document.getElementById('statusIcon');
     const statusTitle = document.getElementById('statusTitle');
     const journeyInfo = document.getElementById('journeyInfo');
+    const stationId = document.querySelector('[data-station-id]').dataset.stationId;
 
     let scanning = false;
     let stream = null;
@@ -53,8 +54,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                     if (code) {
                         // QR code detected
-                        statusCard.className = 'status-card status-scanning';
-                        statusTitle.textContent = 'Processing QR Code';
+                        statusCard.className = 'status-card status-processing';
+                        statusIcon.className = 'fa-solid fa-hourglass-start';
+                        statusTitle.textContent = 'Processing...';
 
                         // Flash effect for the scan area
                         const scanArea = document.querySelector('.scan-area');
@@ -64,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         }, 300);
 
                         // Process the QR code
-                        processQRCode(code.data);
+                        processQRCode(stationId, code.data);
 
                         // Briefly pause scanning to prevent multiple scans
                         scanning = false;
@@ -89,12 +91,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         tick();
     }
 
-    async function processQRCode(token) {
+    async function processQRCode(stationId, qrCodeData) {
         try {
             const response = await fetch('/System/Scanner/ScanTicket', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Token: token })
+                body: JSON.stringify({ StationId: stationId, QRCodeData: qrCodeData })
             });
 
             const result = await response.json();
@@ -115,19 +117,19 @@ document.addEventListener('DOMContentLoaded', async function () {
             } else {
                 // Error case
                 statusCard.className = 'status-card status-error';
-                statusTitle.textContent = 'Invalid';
+                statusTitle.textContent = result.message;
 
                 // Add cross icon
                 statusIcon.className = 'fa-solid fa-xmark text-danger';
-                journeyInfo.classList.remove = 'd-none';
-
-                // Restart scanner UI
-                setTimeout(() => {
-                    statusCard.className = 'status-card status-scanning';
-                    statusIcon.className = 'fa-solid fa-expand';
-                    statusTitle.textContent = 'Scan Your QR Code';
-                }, 1500);
+                journeyInfo.classList.remove('d-none');
             }
+
+            // Reset scanner UI
+            setTimeout(() => {
+                statusCard.className = 'status-card status-scanning';
+                statusIcon.className = 'fa-solid fa-expand';
+                statusTitle.textContent = 'Scan Your QR Code';
+            }, 1500);
         } catch (err) {
             // Exception handling
             statusCard.className = 'status-card status-error';
@@ -141,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('toStationName').textContent = trip.ExitStationName;
         document.getElementById('toTime').textContent = trip.ExitTime;
         document.getElementById('fareAmount').textContent = trip.FareAmount;
-        journeyInfo.style.display = 'block';
+        journeyInfo.classList.remove('d-none')
     }
 
     // Stop scanner when page is unloaded

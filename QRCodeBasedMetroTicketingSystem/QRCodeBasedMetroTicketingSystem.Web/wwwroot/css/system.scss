@@ -135,7 +135,6 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
-            transition: all 0.3s ease;
 
             &.status-waiting {
                 background-color: #f8f9fa;
@@ -145,6 +144,11 @@
             &.status-scanning {
                 background-color: #e9f2fe;
                 color: #007bff;
+            }
+
+            &.status-processing {
+                background-color: rgba(255, 193, 7, 0.1);
+                color: var(--warning-color);
             }
 
             &.status-success {

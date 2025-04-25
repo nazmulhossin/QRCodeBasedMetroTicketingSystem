@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using QRCodeBasedMetroTicketingSystem.Web.Areas.Admin.ViewModels;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.System.ViewModels;
-using System.Threading.Tasks;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.System.Controllers
 {
@@ -12,12 +10,12 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.System.Controllers
     public class ScannerController : Controller
     {
         private readonly IStationService _stationService;
-        private readonly IMapper _mapper;
+        private readonly ITicketScanService _ticketScanService;
 
-        public ScannerController(IStationService stationService, IMapper mapper)
+        public ScannerController(IStationService stationService, ITicketScanService ticketScanService)
         {
             _stationService = stationService;
-            _mapper = mapper;
+            _ticketScanService = ticketScanService;
         }
 
         public async Task<IActionResult> Index()
@@ -61,48 +59,25 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.System.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StationId = stationId;
-            ViewBag.StationName = stationName;
+            var viewModel = new SelectStationViewModel
+            {
+                StationId = stationId,
+                StationName = stationName
+            };
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ScanTicket([FromBody] ScanTicketRequest? request)
+        public async Task<IActionResult> ScanTicket([FromBody] ScanTicketRequest request)
         {
-            if (request == null)
-            {
-                return BadRequest(new { IsValid = false, Message = "Request is null" });
-            }
-
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return Json(new ScanTicketResponseDto { IsValid = false, Message = "Invalid" });
             }
 
-            if (string.IsNullOrEmpty(request.Token))
-            {
-                return Json(new
-                {
-                    IsValid = false,
-                    Message = "Invalid QR code data"
-                });
-            }
-
-            if (char.IsLower(request.Token[0]))
-            {
-                return Json(new
-                {
-                    IsValid = true,
-                    Message = "Valid QR code data"
-                });
-            }
-
-            return Json(new
-            {
-                IsValid = false,
-                Message = "Invalid QR code data"
-            });
+            var result = await _ticketScanService.ProcessTicketScanAsync(request);
+            return Json(result);
         }
     }
 }

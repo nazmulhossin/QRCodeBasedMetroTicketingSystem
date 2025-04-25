@@ -19,6 +19,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         public IWalletRepository WalletRepository { get; }
         public ITransactionRepository TransactionRepository { get; }
         public ITicketRepository TicketRepository { get; }
+        public ITripRepository TripRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db,
                           IAdminRepository adminRepository,
@@ -29,7 +30,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                           IUserTokenRepository userTokenRepository,
                           IWalletRepository walletRepository,
                           ITransactionRepository transactionRepository,
-                          ITicketRepository ticketRepository)
+                          ITicketRepository ticketRepository,
+                          ITripRepository tripRepository)
         {
             _db = db;
             AdminRepository = adminRepository;
@@ -41,6 +43,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             WalletRepository = walletRepository;
             TransactionRepository = transactionRepository;
             TicketRepository = ticketRepository;
+            TripRepository = tripRepository;
         }
 
         public async Task<int> SaveChangesAsync()
