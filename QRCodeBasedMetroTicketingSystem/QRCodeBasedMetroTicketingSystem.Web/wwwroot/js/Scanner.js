@@ -140,9 +140,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('toStationName').textContent = trip.exitStationName;
         document.getElementById('toTime').textContent = trip.exitTime;
 
-        if (trip.fareAmount > 1) {
+        if (trip.fareAmount > 0) {
             document.getElementById('fare').textContent = trip.fareAmount;
-            alert(trip.fareAmount);
         } 
     }
 

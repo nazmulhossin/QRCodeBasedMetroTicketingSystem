@@ -23,6 +23,5 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
             return bdTime.ToString(format, CultureInfo.InvariantCulture);
         }
-
     }
 }
