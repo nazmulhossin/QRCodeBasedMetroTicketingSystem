@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
+using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.System.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.System.Controllers
@@ -6,47 +8,75 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.System.Controllers
     [Area("System")]
     public class ScannerController : Controller
     {
-        public IActionResult Index()
+        private readonly IStationService _stationService;
+        private readonly ITicketScanService _ticketScanService;
+
+        public ScannerController(IStationService stationService, ITicketScanService ticketScanService)
         {
-            return View();
+            _stationService = stationService;
+            _ticketScanService = ticketScanService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var stationList = await _stationService.GetAllStationsOrderedAsync();
+            var viewModel = new SelectStationViewModel
+            {
+                StationList = stationList
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ScanTicket([FromBody] ScanTicketRequest? request)
+        public async Task<IActionResult> Index(SelectStationViewModel model)
         {
-            if (request == null)
-            {
-                return BadRequest(new { IsValid = false, Message = "Request is null" });
-            }
-
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var stationList = await _stationService.GetAllStationsOrderedAsync();
+                model.StationList = stationList;
+                return View(model);
             }
 
-            if (string.IsNullOrEmpty(request.Token))
+            var stationName = await _stationService.GetStationNameByIdAsync(model.StationId.Value);
+            if (stationName == null)
             {
-                return Json(new
-                {
-                    IsValid = false,
-                    Message = "Invalid QR code data"
-                });
+                ModelState.AddModelError("StationId", "Please select a valid station");
+                var stationList = await _stationService.GetAllStationsOrderedAsync();
+                model.StationList = stationList;
+                return View(model);
             }
 
-            if (char.IsLower(request.Token[0]))
+            return RedirectToAction("ScanTicket", new { model.StationId });
+        }
+
+        public async Task<IActionResult> ScanTicket(int stationId)
+        {
+            var stationName = await _stationService.GetStationNameByIdAsync(stationId);
+            if (stationName == null)
             {
-                return Json(new
-                {
-                    IsValid = true,
-                    Message = "Valid QR code data"
-                });
+                return RedirectToAction("Index");
             }
 
-            return Json(new
+            var viewModel = new SelectStationViewModel
             {
-                IsValid = false,
-                Message = "Invalid QR code data"
-            });
+                StationId = stationId,
+                StationName = stationName
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ScanTicket([FromBody] ScanTicketRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new ScanTicketResponseDto { IsValid = false, Message = "Invalid" });
+            }
+
+            var result = await _ticketScanService.ProcessTicketScanAsync(request);
+            return Json(result);
         }
     }
 }

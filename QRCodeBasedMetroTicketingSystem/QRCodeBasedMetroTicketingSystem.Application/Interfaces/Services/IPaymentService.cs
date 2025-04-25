@@ -9,5 +9,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
         Task<bool> VerifyPaymentAsync(string transactionReference, PaymentMethod paymentMethod);
         Task<bool> CancelPaymentAsync(string transactionReference);
         Task<TransactionDto?> GetTransactionByReferenceAsync(string transactionReference);
+        Task<(bool Success, string? TransactionReference)> PayWithAccountBalanceAsync(int userId, decimal amount, PaymentItem paymentFor, string description);
     }
 }

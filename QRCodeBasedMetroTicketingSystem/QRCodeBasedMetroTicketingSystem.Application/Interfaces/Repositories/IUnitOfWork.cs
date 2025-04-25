@@ -11,6 +11,7 @@
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
         ITicketRepository TicketRepository { get; }
+        ITripRepository TripRepository { get; }
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

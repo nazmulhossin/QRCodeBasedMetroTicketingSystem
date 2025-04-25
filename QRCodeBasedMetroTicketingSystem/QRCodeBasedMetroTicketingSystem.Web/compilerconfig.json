@@ -38,5 +38,9 @@
   {
     "outputFile": "wwwroot/css/admin-auth.css",
     "inputFile": "wwwroot/css/admin-auth.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/system.css",
+    "inputFile": "wwwroot/css/system.scss"
   }
 ]

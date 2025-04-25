@@ -11,12 +11,14 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ITicketService _ticketService;
+        private readonly IWalletService _walletService;
 
-        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, ITicketService ticketService)
+        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, ITicketService ticketService, IWalletService walletService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _ticketService = ticketService;
+            _walletService = walletService;
         }
 
         public async Task<string> InitiatePaymentAsync(int userId, decimal amount, PaymentMethod paymentMethod, string? transactionReference)
@@ -145,6 +147,61 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             var result = await _unitOfWork.TransactionRepository.GetByReferenceAsync(transactionReference);
             return _mapper.Map<TransactionDto>(result);
+        }
+
+        public async Task<(bool Success, string? TransactionReference)> PayWithAccountBalanceAsync(int userId, decimal amount, PaymentItem paymentFor, string description)
+        {
+            // Get wallet for the transaction record
+            var wallet = await _walletService.GetWalletByUserIdAsync(userId);
+            if (wallet == null)
+            {
+                return (false, null);
+            }
+
+            // Check if user has sufficient balance
+            if (await _walletService.GetBalanceByUserIdAsync(userId) < amount)
+            {
+                return (false, null);
+            }
+
+            // Begin transaction
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                // Create transaction record
+                var transaction = new Transaction
+                {
+                    WalletId = wallet.Id,
+                    Amount = amount,
+                    Type = TransactionType.Payment,
+                    PaymentMethod = PaymentMethod.AccountBalance,
+                    PaymentFor = paymentFor,
+                    Status = TransactionStatus.Completed,
+                    TransactionReference = Guid.NewGuid().ToString(),
+                    Description = description
+                };
+
+                // Save transaction
+                await _unitOfWork.TransactionRepository.CreateAsync(transaction);
+
+                // Deduct from wallet
+                bool success = await _walletService.DeductBalanceAsync(userId, amount);
+                if (!success)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    return (false, null);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return (true, transaction.TransactionReference);
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return (false, null);
+            }
         }
     }
 }

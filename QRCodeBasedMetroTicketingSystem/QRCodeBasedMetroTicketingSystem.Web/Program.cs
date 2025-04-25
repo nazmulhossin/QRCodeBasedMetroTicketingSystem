@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
@@ -71,6 +70,7 @@ builder.Services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
@@ -85,10 +85,12 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<ITimeService, TimeService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
-builder.Services.AddScoped<IQRCodeService, QRCodeService>();
+builder.Services.AddSingleton<IQRCodeService, QRCodeService>();
+builder.Services.AddScoped<ITicketScanService, TicketScanService>();
 
 // Add authorization
 builder.Services.AddAuthorization();

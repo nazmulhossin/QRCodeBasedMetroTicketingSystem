@@ -1,12 +1,11 @@
-
 document.addEventListener('DOMContentLoaded', async function () {
     const video = document.getElementById('video');
-    const scannerStatus = document.getElementById('scannerStatus');
+    const scanInstruction = document.getElementById('scanInstruction');
     const statusCard = document.getElementById('statusCard');
-    const statusTitle = document.getElementById('statusTitle');
-    const statusMessage = document.getElementById('statusMessage');
-    const ticketInfo = document.getElementById('ticketInfo');
     const statusIcon = document.getElementById('statusIcon');
+    const statusTitle = document.getElementById('statusTitle');
+    const journeyInfo = document.getElementById('journeyInfo');
+    const stationId = document.querySelector('[data-station-id]').dataset.stationId;
 
     let scanning = false;
     let stream = null;
@@ -24,18 +23,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         video.srcObject = stream;
         await video.play();
         scanning = true;
-        scannerStatus.className = 'alert alert-success mt-3 w-100';
-        scannerStatus.textContent = 'Scanner active - position QR code in view';
+        scanInstruction.className = 'text-muted text-center';
+        scanInstruction.textContent = 'Position the QR code inside the box';
         statusCard.className = 'status-card status-scanning';
-        statusTitle.textContent = 'Scanner Active';
-        statusMessage.textContent = 'Ready to scan QR codes';
+        statusIcon.className = "fa-solid fa-expand";
+        statusTitle.textContent = 'Scanner Your QR Code';
         startScan();
     } catch (err) {
-        scannerStatus.className = 'alert alert-danger mt-3 w-100';
-        scannerStatus.textContent = 'Error accessing camera: ' + err.message;
         statusCard.className = 'status-card status-error';
         statusTitle.textContent = 'Camera Error';
-        statusMessage.textContent = 'Unable to access camera: ' + err.message;
     }
 
     function startScan() {
@@ -58,11 +54,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                     if (code) {
                         // QR code detected
-                        scannerStatus.className = 'alert alert-warning mt-3 w-100';
-                        scannerStatus.textContent = 'QR code detected! Processing...';
-                        statusCard.className = 'status-card status-scanning';
-                        statusTitle.textContent = 'Processing QR Code';
-                        statusMessage.textContent = 'Please wait while we validate the ticket...';
+                        statusCard.className = 'status-card status-processing';
+                        statusIcon.className = 'fa-solid fa-hourglass-start';
+                        statusTitle.textContent = 'Processing...';
 
                         // Flash effect for the scan area
                         const scanArea = document.querySelector('.scan-area');
@@ -72,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         }, 300);
 
                         // Process the QR code
-                        processQRCode(code.data);
+                        processQRCode(stationId, code.data);
 
                         // Briefly pause scanning to prevent multiple scans
                         scanning = false;
@@ -97,55 +91,68 @@ document.addEventListener('DOMContentLoaded', async function () {
         tick();
     }
 
-    async function processQRCode(token) {
+    async function processQRCode(stationId, qrCodeData) {
         try {
             const response = await fetch('/System/Scanner/ScanTicket', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Token: token })
+                body: JSON.stringify({ StationId: stationId, QRCodeData: qrCodeData })
             });
 
             const result = await response.json();
-            const timestamp = new Date().toLocaleTimeString();
 
             if (result.isValid) {
                 // Success case
                 statusCard.className = 'status-card status-success';
-                statusTitle.textContent = 'Valid Ticket';
-                statusMessage.textContent = result.Message;
+                statusTitle.textContent = 'GO! GO!';
 
                 // Add tick icon
-                statusIcon.className = 'fas fa-check-circle text-success';
+                statusIcon.className = 'fa-solid fa-check text-success';
 
-                // Show ticket info if available
-                if (result.Ticket) {
-                    showTicketInfo(result.Ticket, timestamp);
+                // Show journey info if available
+                if (result.tripSummary) {
+                    journeyInfo.classList.remove('d-none');
+                    showJourneyInfo(result.tripSummary);
                 }
+
+                // Reset scanner UI
+                resetScannerUI(4000);
 
             } else {
                 // Error case
                 statusCard.className = 'status-card status-error';
-                statusTitle.textContent = 'Invalid Ticket';
-                statusMessage.textContent = result.Message;
-
-                // Add cross icon
-                statusIcon.className = 'fas fa-times-circle text-danger';
-                ticketInfo.style.display = 'none';
+                statusTitle.textContent = result.message;
+                statusIcon.className = 'fa-solid fa-xmark text-danger';
+                resetScannerUI();
             }
         } catch (err) {
             // Exception handling
             statusCard.className = 'status-card status-error';
+            statusIcon.className = 'fa-solid fa-triangle-exclamation';
             statusTitle.textContent = 'System Error';
-            statusMessage.textContent = 'Error processing QR code: ' + err.message;
         }
     }
 
-    function showTicketInfo(ticket, timestamp) {
-        document.getElementById('ticketId').textContent = ticket.Id;
-        document.getElementById('userId').textContent = ticket.UserId;
-        document.getElementById('ticketStatus').textContent = ticket.Status;
-        document.getElementById('scanTime').textContent = timestamp;
-        ticketInfo.style.display = 'block';
+    // Helper function to show journey information
+    function showJourneyInfo(trip) {
+        document.getElementById('fromStationName').textContent = trip.entryStationName;
+        document.getElementById('fromTime').textContent = trip.entryTime;
+        document.getElementById('toStationName').textContent = trip.exitStationName;
+        document.getElementById('toTime').textContent = trip.exitTime;
+
+        if (trip.fareAmount > 0) {
+            document.getElementById('fare').textContent = trip.fareAmount;
+        } 
+    }
+
+    // Helper function to reset scanner UI
+    function resetScannerUI(delay = 2000) {
+        setTimeout(() => {
+            statusCard.className = 'status-card status-scanning';
+            statusIcon.className = 'fa-solid fa-expand';
+            statusTitle.textContent = 'Scan Your QR Code';
+            journeyInfo.classList.add('d-none');
+        }, delay);
     }
 
     // Stop scanner when page is unloaded
