@@ -145,28 +145,38 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             });
         }
 
-        //public async Task<IActionResult> GetOrGenerateRapidPassQr()
-        //{
-        //    var userId = User.GetUserId();
-        //    if (userId == null)
-        //        return Unauthorized();
+        public async Task<IActionResult> GetOrGenerateRapidPass()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
-        //    var ticket = await _ticketService.GetOrGenerateRapidPassQrByUserIdAsync(userId);
-        //    if (ticket == null)
-        //    {
-        //        return Unauthorized();
-        //    }
+            var rapidPassTicket = await _ticketService.GetOrGenerateRapidPassAsync(userId.Value);
+            if (rapidPassTicket == null)
+            {
+                return Unauthorized();
+            }
 
-        //    var qrCodeBase64 = _qrCodeService.GenerateQRCode(ticket.QRCodeData);
+            var qrCodeBase64 = _qrCodeService.GenerateQRCode(rapidPassTicket.QRCodeData!);
 
-        //    return Json(new
-        //    {
-        //        ticketId = ticket.Id,
-        //        qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
-        //        originStationName = ticket.OriginStationName,
-        //        destinationStationName = ticket.DestinationStationName,
-        //        expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime)
-        //    });
-        //}
+            return Json(new
+            {
+                rapidPassTicketId = rapidPassTicket.Id,
+                qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
+                status = rapidPassTicket.Status,
+                expiryTime = _timeService.FormatAsBdTime(rapidPassTicket.ExpiryTime)
+            });
+        }
+
+        public async Task<IActionResult> CancelRapidPass()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _ticketService.CancelRapidPassAsync(userId.Value);
+
+            return Json(result);
+        }
     } 
 }

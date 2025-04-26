@@ -1,15 +1,15 @@
 ﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
 @model TicketDto
 
+@{
+    var statusCode = (int)Model.Status;
+}
+
 @if (Model.Id == 0)
 {
-    <span id="rapidPassStatus" data-ticket-id="@Model.Id">Generate Rapid-Pass</span>
-}
-else if (Model.Status == TicketStatus.Active)
-{
-    <span id="rapidPassStatus" data-ticket-id="@Model.Id">Show Rapid-Pass at Entry Gate</span>
+    <span id="rapidPassStatus" data-rapid-pass-status="@statusCode">Get RapidPass QR Code</span>
 }
 else
 {
-    <span id="rapidPassStatus" data-ticket-id="@Model.Id">Show Rapid-Pass at Exit Gate</span>
+    <span id="rapidPassStatus" data-rapid-pass-status="@statusCode">Show RapidPass QR Code</span>
 }

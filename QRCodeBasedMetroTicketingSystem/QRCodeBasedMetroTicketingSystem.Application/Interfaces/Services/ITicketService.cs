@@ -1,4 +1,5 @@
-﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
+﻿using QRCodeBasedMetroTicketingSystem.Application.Common.Result;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 
 namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
@@ -8,7 +9,9 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
         Task<IEnumerable<TicketDto>> GetQrTicketsByStatusAsync(int userId, TicketStatus status);
         Task<TicketDto?> GetTicketByIdAsync(int ticketId);
         Task<int> GetActiveAndInUseTicketsCountAsync(int userId);
-        Task<TicketDto?> GetActiveRapidPassTicketByUserIdAsync(int userId);
+        Task<TicketDto?> GetActiveRapidPassAsync(int userId);
+        Task<TicketDto?> GetOrGenerateRapidPassAsync(int userId);
+        Task<Result> CancelRapidPassAsync(int userId);
         Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int fromStationId, int toStationId);
         Task<(string TransactionReference, decimal Amount)> InitiatePurchaseQRTicketAsync(int userId, int originStationId, int destinationStationId, string paymentMethod);
         Task<bool> CompleteQRTicketPurchaseAsync(string transactionReference);

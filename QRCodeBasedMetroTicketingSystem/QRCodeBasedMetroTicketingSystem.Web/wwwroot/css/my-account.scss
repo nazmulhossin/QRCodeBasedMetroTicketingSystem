@@ -569,19 +569,3 @@
         }
     }
 }
-
-.qr-modal .modal-content {
-    .qr-code-container {
-        .qr-code {
-            width: 80%;
-            height: 80%;
-            margin: 0 auto 20px;
-        }
-
-        .station-name {
-            font-weight: 600;
-            color: var(--primary-color);
-            text-transform: uppercase;
-        }
-    }
-}

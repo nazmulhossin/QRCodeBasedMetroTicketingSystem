@@ -21,7 +21,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Components
             var userId = (User as ClaimsPrincipal)?.GetUserId();
             if (userId != null)
             {
-                ticket = await _ticketService.GetActiveRapidPassTicketByUserIdAsync(userId.Value) ?? new TicketDto();
+                ticket = await _ticketService.GetActiveRapidPassAsync(userId.Value) ?? new TicketDto();
             }
 
             return View(ticket);

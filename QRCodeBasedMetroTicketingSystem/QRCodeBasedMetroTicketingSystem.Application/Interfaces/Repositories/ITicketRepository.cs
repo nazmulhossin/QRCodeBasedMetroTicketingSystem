@@ -1,5 +1,4 @@
-﻿using QRCodeBasedMetroTicketingSystem.Application.DTOs;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
+﻿using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 
 namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
 {

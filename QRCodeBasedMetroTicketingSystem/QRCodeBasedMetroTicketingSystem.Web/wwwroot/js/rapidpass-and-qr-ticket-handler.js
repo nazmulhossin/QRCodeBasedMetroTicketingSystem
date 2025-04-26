@@ -31,9 +31,14 @@
                 hideLoading(btn, originalText);
             },
             error: function () {
-                alert('Failed to load QR code. Please try again.');
-                qrModal.hide();
-                hideLoading(btn, originalText);
+                if (xhr.status === 401) {
+                    // Redirect to login if not authorized
+                    window.location.href = '/Login';
+                } else {
+                    alert('Failed to load QR code. Please try again.');
+                    qrModal.hide();
+                    hideLoading(btn, originalText);
+                }
             }
         });
     });
@@ -52,41 +57,97 @@
     // Generate and show Rapid-Pass QR Code
     $('#rapidPassToggleBtn').click(function () {
         const btn = $(this);
-        const ticketId = $("#rapidPassStatus").data('ticket-id');
+        const rapidPassStatus = $("#rapidPassStatus").data('rapid-pass-status');
         qrModal.hide();
 
         // Save original button text and show loading
         const originalText = btn.html();
-        if (ticketId == 0) {
-            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...');
-            window.location.href = '/Login';
-            return;
+        if (rapidPassStatus == 0) {
+            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating QR Code...');
         } else {
-            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Showing...');
+            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Showing QR Code...');
         }
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '/User/Ticket/GetOrGenerateRapidPassQr',
+            url: '/User/Ticket/GetOrGenerateRapidPass',
             type: 'GET',
             success: function (data) {
                 $('#qrCodeImage').attr('src', data.qrCodeImage);
                 $('#infoMessage').html('Scan this QR code at the entry gate and the exit gate');
-                $('#downloadQRBtn').attr('data-ticket-id', data.ticketId);
+                $('#downloadQRBtn').attr('data-ticket-id', data.rapidPassTicketId);
+                $('#cancelRapidPassBtn').attr('data-ticket-id', data.rapidPassTicketId);
+                $('#rapidPassStatus').data('rapid-pass-status', data.status);
 
-                // Start the countdown timer for expiry
-                startExpiryCountdown(new Date(data.expiryTime));
+                startExpiryCountdown(new Date(data.expiryTime)); // Start the countdown timer for expiry
                 qrModal.show();
+                hideLoading(btn, originalText); // Restore button text (hide loadig animation)
+                updateRapidPassBtnText();
+            },
+            error: function () {
+                if (xhr.status === 401) {
+                    // Redirect to login if not authorized
+                    window.location.href = '/Login';
+                } else {
+                    alert('Failed to load RapidPass QR code. Please try again.');
+                    qrModal.hide();
+                    hideLoading(btn, originalText);
+                }
+            }
+        });
+    });
 
-                // Restore button text (hide loadig animation)
+    // Cancel Rapid-Pass
+    $('#cancelRapidPassBtn').click(function () {
+        const btn = $(this);
+        const rapidPassStatus = $("#rapidPassStatus").data('rapid-pass-status');
+
+        // Save original button text and show loading
+        const originalText = btn.html();
+        if (rapidPassStatus == 2) {
+            alert('RapidPass is in use. Cannot cancel.');
+        }
+
+        btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Canceling...');
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: '/User/Ticket/CancelRapidPass',
+            type: 'GET',
+            success: function (data) {
+                if (data.isSuccess) {
+                    $('#rapidPassStatus').data('rapid-pass-status', 0);
+                    updateRapidPassBtnText();
+                    $('#cancelRapidPassBtn').text(data.message);
+                } else {
+                    alert(data.message);
+                }
+
+                qrModal.hide();
                 hideLoading(btn, originalText);
             },
             error: function () {
-                alert('Failed to load QR code. Please try again.');
-                qrModal.hide();
-                hideLoading(btn, originalText);
+                if (xhr.status === 401) {
+                    // Redirect to login if not authorized
+                    window.location.href = '/Login';
+                } else {
+                    alert('Failed to load Rapid-Pass QR code. Please try again.');
+                    qrModal.hide();
+                    hideLoading(btn, originalText);
+                }
             }
         });
+    });
+
+    // Close Rapid-Pass QR Code Modal
+    $('#rapidPassModalCloseBtn').on('click', function () {
+        // update RapidPass button text
+        updateRapidPassBtnText();
+
+        // Clear count down interval
+        if (window.countdownInterval) {
+            clearInterval(window.countdownInterval);
+        }
     });
 
     // Function to start countdown timer
@@ -134,6 +195,17 @@
 
         // Start countdown interval
         window.countdownInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateRapidPassBtnText() {
+        const rapidPassStatus = $("#rapidPassStatus").data('rapid-pass-status');
+
+        // Update Button text on status
+        if (rapidPassStatus == 0) {
+            $('#rapidPassStatus').text("Get RapidPass QR Code");
+        } else {
+            $('#rapidPassStatus').text("Show RapidPass QR Code");
+        }
     }
 
     // Download QR Ticket and RapidPass QR code as PDF (when clicking the download button on the ticket card or clicking the download button in the modal)
