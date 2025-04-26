@@ -40,9 +40,20 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Ticket?> GetActiveRapidPassTicketByUserIdAsync(int userId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(t =>
+                t.UserId == userId &&
+                t.Type == TicketType.RapidPass &&
+                (
+                    (t.Status == TicketStatus.Active && t.ExpiryTime > DateTime.UtcNow) ||
+                    (t.Status == TicketStatus.InUse)
+                ));
+        }
+
         public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
         {
             return await _dbSet.CountAsync(t => t.UserId == userId && (t.Status == TicketStatus.Active || t.Status == TicketStatus.InUse));
-        }
+        }  
     }
 }

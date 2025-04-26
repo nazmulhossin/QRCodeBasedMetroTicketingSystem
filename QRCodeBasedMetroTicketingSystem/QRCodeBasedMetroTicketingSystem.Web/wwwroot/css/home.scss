@@ -18,6 +18,10 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    #rapidPassToggleBtn {
+        padding: 0.5rem 1rem;
+    }
 }
 
 /* Fare Checker & Buy QR Ticket Section */
@@ -204,22 +208,6 @@
         display: flex;
         justify-content: center;
         margin-top: 20px;
-    }
-}
-
-.qr-modal .modal-content {
-    .qr-code-container {
-        padding: 20px;
-        text-align: center;
-    }
-
-    .qr-code {
-        width: 200px;
-        height: 200px;
-        margin: 0 auto 20px;
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
     }
 }
 

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
-using System.Runtime.InteropServices;
+using System.Net.Sockets;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 {
@@ -15,12 +16,14 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
     {
         private readonly ITicketService _ticketService;
         private readonly IQRCodeService _qrCodeService;
+        private readonly ITimeService _timeService;
         private readonly IMapper _mapper;
 
-        public TicketController(ITicketService ticketService, IQRCodeService qrCodeService, IMapper mapper)
+        public TicketController(ITicketService ticketService, IQRCodeService qrCodeService, ITimeService timeService, IMapper mapper)
         {
             _ticketService = ticketService;
             _qrCodeService = qrCodeService;
+            _timeService = timeService;
             _mapper = mapper;
         }
 
@@ -126,7 +129,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var ticket = await _ticketService.GetTicketByIdAsync(ticketId);
+            // ticketId = 0 means RapidPass
+            var ticket = ticketId == 0
+                ? await _ticketService.GetActiveRapidPassAsync(userId.Value)
+                : await _ticketService.GetTicketByIdAsync(ticketId);
+
             if (ticket == null || ticket.UserId != userId)
             {
                 return Unauthorized();
@@ -140,30 +147,57 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 originStationName = ticket.OriginStationName,
                 destinationStationName = ticket.DestinationStationName,
-                expiryTime = ConvertToBangladeshTime(ticket.ExpiryTime).ToString("MMM d, yyyy h:mm tt")
+                expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime),
+                ticketType = ticket.Type
             });
         }
 
-        private DateTime ConvertToBangladeshTime(DateTime utcDateTime)
+        public async Task<IActionResult> GetOrGenerateRapidPass()
         {
-            try
-            {
-                if (utcDateTime.Kind != DateTimeKind.Utc)
-                {
-                    utcDateTime = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc);
-                }
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
-                var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? "Bangladesh Standard Time"
-                    : "Asia/Dhaka";
-
-                var bstTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-                return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, bstTimeZone);
-            }
-            catch (TimeZoneNotFoundException)
+            var rapidPassTicket = await _ticketService.GetOrGenerateRapidPassAsync(userId.Value);
+            if (rapidPassTicket == null)
             {
-                return utcDateTime.AddHours(6);
+                return Unauthorized();
             }
+
+            var qrCodeBase64 = _qrCodeService.GenerateQRCode(rapidPassTicket.QRCodeData!);
+
+            return Json(new
+            {
+                rapidPassTicketId = rapidPassTicket.Id,
+                qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
+                status = rapidPassTicket.Status,
+                expiryTime = _timeService.FormatAsBdTime(rapidPassTicket.ExpiryTime)
+            });
+        }
+
+        public async Task<IActionResult> CancelRapidPass()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _ticketService.CancelRapidPassAsync(userId.Value);
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetRapidPassStatus()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var rapidPassTicket = await _ticketService.GetActiveRapidPassAsync(userId.Value) ?? new TicketDto();
+
+            return Json(new 
+            {
+                status = rapidPassTicket.Status
+            });
         }
     } 
 }

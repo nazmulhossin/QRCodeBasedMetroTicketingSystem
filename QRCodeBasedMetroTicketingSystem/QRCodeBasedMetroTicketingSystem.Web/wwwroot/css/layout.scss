@@ -412,7 +412,30 @@ footer {
     }
 }
 
+// Show QR Code modal styles
+.qr-modal .modal-content {
+    color: var(--dark-color);
 
+    .qr-code-container {
+        padding: 0 !important;
+
+        .qr-code {
+            width: 80%;
+            height: 80%;
+            margin: 0 auto 20px;
+        }
+
+        #infoMessage {
+            font-size: 1rem;
+        }
+
+        .station-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+    }
+}
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {

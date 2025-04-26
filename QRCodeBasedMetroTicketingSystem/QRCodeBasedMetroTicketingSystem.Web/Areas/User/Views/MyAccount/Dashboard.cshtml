@@ -42,10 +42,11 @@
 
     <!-- Quick Actions -->
     <div class="quick-actions">
-        <a href="#">
+        <a id="rapidPassToggleBtn">
             <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
-            <div class="quick-action-text">Generate QR Ticket</div>
+            <div class="quick-action-text">@await Component.InvokeAsync("RapidPassStatus")</div>
         </a>
+        <partial name="_ShowRapidPassQrModal" />
         <a asp-area="User" asp-controller="Payment" asp-action="EnterPaymentDetails">
             <div class="quick-action-icon"><i class="fas fa-wallet"></i></div>
             <div class="quick-action-text">Add Balance</div>

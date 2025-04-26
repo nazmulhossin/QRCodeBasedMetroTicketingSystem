@@ -350,6 +350,26 @@ footer .footer-bottom {
   color: rgba(255, 255, 255, 0.7);
 }
 
+.qr-modal .modal-content {
+  color: var(--dark-color);
+}
+.qr-modal .modal-content .qr-code-container {
+  padding: 0 !important;
+}
+.qr-modal .modal-content .qr-code-container .qr-code {
+  width: 80%;
+  height: 80%;
+  margin: 0 auto 20px;
+}
+.qr-modal .modal-content .qr-code-container #infoMessage {
+  font-size: 1rem;
+}
+.qr-modal .modal-content .qr-code-container .station-name {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
   .navbar #openUserSidebarBtn {

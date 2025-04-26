@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using QRCodeBasedMetroTicketingSystem.Application.Common.Result;
 using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
@@ -10,7 +11,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFareCalculationService _fareCalculationService;
-        private readonly IStationService _stationService;
         private readonly ISystemSettingsService _systemSettingsService;
         private readonly IWalletService _walletService;
         private readonly IQRCodeService _qrCodeService;
@@ -19,7 +19,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         public TicketService(
             IUnitOfWork unitOfWork,
             IFareCalculationService fareCalculationService,
-            IStationService stationService,
             ISystemSettingsService systemSettingsService,
             IWalletService walletService,
             IQRCodeService qrCodeService,
@@ -27,7 +26,6 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
             _fareCalculationService = fareCalculationService;
-            _stationService = stationService;
             _systemSettingsService = systemSettingsService;
             _walletService = walletService;
             _qrCodeService = qrCodeService;
@@ -42,13 +40,75 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
         public async Task<TicketDto?> GetTicketByIdAsync(int ticketId)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetTicketByIdAsync(ticketId);
-            return _mapper.Map<TicketDto>(tickets);
+            var ticket = await _unitOfWork.TicketRepository.GetTicketByIdAsync(ticketId);
+            return _mapper.Map<TicketDto>(ticket);
         }
 
         public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
         {
             return await _unitOfWork.TicketRepository.GetActiveAndInUseTicketsCountAsync(userId);
+        }
+
+        public async Task<TicketDto?> GetActiveRapidPassAsync(int userId)
+        {
+            var ticket = await _unitOfWork.TicketRepository.GetActiveRapidPassTicketByUserIdAsync(userId);
+            return _mapper.Map<TicketDto>(ticket);
+        }
+
+        public async Task<TicketDto?> GetOrGenerateRapidPassAsync(int userId)
+        {
+            // Check if user already has an active RapidPass
+            var existingRapidPass = await _unitOfWork.TicketRepository.GetActiveRapidPassTicketByUserIdAsync(userId);
+            if (existingRapidPass != null)
+            {
+                return _mapper.Map<TicketDto>(existingRapidPass);
+            }
+
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+
+            // Not found: Create new RapidPass ticket
+            var newTicket = new Ticket
+            {
+                UserId = userId,
+                Type = TicketType.RapidPass,
+                Status = TicketStatus.Active,
+                ExpiryTime = DateTime.UtcNow.AddMinutes(systemSettings.RapidPassQrCodeValidityMinutes),
+            };
+
+            // Generate QR code data
+            newTicket.QRCodeData = _qrCodeService.GenerateQRCodeData(newTicket);
+
+            // Save ticket to database
+            await _unitOfWork.TicketRepository.CreateTicketAsync(newTicket);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Update the QR code with the actual ticket ID
+            newTicket.QRCodeData = _qrCodeService.GenerateQRCodeData(newTicket);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<TicketDto>(newTicket);
+        }
+
+        public async Task<Result> CancelRapidPassAsync(int userId)
+        {
+            // Check if user has an active RapidPass
+            var existingRapidPass = await _unitOfWork.TicketRepository.GetActiveRapidPassTicketByUserIdAsync(userId);
+            if (existingRapidPass == null)
+            {
+                return Result.Failure("RapidPass does not exist.");
+            }
+
+            // Check if existing RapidPass is in use
+            if (existingRapidPass.Status == TicketStatus.InUse)
+            {
+                return Result.Failure("RapidPass is in use. Cannot cancel.");
+            }
+
+            // Update existing RapidPass
+            existingRapidPass.Status = TicketStatus.Cancelled;
+            await _unitOfWork.SaveChangesAsync();            
+
+            return Result.Success("Cancelled Successfully!");
         }
 
         public async Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int originStationId, int destinationStationId)
