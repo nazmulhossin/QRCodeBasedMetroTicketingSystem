@@ -108,7 +108,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             existingRapidPass.Status = TicketStatus.Cancelled;
             await _unitOfWork.SaveChangesAsync();            
 
-            return Result.Success("Canceled Successfully!");
+            return Result.Success("Cancelled Successfully!");
         }
 
         public async Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int originStationId, int destinationStationId)

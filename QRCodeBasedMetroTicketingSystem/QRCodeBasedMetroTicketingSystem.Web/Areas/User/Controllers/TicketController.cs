@@ -6,6 +6,7 @@ using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
+using System.Net.Sockets;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 {
@@ -146,7 +147,8 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 originStationName = ticket.OriginStationName,
                 destinationStationName = ticket.DestinationStationName,
-                expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime)
+                expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime),
+                ticketType = ticket.Type
             });
         }
 
@@ -182,6 +184,20 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             var result = await _ticketService.CancelRapidPassAsync(userId.Value);
 
             return Json(result);
+        }
+
+        public async Task<IActionResult> GetRapidPassStatus()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var rapidPassTicket = await _ticketService.GetActiveRapidPassAsync(userId.Value) ?? new TicketDto();
+
+            return Json(new 
+            {
+                status = rapidPassTicket.Status
+            });
         }
     } 
 }

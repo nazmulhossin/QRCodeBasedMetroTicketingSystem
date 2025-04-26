@@ -69,6 +69,13 @@
         }
         btn.prop('disabled', true);
 
+        // Hide the Cancel RapidPass button if the RapidPass is in use
+        if (rapidPassStatus == 2) {
+            $('#cancelRapidPassBtn').addClass('d-none');
+        } else {
+            $('#cancelRapidPassBtn').removeClass('d-none');
+        }
+
         $.ajax({
             url: '/User/Ticket/GetOrGenerateRapidPass',
             type: 'GET',
@@ -80,8 +87,8 @@
 
                 startExpiryCountdown(new Date(data.expiryTime)); // Start the countdown timer for expiry
                 qrModal.show();
-                hideLoading(btn, originalText); // Restore button text (hide loadig animation)
                 updateRapidPassBtnText();
+                hideLoading(btn, originalText); // Restore button text (hide loadig animation)
             },
             error: function (xhr) {
                 if (xhr.status === 401) {
@@ -105,6 +112,7 @@
         const originalText = btn.html();
         if (rapidPassStatus == 2) {
             alert('RapidPass is in use. Cannot cancel.');
+            return;
         }
 
         btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Canceling...');
@@ -130,7 +138,7 @@
                     // Redirect to login if not authorized
                     window.location.href = '/Login';
                 } else {
-                    alert('Failed to load Rapid-Pass QR code. Please try again.');
+                    alert('Failed to cancel RapidPass. Please try again.');
                     qrModal.hide();
                     hideLoading(btn, originalText);
                 }
@@ -140,13 +148,29 @@
 
     // Close Rapid-Pass QR Code Modal
     $('#rapidPassModalCloseBtn').on('click', function () {
-        // update RapidPass button text
-        updateRapidPassBtnText();
-
         // Clear count down interval
         if (window.countdownInterval) {
             clearInterval(window.countdownInterval);
         }
+
+        // Get RapidPass Status from server
+        $.ajax({
+            url: '/User/Ticket/GetRapidPassStatus',
+            type: 'GET',
+            success: function (data) {
+                $('#rapidPassStatus').data('rapid-pass-status', data.status);
+                updateRapidPassBtnText();
+                qrModal.hide();
+            },
+            error: function (xhr) {
+                if (xhr.status === 401) {
+                    // Redirect to login if not authorized
+                    window.location.href = '/Login';
+                } else {
+                    qrModal.hide();
+                }
+            }
+        });
     });
 
     // Function to start countdown timer
@@ -256,7 +280,7 @@
         doc.setFont('helvetica', 'normal');
         doc.setTextColor('#333333');
 
-        if (ticketData.destinationStationName) {
+        if (ticketData.ticketType == 0) {
             doc.text(`From: ${ticketData.originStationName}`, 10, 112);
             doc.text(`To: ${ticketData.destinationStationName}`, 10, 118);
         }
@@ -264,7 +288,12 @@
         doc.text(`Valid Until: ${ticketData.expiryTime}`, 10, 124);
 
         // Save PDF
-        doc.save(`metro-ticket-${ticketData.ticketId}-${ticketData.originStationName} to ${ticketData.destinationStationName}.pdf`);
+        if (ticketData.ticketType == 0) {
+            doc.save(`Metro-Ticket-${ticketData.ticketId}_${ticketData.originStationName} to ${ticketData.destinationStationName}.pdf`);
+        } else {
+            doc.save(`Metro-RapidPass-${ticketData.ticketId}_${ticketData.expiryTime}.pdf`);
+        }
+        
     }
 
     // Helper function to hide loading animation
