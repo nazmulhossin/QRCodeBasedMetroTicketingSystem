@@ -30,7 +30,7 @@
                 // Restore button text (hide loadig animation)
                 hideLoading(btn, originalText);
             },
-            error: function () {
+            error: function (xhr) {
                 if (xhr.status === 401) {
                     // Redirect to login if not authorized
                     window.location.href = '/Login';
@@ -74,7 +74,6 @@
             type: 'GET',
             success: function (data) {
                 $('#qrCodeImage').attr('src', data.qrCodeImage);
-                $('#infoMessage').html('Scan this QR code at the entry gate and the exit gate');
                 $('#downloadQRBtn').attr('data-ticket-id', data.rapidPassTicketId);
                 $('#cancelRapidPassBtn').attr('data-ticket-id', data.rapidPassTicketId);
                 $('#rapidPassStatus').data('rapid-pass-status', data.status);
@@ -84,7 +83,7 @@
                 hideLoading(btn, originalText); // Restore button text (hide loadig animation)
                 updateRapidPassBtnText();
             },
-            error: function () {
+            error: function (xhr) {
                 if (xhr.status === 401) {
                     // Redirect to login if not authorized
                     window.location.href = '/Login';
@@ -126,7 +125,7 @@
                 qrModal.hide();
                 hideLoading(btn, originalText);
             },
-            error: function () {
+            error: function (xhr) {
                 if (xhr.status === 401) {
                     // Redirect to login if not authorized
                     window.location.href = '/Login';
@@ -256,8 +255,12 @@
         doc.setFontSize(11);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor('#333333');
-        doc.text(`From: ${ticketData.originStationName}`, 10, 112);
-        doc.text(`To: ${ticketData.destinationStationName}`, 10, 118);
+
+        if (ticketData.destinationStationName) {
+            doc.text(`From: ${ticketData.originStationName}`, 10, 112);
+            doc.text(`To: ${ticketData.destinationStationName}`, 10, 118);
+        }
+
         doc.text(`Valid Until: ${ticketData.expiryTime}`, 10, 124);
 
         // Save PDF

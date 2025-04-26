@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
@@ -127,7 +128,11 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var ticket = await _ticketService.GetTicketByIdAsync(ticketId);
+            // ticketId = 0 means RapidPass
+            var ticket = ticketId == 0
+                ? await _ticketService.GetActiveRapidPassAsync(userId.Value)
+                : await _ticketService.GetTicketByIdAsync(ticketId);
+
             if (ticket == null || ticket.UserId != userId)
             {
                 return Unauthorized();
