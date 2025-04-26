@@ -1,0 +1,30 @@
+﻿<!-- Show QR Code Modal -->
+<div class="modal fade qr-modal" id="generateQRModal" tabindex="-1" aria-labelledby="generateQRModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateQRModalLabel">Rapid-Pass QR Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-container">
+                    <div class="qr-code mb-3">
+                        <img src="" alt="QR Code" class="img-fluid" id="qrCodeImage">
+                    </div>
+                    <p id="infoMessage"></p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary download-ticket">
+                            <i class="fas fa-download me-2"></i> Download Rapid-Pass QR
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fa-regular fa-circle-xmark me-2"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted" id="expiryInfo"></small>
+            </div>
+        </div>
+    </div>
+</div>

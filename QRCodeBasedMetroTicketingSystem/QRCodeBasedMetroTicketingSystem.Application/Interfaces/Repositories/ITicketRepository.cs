@@ -9,6 +9,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
         Task<Ticket?> GetTicketByIdAsync(int ticketId);
         Task<Ticket?> GetByReferenceAsync(string transactionReference);
         Task<IEnumerable<Ticket>> GetQrTicketsByStatusAsync(int userId, TicketStatus status);
+        Task<Ticket?> GetActiveRapidPassTicketByUserIdAsync(int userId);
         Task<int> GetActiveAndInUseTicketsCountAsync(int userId);
     }
 }

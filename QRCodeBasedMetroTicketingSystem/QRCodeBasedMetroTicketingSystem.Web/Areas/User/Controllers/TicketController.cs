@@ -5,7 +5,6 @@ using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
-using System.Runtime.InteropServices;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 {
@@ -15,12 +14,14 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
     {
         private readonly ITicketService _ticketService;
         private readonly IQRCodeService _qrCodeService;
+        private readonly ITimeService _timeService;
         private readonly IMapper _mapper;
 
-        public TicketController(ITicketService ticketService, IQRCodeService qrCodeService, IMapper mapper)
+        public TicketController(ITicketService ticketService, IQRCodeService qrCodeService, ITimeService timeService, IMapper mapper)
         {
             _ticketService = ticketService;
             _qrCodeService = qrCodeService;
+            _timeService = timeService;
             _mapper = mapper;
         }
 
@@ -140,30 +141,32 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 originStationName = ticket.OriginStationName,
                 destinationStationName = ticket.DestinationStationName,
-                expiryTime = ConvertToBangladeshTime(ticket.ExpiryTime).ToString("MMM d, yyyy h:mm tt")
+                expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime)
             });
         }
 
-        private DateTime ConvertToBangladeshTime(DateTime utcDateTime)
-        {
-            try
-            {
-                if (utcDateTime.Kind != DateTimeKind.Utc)
-                {
-                    utcDateTime = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc);
-                }
+        //public async Task<IActionResult> GetOrGenerateRapidPassQr()
+        //{
+        //    var userId = User.GetUserId();
+        //    if (userId == null)
+        //        return Unauthorized();
 
-                var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? "Bangladesh Standard Time"
-                    : "Asia/Dhaka";
+        //    var ticket = await _ticketService.GetOrGenerateRapidPassQrByUserIdAsync(userId);
+        //    if (ticket == null)
+        //    {
+        //        return Unauthorized();
+        //    }
 
-                var bstTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-                return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, bstTimeZone);
-            }
-            catch (TimeZoneNotFoundException)
-            {
-                return utcDateTime.AddHours(6);
-            }
-        }
+        //    var qrCodeBase64 = _qrCodeService.GenerateQRCode(ticket.QRCodeData);
+
+        //    return Json(new
+        //    {
+        //        ticketId = ticket.Id,
+        //        qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
+        //        originStationName = ticket.OriginStationName,
+        //        destinationStationName = ticket.DestinationStationName,
+        //        expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime)
+        //    });
+        //}
     } 
 }

@@ -15,9 +15,11 @@
             travel across Dhaka.
         </p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <button class="btn btn-primary btn-lg px-4" data-bs-toggle="modal" data-bs-target="#generateQRModal">
-                <i class="fas fa-qrcode me-2"></i> Generate QR Ticket
+            <button class="btn btn-primary btn-lg px-4" id="rapidPassToggleBtn">
+                <i class="fas fa-qrcode me-2"></i>
+                @await Component.InvokeAsync("RapidPassStatus")
             </button>
+            <partial name="_ShowRapidPassQrModal" />
             <a href="#how-it-works" class="btn btn-outline-light btn-lg">
                 <i class="fas fa-info-circle me-2"></i> Learn How It Works
             </a>
@@ -113,7 +115,7 @@
             <div class="col-md-4">
                 <div class="step-card">
                     <div class="step-number">1</div>
-                    <h3>Generate QR Ticket</h3>
+                    <h3>Buy or Generate QR Ticket</h3>
                     <p>Use our app or website to generate a QR code ticket for your journey.</p>
                     <img src="~/images/generate-qr-code.jpg" alt="Generate QR Ticket" class="step-img">
                 </div>
@@ -294,42 +296,6 @@
         </div>
     </div>
 </section>
-
-<!-- Generate QR Code Modal -->
-<div class="modal fade qr-modal" id="generateQRModal" tabindex="-1" aria-labelledby="generateQRModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="generateQRModalLabel">Generate QR Ticket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="qr-code-container">
-                    <div class="qr-code mb-3">
-                        <!-- This would be replaced with actual QR code generation -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MRBD-USER123-TRIP456"
-                             alt="QR Code" class="img-fluid">
-                    </div>
-                    <p class="mb-4">Scan this QR code at the metro station gates to begin and end your journey.</p>
-                    <p>Scan this QR code at the entry and exit gates</p>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-download me-2"></i> Save QR Ticket
-                        </button>
-                        <button class="btn btn-outline-secondary">
-                            <i class="fa-regular fa-circle-xmark me-2"></i> Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <small class="text-muted">If you do not save the QR ticket, it will disappear.</small>
-                <small class="text-muted">This QR code will expire in 2 hours or after use.</small>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script src="~/js/home.js" asp-append-version="true"></script>

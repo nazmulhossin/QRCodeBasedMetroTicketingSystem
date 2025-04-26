@@ -12,7 +12,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
         public int? DestinationStationId { get; set; }
         public string? DestinationStationName { get; set; }
         public decimal? FareAmount { get; set; }
-        public required string QRCodeData { get; set; }
+        public string? QRCodeData { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiryTime { get; set; }
         public TicketStatus Status { get; set; }

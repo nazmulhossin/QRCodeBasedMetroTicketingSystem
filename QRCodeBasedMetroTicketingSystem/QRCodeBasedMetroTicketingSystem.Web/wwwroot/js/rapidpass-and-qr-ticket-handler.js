@@ -49,6 +49,46 @@
         location.reload();
     });
 
+    // Generate and show Rapid-Pass QR Code
+    $('#rapidPassToggleBtn').click(function () {
+        const btn = $(this);
+        const ticketId = $("#rapidPassStatus").data('ticket-id');
+        qrModal.hide();
+
+        // Save original button text and show loading
+        const originalText = btn.html();
+        if (ticketId == 0) {
+            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...');
+            window.location.href = '/Login';
+            return;
+        } else {
+            btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Showing...');
+        }
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: '/User/Ticket/GetOrGenerateRapidPassQr',
+            type: 'GET',
+            success: function (data) {
+                $('#qrCodeImage').attr('src', data.qrCodeImage);
+                $('#infoMessage').html('Scan this QR code at the entry gate and the exit gate');
+                $('#downloadQRBtn').attr('data-ticket-id', data.ticketId);
+
+                // Start the countdown timer for expiry
+                startExpiryCountdown(new Date(data.expiryTime));
+                qrModal.show();
+
+                // Restore button text (hide loadig animation)
+                hideLoading(btn, originalText);
+            },
+            error: function () {
+                alert('Failed to load QR code. Please try again.');
+                qrModal.hide();
+                hideLoading(btn, originalText);
+            }
+        });
+    });
+
     // Function to start countdown timer
     function startExpiryCountdown(expiryDate) {
         // Clear any existing interval
