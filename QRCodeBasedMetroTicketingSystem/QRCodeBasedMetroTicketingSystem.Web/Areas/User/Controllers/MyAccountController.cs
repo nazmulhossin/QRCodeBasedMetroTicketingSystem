@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
@@ -65,6 +66,42 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             }).ToList();
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> SecuritySettings()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await _userService.GetUserByIdAsync(userId.Value);
+            if (user == null)
+                return NotFound();
+
+            var viewModel = new SecuritySettingsViewModel { LastPasswordChangeDateFormatted = _timeService.FormatAsBdTime(user.CreatedAt, "dd MMMM yyyy") };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid data. Please try again.";
+                return RedirectToAction("SecuritySettings");
+            }
+
+            var result = await _userService.ChangePasswordAsync(userId.Value, model.CurrentPassword, model.NewPassword);
+            if (result.IsSuccess)
+                TempData["SuccessMessage"] = result.Message;
+            else
+                TempData["ErrorMessage"] = result.Message;
+
+            return RedirectToAction("SecuritySettings");
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
+﻿namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
     public class UserDto
     {
