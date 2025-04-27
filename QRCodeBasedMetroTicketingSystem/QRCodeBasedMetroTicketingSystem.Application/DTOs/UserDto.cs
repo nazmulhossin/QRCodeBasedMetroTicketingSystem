@@ -10,5 +10,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
         public required string PhoneNumber { get; set; }
         public string? NID { get; set; }
         public bool IsEmailVerified { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

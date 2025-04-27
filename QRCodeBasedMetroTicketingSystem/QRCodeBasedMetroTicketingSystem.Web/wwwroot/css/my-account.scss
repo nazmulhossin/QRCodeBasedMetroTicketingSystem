@@ -401,6 +401,70 @@
     }
 }
 
+/* My Profile Styles */
+.profile-section {
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .profile-avatar {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-right: 25px;
+
+            .profile-info {
+                h3 {
+                    font-size: 1.5rem;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    color: var(--gray-color);
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+
+    .profile-details {
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+        margin-bottom: 25px;
+
+        h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+
+            i {
+                margin-right: 10px;
+            }
+        }
+
+        .profile-details-row {
+            display: flex;
+            margin-bottom: 15px;
+
+            .profile-details-label {
+                width: 150px;
+                font-weight: 600;
+                color: var(--gray-color);
+            }
+
+            .profile-details-value {
+                flex-grow: 1;
+            }
+        }
+    }
+}
+
 /* My Wallet Styles*/
 .my-wallet-section {
     /* Wallet Balance Card */

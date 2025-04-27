@@ -1,0 +1,68 @@
+﻿@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="content-wrapper profile-section">
+    <div class="content-header">
+        <h2 class="content-title">My Profile</h2>
+    </div>
+
+    <div class="profile-header">
+        <img src="~/images/user.jpg" alt="User" class="profile-avatar">
+        <div class="profile-info">
+            <h3>Md Nazmul Hossain</h3>
+            <p>mdnazmulhossin999@gmail.com</p>
+        </div>
+    </div>
+
+    <div class="profile-details">
+        <h4><i class="fas fa-user"></i> Personal Information</h4>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Full Name</div>
+            <div class="profile-details-value">@Model.FullName</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Email Address</div>
+            <div class="profile-details-value">@Model.Email</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Phone Number</div>
+            <div class="profile-details-value">@($"{Model.PhoneNumber.Substring(0, 4)} {Model.PhoneNumber.Substring(4, 4)} {Model.PhoneNumber.Substring(8)}")</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">NID Number</div>
+            <div class="profile-details-value">@($"{Model.NID.Substring(0, 4)} {Model.NID.Substring(4, 4)} {Model.NID.Substring(8)}")</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Member Since</div>
+            <div class="profile-details-value">@Model.CreatedAt.ToString("dd MMMM yyyy")</div>
+        </div>
+    </div>
+
+    <div class="profile-details">
+        <h4><i class="fas fa-map-marker-alt"></i> Address Information</h4>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Village</div>
+            <div class="profile-details-value">South Baipail</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Upazila</div>
+            <div class="profile-details-value">Savar</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">District</div>
+            <div class="profile-details-value">Dhaka</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Postal Code</div>
+            <div class="profile-details-value">1349</div>
+        </div>
+        <div class="profile-details-row">
+            <div class="profile-details-label">Country</div>
+            <div class="profile-details-value">Bangladesh</div>
+        </div>
+        <p>This information comes from the NID server.</p>
+    </div>
+</div>
