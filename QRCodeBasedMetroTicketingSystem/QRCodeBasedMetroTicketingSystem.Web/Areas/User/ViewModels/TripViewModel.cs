@@ -2,7 +2,7 @@
 {
     public class TripViewModel
     {
-        public string? Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public string? EntryStationName { get; set; }
         public string? ExitStationName { get; set; }
         public string? EntryTimeFormatted { get; set; }

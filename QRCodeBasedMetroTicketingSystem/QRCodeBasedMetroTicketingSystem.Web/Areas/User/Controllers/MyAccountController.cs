@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using QRCodeBasedMetroTicketingSystem.Infrastructure.Services;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
