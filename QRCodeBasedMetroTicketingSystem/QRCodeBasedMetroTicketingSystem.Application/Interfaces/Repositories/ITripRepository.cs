@@ -6,5 +6,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
     {
         Task CreateTripAsync(Trip trip);
         Task<Trip?> GetActiveTripByTicketIdAsync(int ticketId);
+        Task<IEnumerable<Trip>> GetCompletedTripsByUserIdAsync(int userId);
     }
 }

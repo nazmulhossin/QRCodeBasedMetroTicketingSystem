@@ -34,7 +34,21 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
             if (string.IsNullOrEmpty(format))
             {
-                return bdTime.ToString("dd MMM yyyy, h:mm tt", CultureInfo.InvariantCulture);
+                var today = ConvertUtcToBdTime(DateTime.UtcNow).Date;
+                var yesterday = today.AddDays(-1);
+
+                if (bdTime.Date == today)
+                {
+                    return $"Today, {bdTime:hh:mm tt}";
+                }
+                else if (bdTime.Date == yesterday)
+                {
+                    return $"Yesterday, {bdTime:hh:mm tt}";
+                }
+                else
+                {
+                    return bdTime.ToString("dd MMM yyyy, h:mm tt", CultureInfo.InvariantCulture);
+                }
             }
 
             return bdTime.ToString(format, CultureInfo.InvariantCulture);

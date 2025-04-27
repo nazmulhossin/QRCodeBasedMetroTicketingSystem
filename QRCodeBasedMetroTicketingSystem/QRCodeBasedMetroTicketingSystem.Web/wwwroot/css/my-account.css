@@ -555,6 +555,12 @@
 .trips-section .trip-table .trip-fare {
   font-weight: 600;
 }
+@media (max-width: 768px) {
+  .trips-section .trip-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
 
 /* My Wallet Styles*/
 .my-wallet-section {

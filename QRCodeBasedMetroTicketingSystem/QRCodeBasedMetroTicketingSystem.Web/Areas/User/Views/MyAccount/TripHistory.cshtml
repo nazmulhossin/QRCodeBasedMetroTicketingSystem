@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<TripViewModel>
+
+@{
     ViewData["Title"] = "Trip History";
 }
 
@@ -19,45 +21,33 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="trip-id">TR-001</td>
-                    <td>
-                        <div class="trip-route">
-                            <span class="trip-station">Uttara North</span>
-                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
-                            <span class="trip-station">Agargaon</span>
-                        </div>
-                    </td>
-                    <td class="trip-date">Today, 09:45 AM</td>
-                    <td><span class="ticket-types rapid-pass">Rapid Pass</span></td>
-                    <td class="trip-fare">৳60</td>
-                </tr>
-                <tr>
-                    <td class="trip-id">TR-002</td>
-                    <td>
-                        <div class="trip-route">
-                            <span class="trip-station">Agargaon</span>
-                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
-                            <span class="trip-station">Uttara North</span>
-                        </div>
-                    </td>
-                    <td class="trip-date">Yesterday, 06:30 PM</td>
-                    <td><span class="ticket-types qr-ticket">QR Ticket</span></td>
-                    <td class="trip-fare">৳60</td>
-                </tr>
-                <tr>
-                    <td class="trip-id">TR-003</td>
-                    <td>
-                        <div class="trip-route">
-                            <span class="trip-station">Mirpur 10</span>
-                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
-                            <span class="trip-station">Agargaon</span>
-                        </div>
-                    </td>
-                    <td class="trip-date">Yesterday, 10:15 AM</td>
-                    <td><span class="ticket-types rapid-pass">Rapid Pass</span></td>
-                    <td class="trip-fare">৳40</td>
-                </tr>
+                @if (Model.Any())
+                {
+                    @foreach (var trip in Model)
+                    {
+                        <tr>
+                            <td class="trip-id">@trip.Id</td>
+                            <td>
+                                <div class="trip-route">
+                                    <span class="trip-station">@trip.EntryStationName</span>
+                                    <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
+                                    <span class="trip-station">@trip.ExitStationName</span>
+                                </div>
+                            </td>
+                            <td class="trip-date">@trip.ExitTimeFormatted</td>
+                            <td>
+                                <span class="ticket-types @(trip.TicketType == "Rapid Pass" ? "rapid-pass" : "qr-ticket")">@trip.TicketType</span>
+                            </td>
+                            <td class="trip-fare"><span class="taka-icon">৳</span>@trip.Fare</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">NO TRIP HISTORY FOUND.</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

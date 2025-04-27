@@ -662,6 +662,13 @@
             font-weight: 600;
         }
     }
+
+    @media (max-width: 768px) {
+        .trip-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
 }
 
 /* My Wallet Styles*/
