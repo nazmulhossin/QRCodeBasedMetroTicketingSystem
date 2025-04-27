@@ -41,5 +41,10 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> TripHistory()
+        {
+            return View();
+        }
     }
 }

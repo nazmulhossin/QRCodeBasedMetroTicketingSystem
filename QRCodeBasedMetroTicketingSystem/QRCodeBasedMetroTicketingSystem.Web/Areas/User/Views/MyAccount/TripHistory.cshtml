@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Trip History";
+}
+
+<div class="content-wrapper trips-section">
+    <div class="content-header">
+        <h2 class="content-title">Trip History</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="trip-table">
+            <thead>
+                <tr>
+                    <th>Trip ID</th>
+                    <th>Route</th>
+                    <th>Date & Time</th>
+                    <th>Ticket Type</th>
+                    <th>Fare</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="trip-id">TR-001</td>
+                    <td>
+                        <div class="trip-route">
+                            <span class="trip-station">Uttara North</span>
+                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
+                            <span class="trip-station">Agargaon</span>
+                        </div>
+                    </td>
+                    <td class="trip-date">Today, 09:45 AM</td>
+                    <td><span class="ticket-types rapid-pass">Rapid Pass</span></td>
+                    <td class="trip-fare">৳60</td>
+                </tr>
+                <tr>
+                    <td class="trip-id">TR-002</td>
+                    <td>
+                        <div class="trip-route">
+                            <span class="trip-station">Agargaon</span>
+                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
+                            <span class="trip-station">Uttara North</span>
+                        </div>
+                    </td>
+                    <td class="trip-date">Yesterday, 06:30 PM</td>
+                    <td><span class="ticket-types qr-ticket">QR Ticket</span></td>
+                    <td class="trip-fare">৳60</td>
+                </tr>
+                <tr>
+                    <td class="trip-id">TR-003</td>
+                    <td>
+                        <div class="trip-route">
+                            <span class="trip-station">Mirpur 10</span>
+                            <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
+                            <span class="trip-station">Agargaon</span>
+                        </div>
+                    </td>
+                    <td class="trip-date">Yesterday, 10:15 AM</td>
+                    <td><span class="ticket-types rapid-pass">Rapid Pass</span></td>
+                    <td class="trip-fare">৳40</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

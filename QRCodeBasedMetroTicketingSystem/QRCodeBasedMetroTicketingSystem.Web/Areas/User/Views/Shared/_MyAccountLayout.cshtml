@@ -44,7 +44,7 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="#trips">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="TripHistory" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "TripHistory" ? "active" : "")">
                                 <span class="icon"><i class="fas fa-subway"></i></span>
                                 <span class="text">Trip History</span>
                             </a>
@@ -53,12 +53,6 @@
                             <a asp-area="User" asp-controller="Wallet" asp-action="Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                                 <span class="icon"><i class="fas fa-wallet"></i></span>
                                 <span class="text">My Wallet</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="#payment">
-                                <span class="icon"><i class="fas fa-credit-card"></i></span>
-                                <span class="text">Payment Methods</span>
                             </a>
                         </li>
                         <li class="menu-item">

@@ -486,75 +486,6 @@
     }
 }
 
-/* My Wallet Styles*/
-.my-wallet-section {
-    /* Wallet Balance Card */
-    .wallet-balance-card {
-        // background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        background-color: var(--primary-color);
-        color: white;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border-radius: 10px;
-        position: relative;
-        overflow: hidden;
-
-        .pattern {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            opacity: 0.1;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        .content {
-            position: relative;
-            z-index: 1;
-
-            .label {
-                font-size: 1rem;
-                margin-bottom: 0.5rem;
-                opacity: 0.9;
-            }
-
-            .amount {
-                font-size: 2.5rem;
-                font-weight: 700;
-                margin-bottom: 1.5rem;
-
-                .taka-icon {
-                    font-weight: 600;
-                }
-            }
-
-            .actions {
-                .add-balance-btn {
-                    background-color: rgba(255, 255, 255, 0.2);
-                    color: var(--white);
-                    padding: 0.75rem 1.6rem;
-                    font-weight: 500;
-                    width: fit-content;
-                    transition: var(--transition);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    &:hover {
-                        background-color: rgba(255, 255, 255, 0.3);
-                    }
-
-                    i {
-                        margin-right: 0.5rem;
-                    }
-                }
-            }
-        }
-    }
-}
-
 /* My QR Tickets Styles */
 .my-qr-ticket-section {
     .content-header {
@@ -651,6 +582,152 @@
             .btn {
                 padding: 0.4rem 1rem;
                 font-size: 0.9rem;
+            }
+        }
+    }
+}
+
+/* Trip History Styles */
+.trips-section {
+    .trip-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+
+        th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid #eee;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        .trip-id {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .trip-route {
+            display: flex;
+            align-items: center;
+
+            .trip-station {
+                font-weight: 500;
+            }
+
+            .trip-arrow {
+                margin: 0 10px;
+                color: var(--gray-color);
+            }
+        }
+
+        .trip-date {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .ticket-types {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            display: inline-block;
+
+            &.rapid-pass {
+                background-color: rgba(255, 193, 7, 0.1);
+                color: var(--warning-color);
+            }
+
+            &.qr-ticket {
+                background-color: rgba(23, 162, 184, 0.1);
+                color: var(--info-color);
+            }
+        }
+
+        .trip-fare {
+            font-weight: 600;
+        }
+    }
+}
+
+/* My Wallet Styles*/
+.my-wallet-section {
+    /* Wallet Balance Card */
+    .wallet-balance-card {
+        // background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+
+        .pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0.1;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+
+            .label {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+                opacity: 0.9;
+            }
+
+            .amount {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+
+                .taka-icon {
+                    font-weight: 600;
+                }
+            }
+
+            .actions {
+                .add-balance-btn {
+                    background-color: rgba(255, 255, 255, 0.2);
+                    color: var(--white);
+                    padding: 0.75rem 1.6rem;
+                    font-weight: 500;
+                    width: fit-content;
+                    transition: var(--transition);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.3);
+                    }
+
+                    i {
+                        margin-right: 0.5rem;
+                    }
+                }
             }
         }
     }
