@@ -140,7 +140,7 @@
     width: 100%;
   }
   .my-account-container .content-wrapper {
-    padding: 0 15px;
+    padding: 15px;
   }
 }
 
@@ -358,11 +358,11 @@
   border: 3px solid var(--primary-color);
   margin-right: 25px;
 }
-.profile-section .profile-header .profile-avatar .profile-info h3 {
+.profile-section .profile-header .profile-info h3 {
   font-size: 1.5rem;
   margin-bottom: 5px;
 }
-.profile-section .profile-header .profile-avatar .profile-info p {
+.profile-section .profile-header .profile-info p {
   color: var(--gray-color);
   margin-bottom: 10px;
 }
@@ -393,6 +393,23 @@
 }
 .profile-section .profile-details .profile-details-row .profile-details-value {
   flex-grow: 1;
+}
+@media (max-width: 576px) {
+  .profile-section .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .profile-section .profile-header .profile-avatar {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  .profile-section .profile-details-row {
+    flex-direction: column;
+  }
+  .profile-section .profile-details-row .profile-details-label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }
 
 /* My Wallet Styles*/

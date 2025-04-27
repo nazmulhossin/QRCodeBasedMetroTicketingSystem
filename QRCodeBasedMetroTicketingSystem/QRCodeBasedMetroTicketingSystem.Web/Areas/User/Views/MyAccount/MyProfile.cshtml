@@ -12,8 +12,8 @@
     <div class="profile-header">
         <img src="~/images/user.jpg" alt="User" class="profile-avatar">
         <div class="profile-info">
-            <h3>Md Nazmul Hossain</h3>
-            <p>mdnazmulhossin999@gmail.com</p>
+            <h3>@Model.FullName</h3>
+            <p>@Model.Email</p>
         </div>
     </div>
 
@@ -29,11 +29,29 @@
         </div>
         <div class="profile-details-row">
             <div class="profile-details-label">Phone Number</div>
-            <div class="profile-details-value">@($"{Model.PhoneNumber.Substring(0, 4)} {Model.PhoneNumber.Substring(4, 4)} {Model.PhoneNumber.Substring(8)}")</div>
+            <div class="profile-details-value">
+                @if (!string.IsNullOrEmpty(Model.PhoneNumber) && Model.PhoneNumber.Length >= 11)
+                {
+                    @($"{Model.PhoneNumber.Substring(0, 4)} {Model.PhoneNumber.Substring(4, 4)} {Model.PhoneNumber.Substring(8)}")
+                }
+                else
+                {
+                    @Model.PhoneNumber
+                }
+            </div>
         </div>
         <div class="profile-details-row">
             <div class="profile-details-label">NID Number</div>
-            <div class="profile-details-value">@($"{Model.NID.Substring(0, 4)} {Model.NID.Substring(4, 4)} {Model.NID.Substring(8)}")</div>
+            <div class="profile-details-value">
+                @if (!string.IsNullOrEmpty(Model.NID) && Model.NID.Length >= 10)
+                {
+                    @($"{Model.NID.Substring(0, 4)} {Model.NID.Substring(4, 4)} {Model.NID.Substring(8)}")
+                }
+                else
+                {
+                    @Model.NID
+                }
+            </div>
         </div>
         <div class="profile-details-row">
             <div class="profile-details-label">Member Since</div>
