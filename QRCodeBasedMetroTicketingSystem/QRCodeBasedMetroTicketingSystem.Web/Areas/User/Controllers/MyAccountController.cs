@@ -74,11 +74,9 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _userService.GetUserByIdAsync(userId.Value);
-            if (user == null)
-                return NotFound();
+            var lastPasswordChangeDate = await _userService.GetLastPasswordChangeDateAsync(userId.Value);
+            var viewModel = new SecuritySettingsViewModel { LastPasswordChangeDateFormatted = _timeService.FormatAsBdTime(lastPasswordChangeDate, "dd MMMM yyyy") };
 
-            var viewModel = new SecuritySettingsViewModel { LastPasswordChangeDateFormatted = _timeService.FormatAsBdTime(user.CreatedAt, "dd MMMM yyyy") };
             return View(viewModel);
         }
 

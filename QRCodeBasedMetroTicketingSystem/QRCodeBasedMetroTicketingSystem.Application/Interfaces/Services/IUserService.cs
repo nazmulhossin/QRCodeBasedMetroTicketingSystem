@@ -14,6 +14,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services
         
         Task<Result> VerifyEmailAsync(string email, string token);
         Task<Result> ResetPassword(ResetPasswordModel model);
+        Task<DateTime> GetLastPasswordChangeDateAsync(int userId);
         Task<Result> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
     }
 }

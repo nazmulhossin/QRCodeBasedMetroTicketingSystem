@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
     const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
 
     if (signupForm) {
         const fullName = document.getElementById('fullName');
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFieldStatus(password, isPasswordValid);
         updateFieldStatus(confirmPassword, isConfirmPasswordValid);
 
-        if (currentPassword && isPasswordValid && isConfirmPasswordValid) {
+        if (isCurrentPasswordValid && isPasswordValid && isConfirmPasswordValid) {
             changePasswordForm.submit();
         }
     });

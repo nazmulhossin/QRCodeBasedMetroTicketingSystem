@@ -169,6 +169,17 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             }
         }
 
+        public async Task<DateTime> GetLastPasswordChangeDateAsync(int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return DateTime.UtcNow;
+            }
+
+            return user.CreatedAt;
+        }
+
         public async Task<Result> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
