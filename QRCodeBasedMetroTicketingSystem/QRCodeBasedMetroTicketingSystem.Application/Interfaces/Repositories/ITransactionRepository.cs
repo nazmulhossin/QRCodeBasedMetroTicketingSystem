@@ -8,5 +8,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
         Task<Transaction?> GetByIdAsync(int id);
         Task<Transaction?> GetByReferenceAsync(string transactionReference);
         Task<IEnumerable<Transaction>> GetByWalletIdAsync(int walletId, int limit = 10);
+        Task<decimal> GetTotalTopUpsAsync(int userId, DateTime fromDate);
+        Task<List<Transaction>> GetRecentTransactionsByUserIdAsync(int userId, int count = 10);
     }
 }

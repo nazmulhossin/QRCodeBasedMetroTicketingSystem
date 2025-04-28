@@ -51,9 +51,15 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 ));
         }
 
-        public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
+        public async Task<int> GetActiveAndInUseQrTicketsCountByUserIdAsync(int userId)
         {
-            return await _dbSet.CountAsync(t => t.UserId == userId && (t.Status == TicketStatus.Active || t.Status == TicketStatus.InUse));
-        }  
+            return await _dbSet.CountAsync(t => 
+                t.UserId == userId && 
+                t.Type == TicketType.QRTicket &&
+                (
+                    (t.Status == TicketStatus.Active && t.ExpiryTime > DateTime.UtcNow) || 
+                    (t.Status == TicketStatus.InUse)
+                ));
+        }
     }
 }

@@ -39,5 +39,23 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .OrderByDescending(t => t.ExitTime)
                 .ToListAsync();
         }
+
+        public async Task<int> GetTripCountByUserIdAsync(int userId, DateTime fromDate)
+        {
+            return await _dbSet.CountAsync(t => t.UserId == userId && t.EntryTime >= fromDate);
+        }
+
+        public async Task<List<Trip>> GetRecentTripsByUserIdAsync(int userId, int count = 10)
+        {
+            return await _dbSet
+                .AsSplitQuery()
+                .Where(t => t.UserId == userId)
+                .Include(t => t.EntryStation)
+                .Include(t => t.ExitStation)
+                .Include(t => t.Ticket)
+                .OrderByDescending(t => t.EntryTime)
+                .Take(count)
+                .ToListAsync();
+        }
     }
 }

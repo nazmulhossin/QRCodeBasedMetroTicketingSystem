@@ -13,21 +13,36 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
     [Authorize(Roles = "User")]
     public class MyAccountController : Controller
     {
+        private readonly IUserDashboardService _userDashboardService;
         private readonly IUserService _userService;
         private readonly ITripService _tripService;
         private readonly ITimeService _timeService;
         private readonly IMapper _mapper;
-        public MyAccountController(IUserService userService, ITripService tripService, ITimeService timeService, IMapper mapper)
+        public MyAccountController(IUserDashboardService userDashboardService,IUserService userService, ITripService tripService, ITimeService timeService, IMapper mapper)
         {
+            _userDashboardService = userDashboardService;
             _userService = userService;
             _tripService = tripService;
             _timeService = timeService;
             _mapper = mapper;
         }
 
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
-            return View();
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var stats = await _userDashboardService.GetUserStatsAsync(userId.Value);
+            var activities = await _userDashboardService.GetRecentActivitiesAsync(userId.Value);
+
+            var viewModel = new UserDashboardViewModel
+            {
+                Stats = stats,
+                Activities = activities
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> MyProfile()

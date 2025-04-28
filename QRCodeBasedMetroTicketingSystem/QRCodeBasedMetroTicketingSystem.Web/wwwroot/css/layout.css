@@ -407,6 +407,9 @@ footer .footer-bottom {
     padding: 0.25rem 0.65rem;
     font-size: 0.85rem;
   }
+  .navbar #openUserSidebarBtn {
+    display: block;
+  }
   footer {
     text-align: center;
   }

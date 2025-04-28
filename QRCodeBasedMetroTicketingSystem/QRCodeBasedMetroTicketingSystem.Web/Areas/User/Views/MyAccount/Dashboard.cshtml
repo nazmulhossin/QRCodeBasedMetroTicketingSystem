@@ -1,15 +1,13 @@
-﻿@{
+﻿@using QRCodeBasedMetroTicketingSystem.Application.DTOs
+@model UserDashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
 <div class="content-wrapper dashboard-section">
     <div class="content-header">
         <h2 class="content-title">Dashboard</h2>
-        <div class="content-action">
-            <button class="btn btn-outline-primary">
-                <i class="fas fa-sync-alt me-2"></i> Refresh
-            </button>
-        </div>
     </div>
 
     <!-- Stats Cards -->
@@ -18,7 +16,7 @@
             <div class="stats-card balance">
                 <div class="stats-icon"><i class="fas fa-wallet"></i></div>
                 <div class="stats-title">Total Top-ups</div>
-                <div class="stats-value"><span class="taka-icon">৳</span>2500</div>
+                <div class="stats-value"><span class="taka-icon">৳</span>@Model.Stats.TotalTopUps</div>
                 <div class="stats-description">This month</div>
             </div>
         </div>
@@ -26,7 +24,7 @@
             <div class="stats-card trips">
                 <div class="stats-icon"><i class="fas fa-subway"></i></div>
                 <div class="stats-title">Total Trips</div>
-                <div class="stats-value">24</div>
+                <div class="stats-value">@Model.Stats.TotalTrips</div>
                 <div class="stats-description">This month</div>
             </div>
         </div>
@@ -34,7 +32,7 @@
             <div class="stats-card tickets">
                 <div class="stats-icon"><i class="fa-solid fa-ticket"></i></div>
                 <div class="stats-title">Purchased Tickets</div>
-                <div class="stats-value">5</div>
+                <div class="stats-value">@Model.Stats.ValidTickets</div>
                 <div class="stats-description">Valid for use</div>
             </div>
         </div>
@@ -68,46 +66,47 @@
             <a href="#" class="arrow-card-action">View All <i class="fas fa-chevron-right"></i></a>
         </div>
         <ul class="history-list">
-            <li>
-                <div class="icon trip"><i class="fas fa-subway"></i></div>
-                <div class="content">
-                    <div class="text">Completed trip from Agargaon to Uttara North using Rapid Pass</div>
-                    <div class="time">Today, 09:45 AM</div>
-                </div>
-                <div class="amount debit">-<small class="taka-icon">৳</small>60</div>
-            </li>
-            <li>
-                <div class="icon trip"><i class="fas fa-subway"></i></div>
-                <div class="content">
-                    <div class="text">Completed trip from Uttara North to Agargaon using Ticket</div>
-                    <div class="time">Today, 09:45 AM</div>
-                </div>
-                <div class="amount">-</div>
-            </li>
-            <li>
-                <div class="icon ticket"><i class="fa-solid fa-ticket"></i></div>
-                <div class="content">
-                    <div class="text">Purchased Ticket for Uttara North to Agargaon</div>
-                    <div class="time">Today, 10:30 AM</div>
-                </div>
-                <div class="amount debit">-<small class="taka-icon">৳</small>60</div>
-            </li>
-            <li>
-                <div class="icon payment"><i class="fas fa-wallet"></i></div>
-                <div class="content">
-                    <div class="text">Added balance via bKash</div>
-                    <div class="time">Yesterday, 05:20 PM</div>
-                </div>
-                <div class="amount credit">+<small class="taka-icon">৳</small>500</div>
-            </li>
-            <li>
-                <div class="icon refund"><i class="fas fa-undo"></i></div>
-                <div class="content">
-                    <div class="text">Refund for cancelled ticket</div>
-                    <div class="time">Yesterday, 02:15 PM</div>
-                </div>
-                <div class="amount credit">+<small class="taka-icon">৳</small>60</div>
-            </li>
+            @foreach (var activity in Model.Activities)
+            {
+                <li>
+                    @switch (activity.Type)
+                    {
+                        case ActivityType.TopUp:
+                            <div class="icon top-up"><i class="fas fa-wallet"></i></div>
+                            break;
+                        case ActivityType.AccountBalancePayment:
+                            <div class="icon account-balance-payment"><i class="fas fa-wallet"></i></div>
+                            break;
+                        case ActivityType.OnlinePayment:
+                            <div class="icon online-payment"><i class="fa-solid fa-credit-card"></i></div>
+                            break;
+                        case ActivityType.Trip:
+                            <div class="icon trip"><i class="fas fa-subway"></i></div>
+                            break;
+                    }
+
+                    <div class="content">
+                        <div class="text">@activity.Description</div>
+                        <div class="time">@(activity.Time.Date == DateTime.Now.Date ? "Today" : activity.Time.Date == DateTime.Now.Date.AddDays(-1) ? "Yesterday" : activity.Time.ToString("MMM d")), @activity.Time.ToString("hh:mm tt")</div>
+                    </div>
+
+                    <div class="amount @(activity.Type == ActivityType.OnlinePayment ? " none" : (activity.IsCredit ? "credit" : "debit"))">
+                        @if (activity.Amount.HasValue && activity.Type == ActivityType.OnlinePayment)
+                        {
+                            <small class="taka-icon">৳</small>@activity.Amount.Value.ToString()
+                        }
+                        else if (activity.Amount.HasValue)
+                        {
+                            @(activity.IsCredit ? "+" : "-")
+                            <small class="taka-icon">৳</small>@activity.Amount.Value.ToString()
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </div>
+                </li>
+            }
         </ul>
     </div>
 </div>
