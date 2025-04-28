@@ -10,5 +10,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
         Task<User?> GetUserByPhoneAsync(string phone);
         Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
+        Task<int> GetTotalRegisteredUsersAsync();
     }
 }

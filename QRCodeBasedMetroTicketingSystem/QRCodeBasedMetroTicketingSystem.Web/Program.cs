@@ -75,6 +75,7 @@ builder.Services.AddScoped<ITripRepository, TripRepository>();
 // Register other services
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IStationService, StationService>();
 builder.Services.AddScoped<ISystemSettingsService, SystemSettingsService>();
 builder.Services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();

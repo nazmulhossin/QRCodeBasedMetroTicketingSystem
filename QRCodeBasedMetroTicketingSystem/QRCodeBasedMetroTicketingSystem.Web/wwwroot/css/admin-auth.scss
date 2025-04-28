@@ -104,7 +104,7 @@ header {
     background-color: var(--dark-color);
     border-color: var(--dark-color);
 
-    &:hover, &:active {
+    &:hover, &:active, &:disabled {
         background-color: var(--dark-light) !important;
         border-color: var(--dark-light) !important;
     }

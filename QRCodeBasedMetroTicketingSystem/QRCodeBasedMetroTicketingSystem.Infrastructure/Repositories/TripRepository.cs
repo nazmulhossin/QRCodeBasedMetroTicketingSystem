@@ -57,5 +57,34 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .Take(count)
                 .ToListAsync();
         }
+
+        public async Task<int> GetCurrentPassengerCountAsync()
+        {
+            return await _dbSet.CountAsync(t => t.Status == TripStatus.InProgress);
+        }
+
+        public async Task<IDictionary<DateTime, int>> GetDailyPassengerCountAsync(int days)
+        {
+            DateTime startDate = DateTime.UtcNow.Date.AddDays(-days + 1);
+
+            var result = await _dbSet
+                .Where(t => t.EntryTime >= startDate)
+                .GroupBy(t => t.EntryTime.Date)
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .OrderBy(x => x.Date)
+                .ToDictionaryAsync(x => x.Date, x => x.Count);
+
+            // Fill in any missing dates with zero counts
+            for (int i = 0; i < days; i++)
+            {
+                DateTime date = startDate.AddDays(i);
+                if (!result.ContainsKey(date))
+                {
+                    result[date] = 0;
+                }
+            }
+
+            return result.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+        }
     }
 }
