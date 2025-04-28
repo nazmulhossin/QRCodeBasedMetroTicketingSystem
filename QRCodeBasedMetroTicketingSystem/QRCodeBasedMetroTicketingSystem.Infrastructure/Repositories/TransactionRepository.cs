@@ -34,5 +34,36 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .Take(limit)
                 .ToListAsync();
         }
+
+        public async Task<decimal> GetTotalTopUpsAsync(int userId, DateTime fromDate)
+        {
+            var wallet = await _context.Wallets
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (wallet == null)
+                return 0;
+
+            return await _dbSet
+                .Where(t => t.WalletId == wallet.Id &&
+                       t.Type == TransactionType.TopUp &&
+                       t.Status == TransactionStatus.Completed &&
+                       t.CreatedAt >= fromDate)
+                .SumAsync(t => t.Amount);
+        }
+
+        public async Task<List<Transaction>> GetRecentTransactionsByUserIdAsync(int userId, int count = 5)
+        {
+            var wallet = await _context.Wallets
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (wallet == null)
+                return new List<Transaction>();
+
+            return await _context.Transactions
+                .Where(t => t.WalletId == wallet.Id)
+                .OrderByDescending(t => t.CreatedAt)
+                .Take(count)
+                .ToListAsync();
+        }
     }
 }

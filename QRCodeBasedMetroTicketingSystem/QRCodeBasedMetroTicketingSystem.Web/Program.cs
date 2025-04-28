@@ -92,6 +92,7 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddSingleton<IQRCodeService, QRCodeService>();
 builder.Services.AddScoped<ITicketScanService, TicketScanService>();
 builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
 
 // Add authorization
 builder.Services.AddAuthorization();

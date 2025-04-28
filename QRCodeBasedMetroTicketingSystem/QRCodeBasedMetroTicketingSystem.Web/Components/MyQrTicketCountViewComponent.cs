@@ -20,7 +20,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Components
             if (userId == null)
                 return View("Default", 0);
 
-            var myQrTicketsCount = await _ticketService.GetActiveAndInUseTicketsCountAsync(userId.Value);
+            var myQrTicketsCount = await _ticketService.GetValidQrTicketsCountByUserIdAsync(userId.Value);
             return View("Default", myQrTicketsCount);
         }
     }

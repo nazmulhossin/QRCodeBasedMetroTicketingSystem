@@ -44,9 +44,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return _mapper.Map<TicketDto>(ticket);
         }
 
-        public async Task<int> GetActiveAndInUseTicketsCountAsync(int userId)
+        public async Task<int> GetValidQrTicketsCountByUserIdAsync(int userId)
         {
-            return await _unitOfWork.TicketRepository.GetActiveAndInUseTicketsCountAsync(userId);
+            return await _unitOfWork.TicketRepository.GetActiveAndInUseQrTicketsCountByUserIdAsync(userId);
         }
 
         public async Task<TicketDto?> GetActiveRapidPassAsync(int userId)
