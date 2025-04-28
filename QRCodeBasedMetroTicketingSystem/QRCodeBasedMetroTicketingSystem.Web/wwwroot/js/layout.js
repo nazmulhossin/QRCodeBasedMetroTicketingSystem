@@ -14,9 +14,7 @@
     }
 
     // Show open sidebar icon when sidebar available
-    if ($('#userSidebar').length) {
-        $('#openUserSidebarBtn').show();
-    } else {
+    if ($('#userSidebar').length === 0) {
         $('#openUserSidebarBtn').hide();
     }
 

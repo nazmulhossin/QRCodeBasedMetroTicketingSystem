@@ -51,7 +51,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .SumAsync(t => t.Amount);
         }
 
-        public async Task<List<Transaction>> GetRecentTransactionsByUserIdAsync(int userId, int count = 5)
+        public async Task<List<Transaction>> GetRecentTransactionsByUserIdAsync(int userId, int count = 10)
         {
             var wallet = await _context.Wallets
                 .FirstOrDefaultAsync(w => w.UserId == userId);

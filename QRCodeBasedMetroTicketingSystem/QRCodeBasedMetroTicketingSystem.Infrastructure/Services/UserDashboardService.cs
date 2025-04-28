@@ -9,11 +9,13 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITicketService _ticketService;
+        private readonly ITimeService _timeService;
 
-        public UserDashboardService(IUnitOfWork unitOfWork, ITicketService ticketService)
+        public UserDashboardService(IUnitOfWork unitOfWork, ITicketService ticketService, ITimeService timeService)
         {
             _unitOfWork = unitOfWork;
             _ticketService = ticketService;
+            _timeService = timeService;
         }
 
         public async Task<UserDashboardStatsDto> GetUserStatsAsync(int userId)
@@ -65,7 +67,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 {
                     Type = activityType,
                     Description = transaction.Description,
-                    Time = transaction.CreatedAt,
+                    Time = _timeService.ConvertUtcToBdTime(transaction.CreatedAt),
                     Amount = transaction.Amount,
                     IsCredit = isCredit
                 });
@@ -93,7 +95,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 {
                     Type = ActivityType.Trip,
                     Description = description,
-                    Time = trip.EntryTime,
+                    Time = _timeService.ConvertUtcToBdTime(trip.EntryTime),
                     Amount = null,
                     IsCredit = false
                 });

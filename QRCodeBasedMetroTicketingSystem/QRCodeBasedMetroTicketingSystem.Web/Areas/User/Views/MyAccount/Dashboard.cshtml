@@ -87,10 +87,10 @@
 
                     <div class="content">
                         <div class="text">@activity.Description</div>
-                        <div class="time">@(activity.Time.Date == DateTime.Today ? "Today" : activity.Time.Date == DateTime.Today.AddDays(-1) ? "Yesterday" : activity.Time.ToString("MMM d")), @activity.Time.ToString("hh:mm tt")</div>
+                        <div class="time">@(activity.Time.Date == DateTime.Now.Date ? "Today" : activity.Time.Date == DateTime.Now.Date.AddDays(-1) ? "Yesterday" : activity.Time.ToString("MMM d")), @activity.Time.ToString("hh:mm tt")</div>
                     </div>
 
-                    <div class="amount @(activity.IsCredit ? "credit" : "debit") @(activity.Type == ActivityType.OnlinePayment ? "none" : "") ">
+                    <div class="amount @(activity.Type == ActivityType.OnlinePayment ? " none" : (activity.IsCredit ? "credit" : "debit"))">
                         @if (activity.Amount.HasValue && activity.Type == ActivityType.OnlinePayment)
                         {
                             <small class="taka-icon">৳</small>@activity.Amount.Value.ToString()
