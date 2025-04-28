@@ -18,6 +18,9 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Mapping
             CreateMap<Ticket, TicketDto>()
                 .ForMember(dest => dest.OriginStationName, opt => opt.MapFrom(src => src.OriginStation != null ? src.OriginStation.Name : null))
                 .ForMember(dest => dest.DestinationStationName, opt => opt.MapFrom(src => src.DestinationStation != null ? src.DestinationStation.Name : null));
+            CreateMap<Trip, TripDto>()
+                .ForMember(dest => dest.EntryStationName, opt => opt.MapFrom(src => src.EntryStation != null ? src.EntryStation.Name : null))
+                .ForMember(dest => dest.ExitStationName, opt => opt.MapFrom(src => src.ExitStation != null ? src.ExitStation.Name : null));
         }
     }
 }

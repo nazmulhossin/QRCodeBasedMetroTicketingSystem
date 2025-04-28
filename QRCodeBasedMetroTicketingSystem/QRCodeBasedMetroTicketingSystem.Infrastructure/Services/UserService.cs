@@ -141,7 +141,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 if (user == null)
                 {
                     // Not reveal that the user does not exist
-                    return Result.Success("User not found");
+                    return Result.Success("Password reset successful. You can now log in.");
                 }
 
                 // Verify token
@@ -167,6 +167,37 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 await _unitOfWork.RollbackTransactionAsync();
                 return Result.Failure("An error occurred while changing password.");
             }
+        }
+
+        public async Task<DateTime> GetLastPasswordChangeDateAsync(int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return DateTime.UtcNow;
+            }
+
+            return user.CreatedAt;
+        }
+
+        public async Task<Result> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return Result.Failure("User not found.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+            {
+                return Result.Failure("Current password is incorrect.");
+            }
+
+            // Update password
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success("Password changed successfully.");
         }
     }
 }

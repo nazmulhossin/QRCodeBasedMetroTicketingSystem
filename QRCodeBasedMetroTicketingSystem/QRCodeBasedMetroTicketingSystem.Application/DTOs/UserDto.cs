@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
+﻿namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
 {
     public class UserDto
     {
@@ -10,5 +8,6 @@ namespace QRCodeBasedMetroTicketingSystem.Application.DTOs
         public required string PhoneNumber { get; set; }
         public string? NID { get; set; }
         public bool IsEmailVerified { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

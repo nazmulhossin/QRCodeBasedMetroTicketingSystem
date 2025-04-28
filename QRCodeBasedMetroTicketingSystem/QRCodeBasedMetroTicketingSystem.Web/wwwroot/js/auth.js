@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
     const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
 
     if (signupForm) {
         const fullName = document.getElementById('fullName');
@@ -40,6 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmPassword.addEventListener('input', validateField);
     }
 
+    if (changePasswordForm) {
+        const currentPassword = document.getElementById('currentPassword');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        currentPassword.addEventListener('input', validateField);
+        password.addEventListener('input', validateField);
+        confirmPassword.addEventListener('input', validateField);
+    }
+
     // Field validation handler
     function validateField(e) {
         const field = e.target;
@@ -65,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'confirmPassword':
                 isValid = validateConfirmPassword(value);
                 break;
+            default:
+                isValid = validateRequiredField(value);
         }
         
         updateFieldStatus(field, isValid);
@@ -108,6 +121,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return termsCheck.checked;
     }
 
+    function validateRequiredField(value) {
+        return value.length > 0;
+    }
+
     // Update field visual status
     function updateFieldStatus(field, isValid) {
         field.classList.remove('is-valid', 'is-invalid');
@@ -145,11 +162,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'confirmPassword':
                     feedback.textContent = 'Passwords do not match';
                     break;
+                default:
+                    feedback.textContent = 'This field is required';
             }
         }
     }
 
-    // Sign up Form submission handler
+    // Sign up form submission handler
     signupForm?.addEventListener('submit', function(event) {
         event.preventDefault();
         
@@ -176,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Login Form submission handler
+    // Login form submission handler
     loginForm?.addEventListener('submit', function(event) {
         event.preventDefault();
         
@@ -185,6 +204,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isPhoneValid) {
             loginForm.submit();
+        }
+    });
+
+    // Reset password form submission handler
+    resetPasswordForm?.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const isPasswordValid = validatePassword(password.value);
+        const isConfirmPasswordValid = validateConfirmPassword(confirmPassword.value);
+
+        updateFieldStatus(password, isPasswordValid);
+        updateFieldStatus(confirmPassword, isConfirmPasswordValid);
+
+        if (isPasswordValid && isConfirmPasswordValid) {
+            resetPasswordForm.submit();
+        }
+    });
+
+    // Change password form submission handler
+    changePasswordForm?.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const isCurrentPasswordValid = validateRequiredField(currentPassword.value);
+        const isPasswordValid = validatePassword(password.value);
+        const isConfirmPasswordValid = validateConfirmPassword(confirmPassword.value);
+
+        updateFieldStatus(currentPassword, isCurrentPasswordValid);
+        updateFieldStatus(password, isPasswordValid);
+        updateFieldStatus(confirmPassword, isConfirmPasswordValid);
+
+        if (isCurrentPasswordValid && isPasswordValid && isConfirmPasswordValid) {
+            changePasswordForm.submit();
         }
     });
 

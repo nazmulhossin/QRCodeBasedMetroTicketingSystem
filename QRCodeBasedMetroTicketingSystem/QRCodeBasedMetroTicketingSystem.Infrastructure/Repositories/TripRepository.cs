@@ -25,5 +25,19 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                     t.TicketId == ticketId &&
                     t.Status == TripStatus.InProgress);
         }
+
+        public async Task<IEnumerable<Trip>> GetCompletedTripsByUserIdAsync(int userId, DateTime fromDate)
+        {
+            return await _dbSet
+                .AsSplitQuery()
+                .Include(t => t.EntryStation)
+                .Include(t => t.ExitStation)
+                .Include(t => t.Ticket)
+                .Where(t => t.UserId == userId
+                            && t.Status == TripStatus.Completed
+                            && t.ExitTime >= fromDate)
+                .OrderByDescending(t => t.ExitTime)
+                .ToListAsync();
+        }
     }
 }

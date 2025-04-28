@@ -1,0 +1,54 @@
+﻿@model List<TripViewModel>
+
+@{
+    ViewData["Title"] = "Trip History";
+}
+
+<div class="content-wrapper trips-section">
+    <div class="content-header">
+        <h2 class="content-title">Trip History</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="trip-table">
+            <thead>
+                <tr>
+                    <th>Trip ID</th>
+                    <th>Route</th>
+                    <th>Date & Time</th>
+                    <th>Ticket Type</th>
+                    <th>Fare</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var trip in Model)
+                    {
+                        <tr>
+                            <td class="trip-id">@trip.Id</td>
+                            <td>
+                                <div class="trip-route">
+                                    <span class="trip-station">@trip.EntryStationName</span>
+                                    <span class="trip-arrow"><i class="fas fa-arrow-right"></i></span>
+                                    <span class="trip-station">@trip.ExitStationName</span>
+                                </div>
+                            </td>
+                            <td class="trip-date">@trip.ExitTimeFormatted</td>
+                            <td>
+                                <span class="ticket-types @(trip.TicketType == "Rapid Pass" ? "rapid-pass" : "qr-ticket")">@trip.TicketType</span>
+                            </td>
+                            <td class="trip-fare"><span class="taka-icon">৳</span>@trip.Fare</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">NO TRIP HISTORY FOUND.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
