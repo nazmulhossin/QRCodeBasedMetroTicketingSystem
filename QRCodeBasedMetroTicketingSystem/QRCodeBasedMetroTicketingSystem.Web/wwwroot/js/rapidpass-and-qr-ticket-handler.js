@@ -2,9 +2,14 @@
     const qrModal = new bootstrap.Modal(document.getElementById('generateQRModal'));
 
     // Change active RapidPass button color onload
-    const rapidPassStatusOnLoad = $(rapidPassStatus).data('rapid-pass-status');
-    if (rapidPassStatusOnLoad) {
-        $('#rapidPassToggleBtn').addClass('active-rapid-pass-btn-color');
+    const $statusElement = $('#rapidPassStatus');
+
+    if ($statusElement.length > 0) {
+        const rapidPassStatusOnLoad = $statusElement.data('rapid-pass-status');
+
+        if (rapidPassStatusOnLoad) {
+            $('#rapidPassToggleBtn').addClass('active-rapid-pass-btn-color');
+        }
     }
 
     // Show QR Ticket
