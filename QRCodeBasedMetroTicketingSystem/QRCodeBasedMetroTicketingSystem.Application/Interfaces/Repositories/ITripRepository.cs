@@ -9,5 +9,7 @@ namespace QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories
         Task<IEnumerable<Trip>> GetCompletedTripsByUserIdAsync(int userId, DateTime fromDate);
         Task<int> GetTripCountByUserIdAsync(int userId, DateTime fromDate);
         Task<List<Trip>> GetRecentTripsByUserIdAsync(int userId, int count = 10);
+        Task<int> GetCurrentPassengerCountAsync();
+        Task<IDictionary<DateTime, int>> GetDailyPassengerCountAsync(int days);
     }
 }

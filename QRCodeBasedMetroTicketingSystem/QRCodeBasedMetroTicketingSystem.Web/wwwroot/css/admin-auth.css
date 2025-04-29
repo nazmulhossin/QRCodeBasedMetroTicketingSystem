@@ -87,7 +87,7 @@ header .logo-container .title {
   background-color: var(--dark-color);
   border-color: var(--dark-color);
 }
-.btn-primary:hover, .btn-primary:active {
+.btn-primary:hover, .btn-primary:active, .btn-primary:disabled {
   background-color: var(--dark-light) !important;
   border-color: var(--dark-light) !important;
 }

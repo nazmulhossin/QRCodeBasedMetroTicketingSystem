@@ -19,7 +19,7 @@
                         </div>
                     </div>
 
-                    <form asp-area="Admin" asp-controller="AdminAccount" asp-action="Login">
+                    <form asp-area="Admin" asp-controller="AdminAccount" asp-action="Login" class="loading-form">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <div class="input-group">
@@ -45,8 +45,11 @@
                             <a href="#" class="float-end text-decoration-none">Forgot Password?</a>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary py-2">Login</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" data-loading-text="Logging in...">
+                                <span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true" id="loadingSpinner"></span>
+                                <span class="btn-text"><i class="fas fa-sign-in-alt me-2"></i> Login</span>
+                            </button>
                         </div>
                     </form>
                 </div>

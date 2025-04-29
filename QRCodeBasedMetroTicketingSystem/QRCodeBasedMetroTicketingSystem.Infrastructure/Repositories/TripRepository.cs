@@ -2,6 +2,7 @@
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
+using System.Xml.Linq;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
 {
@@ -56,6 +57,29 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .OrderByDescending(t => t.EntryTime)
                 .Take(count)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetCurrentPassengerCountAsync()
+        {
+            return await _dbSet.CountAsync(t => t.Status == TripStatus.InProgress);
+        }
+
+        public async Task<IDictionary<DateTime, int>> GetDailyPassengerCountAsync(int days)
+        {
+            DateTime startDate = DateTime.UtcNow.Date.AddDays(-days + 1);
+
+            var dbData = await _dbSet
+                .Where(t => t.EntryTime >= startDate)
+                .GroupBy(t => t.EntryTime.Date)
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.Date, x => x.Count);
+
+            return Enumerable.Range(0, days)
+                .Select(offset => startDate.AddDays(offset))
+                .ToDictionary(
+                    date => date,
+                    date => dbData.TryGetValue(date, out var count) ? count : 0
+                );
         }
     }
 }

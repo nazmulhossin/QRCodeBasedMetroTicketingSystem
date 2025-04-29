@@ -61,5 +61,25 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                     (t.Status == TicketStatus.InUse)
                 ));
         }
+
+        public async Task<IDictionary<string, int>> GetTicketTypeDistributionByMonthAsync(int months)
+        {
+            DateTime startDate = DateTime.UtcNow.AddMonths(-months + 1).Date;
+
+            var counts = await _dbSet
+                .Where(t => t.CreatedAt >= startDate && t.Status == TicketStatus.Used)
+                .GroupBy(t => t.Type)
+                .Select(g => new {
+                    Type = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            return new Dictionary<string, int>
+            {
+                { "QRTicket", counts.FirstOrDefault(x => x.Type == TicketType.QRTicket)?.Count ?? 0 },
+                { "RapidPass", counts.FirstOrDefault(x => x.Type == TicketType.RapidPass)?.Count ?? 0 }
+            };
+        }
     }
 }
