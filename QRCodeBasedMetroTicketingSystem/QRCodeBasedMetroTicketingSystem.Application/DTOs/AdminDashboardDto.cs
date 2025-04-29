@@ -7,7 +7,7 @@
         public decimal TotalRevenue { get; set; }
         public int QRTickets { get; set; }
         public int RapidPasses { get; set; }
-        public List<ChartDataPoint> PassengerTraffic { get; set; }
-        public List<ChartDataPoint> RevenueAnalysis { get; set; }
+        public List<ChartDataPoint> PassengerTraffic { get; set; } = new List<ChartDataPoint>();
+        public List<ChartDataPoint> RevenueAnalysis { get; set; } = new List<ChartDataPoint>();
     }
 }

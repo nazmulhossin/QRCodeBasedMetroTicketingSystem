@@ -126,7 +126,7 @@ body {
 }
 .sidebar .sidebar-nav a i {
   font-size: 20px;
-  color: var(--sidebar-icon);
+  color: var(--sidebar-iconColor);
   transition: 0.3s ease;
 }
 .sidebar .sidebar-nav a:hover, .sidebar .sidebar-nav a.active-link {
