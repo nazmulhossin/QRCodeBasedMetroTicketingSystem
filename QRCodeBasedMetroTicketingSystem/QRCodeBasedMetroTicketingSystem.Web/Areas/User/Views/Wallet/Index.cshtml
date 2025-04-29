@@ -34,36 +34,54 @@
                 @foreach (var transaction in Model.RecentTransactions)
                 {
                     <li>
-                        @if (transaction.Type == "TopUp")
+                        @switch (transaction.Type)
                         {
-                            <div class="icon top-up"><i class="fas fa-wallet"></i></div>
-                        }
-                        else if (transaction.Type == "Payment")
-                        {
-                            if (transaction.PaymentFor == "RapidPass")
-                            {
-                                <div class="icon trip"><i class="fas fa-subway"></i></div>
-                            }
-                            else
-                            {
-                                <div class="icon ticket"><i class="fa-solid fa-ticket"></i></div>
-                            }
-                        }
-                        else if (transaction.Type == "Refund")
-                        {
-                            <div class="icon refund"><i class="fas fa-undo"></i></div>
-                        }
-                        else
-                        {
-                            <div class="icon penalty"><i class="fa-solid fa-xmark"></i></div>
+                            case "TopUp":
+                                <div class="icon top-up"><i class="fas fa-wallet"></i></div>
+                                break;
+                            case "Payment":
+                                if (transaction.PaymentFor == "RapidPass")
+                                {
+                                    <div class="icon account-balance-payment"><i class="fa-solid fa-qrcode"></i></div>
+                                }
+                                else if (transaction.PaymentFor == "QRTicket" && transaction.PaymentMethod == "AccountBalance")
+                                {
+                                    <div class="icon account-balance-payment"><i class="fa-solid fa-ticket"></i></div>
+                                }
+                                else
+                                {
+                                    <div class="icon online-payment"><i class="fa-solid fa-credit-card"></i></div>
+                                }
+                                break;
                         }
                         <div class="content">
                             <div class="text">@transaction.Description</div>
-                            <div class="time">@TimeZoneInfo.ConvertTimeFromUtc(transaction.Date, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
+                            <div class="time">
+                                @{
+                                    var bdTime = TimeZoneInfo.ConvertTimeFromUtc(transaction.Date, bdTimeZone);
+                                }
+                                @(bdTime.Date == DateTime.Now.Date ? "Today" : bdTime.Date == DateTime.Now.Date.AddDays(-1) ? "Yesterday" : bdTime.ToString("MMM d")), @bdTime.ToString("hh:mm tt")
+                            </div>
                         </div>
-                        @if (transaction.Type == "TopUp" || transaction.Type == "Refund")
+                        @if (transaction.Status == "Failed")
+                        {
+                            <div class="amount failed">Failed</div>
+                        }
+                        else if (transaction.Status == "Canceled")
+                        {
+                            <div class="amount canceled">Canceled</div>
+                        }
+                        else if (transaction.Status == "Pending")
+                        {
+                            <div class="amount pending">Pending</div>
+                        }
+                        else if (transaction.Type == "TopUp")
                         {
                             <div class="amount credit">+<small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                        else if (transaction.PaymentMethod != "AccountBalance")
+                        {
+                            <div class="amount none"><small class="taka-icon">৳</small>@transaction.Amount</div>
                         }
                         else
                         {

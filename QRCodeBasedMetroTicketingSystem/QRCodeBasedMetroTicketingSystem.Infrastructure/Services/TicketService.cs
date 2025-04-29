@@ -4,7 +4,6 @@ using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
-using System.Net.Sockets;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
@@ -230,6 +229,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 var isSuccrss = await _walletService.DeductBalanceAsync(ticket.UserId, ticket.FareAmount.Value);
                 if (!isSuccrss)
                 {
+                    transaction.Status = TransactionStatus.Failed;
+                    await _unitOfWork.SaveChangesAsync();
                     return false;
                 }
             }
