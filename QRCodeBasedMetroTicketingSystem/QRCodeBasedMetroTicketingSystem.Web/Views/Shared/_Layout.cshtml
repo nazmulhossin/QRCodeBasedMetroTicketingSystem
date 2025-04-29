@@ -64,7 +64,7 @@
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
                                 <li><a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="dropdown-item"><i class="fas fa-user me-2"></i> My Account</a></li>
                                 <li><a asp-area="User" asp-controller="Wallet" asp-action="Index" class="dropdown-item"><i class="fas fa-wallet me-2"></i> My Wallet</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-history me-2"></i> Trip History</a></li>
+                                <li><a asp-area="User" asp-controller="MyAccount" asp-action="TripHistory" class="dropdown-item"><i class="fas fa-history me-2"></i> Trip History</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -120,8 +120,9 @@
                     <ul class="footer-links">
                         <li><a href="/Home">Home</a></li>
                         <li><a href="/Home#how-it-works">How It Works</a></li>
-                        <li><a href="/Home#features">Features</a></li>
                         <li><a href="/Home#guidelines">Metro Guidelines</a></li>
+                        <li><a asp-area="Admin" asp-controller="Home" asp-action="Index">Admin Dashboard</a></li>
+                        <li><a asp-area="System" asp-controller="Home" asp-action="Index">Station Scanner</a></li>
                     </ul>
                 </div>
 
@@ -157,7 +158,7 @@
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2025 Dhaka Metro Rail. All rights reserved. A service of Bangladesh Government.</p>
+                <p>&copy; 2025 Dhaka Metro Rail. All rights reserved. A service of Bangladesh Government. Developed by <a href="https://github.com/Learnathon-By-Geeky-Solutions/netninjas" target="_blank">NetNinjas</a>.</p>
             </div>
         </div>
     </footer>

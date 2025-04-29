@@ -43,23 +43,16 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 return defaultInvalidResponse;
             }
 
-            var (ticketId, expiryTimestamp) = _qrCodeService.ParseQRCodeData(request.QRCodeData);
-
-            // Check if ticket is expired
-            var expiryTime = new DateTime(expiryTimestamp);
-            if (DateTime.UtcNow > expiryTime)
-            {
-                return new ScanTicketResponseDto { IsValid = false, Message = "Ticket has expired" };
-            }
-
+            var ticketId = _qrCodeService.ParseQRCodeDataToGetTicketId(request.QRCodeData);
             var ticket = await _unitOfWork.TicketRepository.GetTicketByIdAsync(ticketId);
+
             if (ticket == null)
             {
                 return defaultInvalidResponse;
             }
 
             // Validate QRCodeData with server data
-            if (ticket.ExpiryTime < DateTime.UtcNow)
+            if (ticket.Status == TicketStatus.Active && ticket.ExpiryTime < DateTime.UtcNow)
             {
                 return new ScanTicketResponseDto { IsValid = false, Message = "Ticket has expired" };
             }
@@ -220,7 +213,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 decimal fareAmount = await _fareCalculationService.GetFareAsync(trip.EntryStationId, station.Id);
 
                 // Description for transaction
-                var description = $"Paid for Rapid Pass from {trip.EntryStationId} to {station.Id}";
+                var description = $"Paid for Rapid Pass from {trip.EntryStation.Name} to {station.Name}";
 
                 // Check time limit
                 var tripDuration = DateTime.UtcNow - trip.EntryTime;
@@ -228,7 +221,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 {
                     // Apply time limit penalty
                     fareAmount += systemSettings.TimeLimitPenaltyFee;
-                    description += "(with penalty applied)";
+                    description += " (with penalty applied)";
                 }
 
                 // Process payment

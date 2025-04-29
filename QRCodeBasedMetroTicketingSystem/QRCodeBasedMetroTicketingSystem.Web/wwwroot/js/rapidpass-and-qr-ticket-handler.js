@@ -1,6 +1,17 @@
 ﻿$(document).ready(function () {
     const qrModal = new bootstrap.Modal(document.getElementById('generateQRModal'));
 
+    // Change active RapidPass button color onload
+    const $statusElement = $('#rapidPassStatus');
+
+    if ($statusElement.length > 0) {
+        const rapidPassStatusOnLoad = $statusElement.data('rapid-pass-status');
+
+        if (rapidPassStatusOnLoad) {
+            $('#rapidPassToggleBtn').addClass('active-rapid-pass-btn-color');
+        }
+    }
+
     // Show QR Ticket
     $('.show-qr-ticket-btn').click(function () {
         const btn = $(this);
@@ -24,7 +35,7 @@
                 $('#downloadQRBtn').attr('data-ticket-id', data.ticketId);
 
                 // Start the countdown timer for expiry
-                startExpiryCountdown(new Date(data.expiryTime));
+                startExpiryCountdown(new Date(data.expiryTime), data.ticketStatus);
                 qrModal.show();
 
                 // Restore button text (hide loadig animation)
@@ -85,10 +96,10 @@
                 $('#cancelRapidPassBtn').attr('data-ticket-id', data.rapidPassTicketId);
                 $('#rapidPassStatus').data('rapid-pass-status', data.status);
 
-                startExpiryCountdown(new Date(data.expiryTime)); // Start the countdown timer for expiry
+                startExpiryCountdown(new Date(data.expiryTime), data.ticketStatus); // Start the countdown timer for expiry
                 qrModal.show();
                 updateRapidPassBtnText();
-                hideLoading(btn, originalText); // Restore button text (hide loadig animation)
+                hideLoading(btn, originalText); // Restore button text (hide loading animation)
             },
             error: function (xhr) {
                 if (xhr.status === 401) {
@@ -174,7 +185,7 @@
     });
 
     // Function to start countdown timer
-    function startExpiryCountdown(expiryDate) {
+    function startExpiryCountdown(expiryDate, ticketStatus) {
         // Clear any existing interval
         if (window.countdownInterval) {
             clearInterval(window.countdownInterval);
@@ -186,7 +197,11 @@
 
             if (timeDiff <= 0) {
                 // Timer expired
-                $('#expiryInfo').html('This QR code has <strong>expired</strong>');
+                $('#expiryInfo').html('Trip duration limit exceeded');
+                if (ticketStatus == 1) {
+                    $('#expiryInfo').html('This QR code has <strong>expired</strong>');
+                }
+
                 clearInterval(window.countdownInterval);
                 return;
             }
@@ -198,6 +213,9 @@
 
             // Format display text
             let timerText = 'Expires in ';
+            if (ticketStatus == 2) {
+                timerText = 'Scan at the exit gate within ';
+            }
 
             if (hours > 0) {
                 timerText += `<strong>${hours}</strong> hour${hours !== 1 ? 's' : ''} `;
@@ -226,8 +244,10 @@
         // Update Button text on status
         if (rapidPassStatus == 0) {
             $('#rapidPassStatus').text("Get RapidPass QR Code");
+            $('#rapidPassToggleBtn').removeClass('active-rapid-pass-btn-color');
         } else {
             $('#rapidPassStatus').text("Show RapidPass QR Code");
+            $('#rapidPassToggleBtn').addClass('active-rapid-pass-btn-color');
         }
     }
 
@@ -285,7 +305,7 @@
             doc.text(`To: ${ticketData.destinationStationName}`, 10, 118);
         }
 
-        doc.text(`Valid Until: ${ticketData.expiryTime}`, 10, 124);
+        doc.text(`Valid Until: ${convertToHumanReadableDate(ticketData.expiryTime)}`, 10, 124);
 
         // Save PDF
         if (ticketData.ticketType == 0) {
@@ -293,12 +313,24 @@
         } else {
             doc.save(`Metro-RapidPass-${ticketData.ticketId}_${ticketData.expiryTime}.pdf`);
         }
-        
     }
 
     // Helper function to hide loading animation
     function hideLoading(btn, originalText) {
         btn.html(originalText);
         btn.prop('disabled', false);
+    }
+
+    function convertToHumanReadableDate(isoString) {
+        const date = new Date(isoString)
+        return date.toLocaleString('en-US', {
+            weekday: 'short', 
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true 
+        });
     }
 });

@@ -60,7 +60,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 return new List<Transaction>();
 
             return await _context.Transactions
-                .Where(t => t.WalletId == wallet.Id)
+                .Where(t => t.WalletId == wallet.Id && t.Status == TransactionStatus.Completed)
                 .OrderByDescending(t => t.CreatedAt)
                 .Take(count)
                 .ToListAsync();

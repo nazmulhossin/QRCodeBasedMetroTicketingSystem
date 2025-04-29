@@ -14,6 +14,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         private readonly ISystemSettingsService _systemSettingsService;
         private readonly IWalletService _walletService;
         private readonly IQRCodeService _qrCodeService;
+        private readonly ITimeService _timeService;
         private readonly IMapper _mapper;
 
         public TicketService(
@@ -22,6 +23,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             ISystemSettingsService systemSettingsService,
             IWalletService walletService,
             IQRCodeService qrCodeService,
+            ITimeService timeService,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -29,19 +31,17 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             _systemSettingsService = systemSettingsService;
             _walletService = walletService;
             _qrCodeService = qrCodeService;
+            _timeService = timeService;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<TicketDto>> GetQrTicketsByStatusAsync(int userId, TicketStatus status)
         {
             var tickets = await _unitOfWork.TicketRepository.GetQrTicketsByStatusAsync(userId, status);
-            return _mapper.Map<IEnumerable<TicketDto>>(tickets);
-        }
+            if (status == TicketStatus.Active)
+                tickets = tickets.Where(t => t.ExpiryTime > DateTime.UtcNow);
 
-        public async Task<TicketDto?> GetTicketByIdAsync(int ticketId)
-        {
-            var ticket = await _unitOfWork.TicketRepository.GetTicketByIdAsync(ticketId);
-            return _mapper.Map<TicketDto>(ticket);
+            return _mapper.Map<IEnumerable<TicketDto>>(tickets);
         }
 
         public async Task<int> GetValidQrTicketsCountByUserIdAsync(int userId)
@@ -57,14 +57,24 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 
         public async Task<TicketDto?> GetOrGenerateRapidPassAsync(int userId)
         {
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+
             // Check if user already has an active RapidPass
             var existingRapidPass = await _unitOfWork.TicketRepository.GetActiveRapidPassTicketByUserIdAsync(userId);
             if (existingRapidPass != null)
             {
-                return _mapper.Map<TicketDto>(existingRapidPass);
-            }
+                var ticketDto = _mapper.Map<TicketDto>(existingRapidPass);
+                if (ticketDto.Status == TicketStatus.InUse)
+                {
+                    var trip = await _unitOfWork.TripRepository.GetActiveTripByTicketIdAsync(existingRapidPass.Id);
+                    if (trip == null)
+                        return null;
 
-            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+                    ticketDto.ExpiryTime = trip.EntryTime.AddMinutes(systemSettings.MaxTripDurationMinutes);
+                }
+
+                return ticketDto;
+            }
 
             // Not found: Create new RapidPass ticket
             var newTicket = new Ticket
@@ -109,6 +119,33 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();            
 
             return Result.Success("Cancelled Successfully!");
+        }
+
+        public async Task<TicketDto?> GetTicketDetails(int userId, int ticketId)
+        {
+            var systemSettings = await _systemSettingsService.GetSystemSettingsAsync();
+
+            // ticketId = 0 means RapidPass
+            var ticket = ticketId == 0
+                ? await _unitOfWork.TicketRepository.GetActiveRapidPassTicketByUserIdAsync(userId)
+                : await _unitOfWork.TicketRepository.GetActiveQrTicketByIdAsync(ticketId);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            var ticketDto = _mapper.Map<TicketDto>(ticket);
+            if (ticketDto.Status == TicketStatus.InUse)
+            {
+                var trip = await _unitOfWork.TripRepository.GetActiveTripByTicketIdAsync(ticket.Id);
+                if (trip == null)
+                    return null;
+
+                ticketDto.ExpiryTime = trip.EntryTime.AddMinutes(systemSettings.MaxTripDurationMinutes);
+            }
+
+            return ticketDto;
         }
 
         public async Task<(string OriginStationName, string DestinationStationName, int Fare)> GetTicketSummaryAsync(int originStationId, int destinationStationId)
@@ -192,6 +229,8 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 var isSuccrss = await _walletService.DeductBalanceAsync(ticket.UserId, ticket.FareAmount.Value);
                 if (!isSuccrss)
                 {
+                    transaction.Status = TransactionStatus.Failed;
+                    await _unitOfWork.SaveChangesAsync();
                     return false;
                 }
             }

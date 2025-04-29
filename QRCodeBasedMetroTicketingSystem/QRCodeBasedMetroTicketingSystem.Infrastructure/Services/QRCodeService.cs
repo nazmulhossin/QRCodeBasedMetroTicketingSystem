@@ -68,13 +68,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
             return true;
         }
 
-        public (int ticketId, long expiryTimestamp) ParseQRCodeData(string qrCodeData)
+        public int ParseQRCodeDataToGetTicketId(string qrCodeData)
         {
             var parts = qrCodeData.Split('|');
-            return (
-                int.Parse(parts[0]),  // ticketId
-                long.Parse(parts[1])  // expiryTimestamp
-            );
+            return int.Parse(parts[0]);
         }
     }
 }

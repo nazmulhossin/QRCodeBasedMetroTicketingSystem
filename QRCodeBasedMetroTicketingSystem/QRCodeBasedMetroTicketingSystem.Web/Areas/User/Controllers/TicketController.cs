@@ -6,7 +6,6 @@ using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
-using System.Net.Sockets;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 {
@@ -34,7 +33,15 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 return Unauthorized();
 
             var tickets = await _ticketService.GetQrTicketsByStatusAsync(userId.Value, status);
-            var viewModel = _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
+            var viewModel = tickets.Select(ticket => new TicketViewModel
+            {
+                Id = ticket.Id,
+                OriginStationName = ticket.OriginStationName,
+                DestinationStationName = ticket.DestinationStationName,
+                FareAmount = ticket.FareAmount,
+                Status = ticket.Status,
+                ExpiryTimeFormatted = _timeService.FormatAsBdTime(ticket.ExpiryTime)
+            });
 
             return View(viewModel);
         }
@@ -129,17 +136,13 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            // ticketId = 0 means RapidPass
-            var ticket = ticketId == 0
-                ? await _ticketService.GetActiveRapidPassAsync(userId.Value)
-                : await _ticketService.GetTicketByIdAsync(ticketId);
-
+            var ticket = await _ticketService.GetTicketDetails(userId.Value, ticketId);
             if (ticket == null || ticket.UserId != userId)
             {
                 return Unauthorized();
             }
 
-            var qrCodeBase64 = _qrCodeService.GenerateQRCode(ticket.QRCodeData);
+            var qrCodeBase64 = _qrCodeService.GenerateQRCode(ticket.QRCodeData!);
 
             return Json(new
             {
@@ -147,8 +150,9 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 originStationName = ticket.OriginStationName,
                 destinationStationName = ticket.DestinationStationName,
-                expiryTime = _timeService.FormatAsBdTime(ticket.ExpiryTime),
-                ticketType = ticket.Type
+                expiryTime = _timeService.ConvertUtcToBdTime(ticket.ExpiryTime),
+                ticketType = ticket.Type,
+                ticketStatus = ticket.Status
             });
         }
 
@@ -171,7 +175,8 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 rapidPassTicketId = rapidPassTicket.Id,
                 qrCodeImage = $"data:image/png;base64,{qrCodeBase64}",
                 status = rapidPassTicket.Status,
-                expiryTime = _timeService.FormatAsBdTime(rapidPassTicket.ExpiryTime)
+                expiryTime = _timeService.ConvertUtcToBdTime(rapidPassTicket.ExpiryTime),
+                ticketStatus = rapidPassTicket.Status
             });
         }
 
