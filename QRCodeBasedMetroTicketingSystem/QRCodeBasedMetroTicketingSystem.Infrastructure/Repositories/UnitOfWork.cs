@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
-using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Infrastructure.Data;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
@@ -12,19 +10,40 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
         private IDbContextTransaction? _transaction;
         private bool _disposed = false;
 
+        public IAdminRepository AdminRepository { get; }
         public IStationRepository StationRepository { get; }
         public IStationDistanceRepository StationDistanceRepository { get; }
-        public ISettingsRepository SettingsRepository { get; }
+        public ISystemSettingsRepository SystemSettingsRepository { get; }
+        public IUserRepository UserRepository { get; }
+        public IUserTokenRepository UserTokenRepository { get; }
+        public IWalletRepository WalletRepository { get; }
+        public ITransactionRepository TransactionRepository { get; }
+        public ITicketRepository TicketRepository { get; }
+        public ITripRepository TripRepository { get; }
 
         public UnitOfWork(ApplicationDbContext db,
+                          IAdminRepository adminRepository,
                           IStationRepository stationRepository,
                           IStationDistanceRepository stationDistanceRepository,
-                          ISettingsRepository settingsRepository)
+                          ISystemSettingsRepository settingsRepository,
+                          IUserRepository userRepository,
+                          IUserTokenRepository userTokenRepository,
+                          IWalletRepository walletRepository,
+                          ITransactionRepository transactionRepository,
+                          ITicketRepository ticketRepository,
+                          ITripRepository tripRepository)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
-            StationRepository = stationRepository ?? throw new ArgumentNullException(nameof(stationRepository));
-            StationDistanceRepository = stationDistanceRepository ?? throw new ArgumentNullException(nameof(stationDistanceRepository));
-            SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _db = db;
+            AdminRepository = adminRepository;
+            StationRepository = stationRepository;
+            StationDistanceRepository = stationDistanceRepository;
+            SystemSettingsRepository = settingsRepository;
+            UserRepository = userRepository;
+            UserTokenRepository = userTokenRepository;
+            WalletRepository = walletRepository;
+            TransactionRepository = transactionRepository;
+            TicketRepository = ticketRepository;
+            TripRepository = tripRepository;
         }
 
         public async Task<int> SaveChangesAsync()

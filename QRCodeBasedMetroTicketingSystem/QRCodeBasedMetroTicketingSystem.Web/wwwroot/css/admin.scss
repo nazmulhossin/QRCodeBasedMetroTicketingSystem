@@ -185,7 +185,7 @@ body {
 
             i {
                 font-size: 20px;
-                color: var(--sidebar-icon);
+                color: var(--sidebar-iconColor);
                 transition: $transition-speed ease;
             }
 
@@ -521,7 +521,7 @@ body {
 }
 
 // Form Styels
-form {
+form, .form-group, select:has(option:checked) {
     color: var(--main-primary-text-color);
 }
 
@@ -573,8 +573,8 @@ form {
     }
 }
 
-// Cards Section styles
-.cards {
+// Stats Cards Section styles
+.stats-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
@@ -597,95 +597,33 @@ form {
         .card-icon {
             background-color: $primary;
             color: #fff;
-            width: 50px;
-            height: 50px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
 
             i {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
         }
 
         .card-content {
+            margin-top: 0.8rem;
+
             h3 {
                 font-size: 1.2rem;
                 margin: 0;
             }
 
             p {
+                margin-top: 0.3rem;
+                margin-bottom: 0;
                 font-size: 1.5rem;
                 font-weight: bold;
-                margin: 5px 0 0;
+                text-align: center;
             }
-        }
-    }
-}
-
-// Stats Cards Grid styles
-.stats-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: $grid-gap;
-    margin-bottom: $grid-gap;
-
-    .stats-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: $card-radius;
-        box-shadow: $card-shadow;
-        @include flex-center;
-        gap: 1rem;
-
-        .stats-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            @include flex-center;
-            justify-content: center;
-
-            i {
-                font-size: 1.5rem;
-
-                &.text-primary {
-                    color: $primary;
-                }
-
-                &.text-success {
-                    color: $success;
-                }
-
-                &.text-danger {
-                    color: $danger;
-                }
-
-                &.text-purple {
-                    color: $purple;
-                }
-            }
-        }
-
-        .stats-info {
-            flex: 1;
-
-            h3 {
-                font-size: 1.5rem;
-                color: var(--main-primary-text-color);
-                margin-bottom: 0.25rem;
-            }
-
-            p {
-                color: var(--main-secondary-text-color);
-                margin: 0;
-                font-size: 0.875rem;
-            }
-        }
-
-        .stats-progress {
-            align-self: flex-start;
         }
     }
 }
@@ -724,8 +662,9 @@ form {
             padding: 1.5rem;
 
             .chart-placeholder {
+                position: relative;
                 height: 300px;
-                background: #f8f9fa;
+                
                 border-radius: $card-radius;
                 @include flex-center;
                 justify-content: center;

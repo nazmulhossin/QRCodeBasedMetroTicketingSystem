@@ -8,7 +8,6 @@
     <link href="https://cdn.datatables.net/v/bs5/dt-2.2.2/datatables.min.css" rel="stylesheet" integrity="sha384-M6C9anzq7GcT0g1mv0hVorHndQDVZLVBkRVdRb2SsQT7evLamoeztr1ce+tvn+f2" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/admin.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QRCodeBasedMetroTicketingSystem.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <div class="sidebar">
@@ -24,9 +23,6 @@
             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active-link" : "")"><i class="bi bi-columns-gap"></i> Dashboard</a>
             <a asp-area="Admin" asp-controller="Station" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Station" ? "active-link" : "")"><i class="bi bi-buildings"></i> Manage Stations</a>
             <a asp-area="Admin" asp-controller="FareAndDistance" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "FareAndDistance" ? "active-link" : "")"><i class="bi bi-table"></i> Fare & Distance Table</a>
-            <a href=""><i class="bi bi-people"></i> Manage Users</a>
-            <a href=""><i class="bi bi-bar-chart-line"></i> Reports</a>
-            <a href=""><i class="bi bi-exclamation-triangle"></i> Emergency</a>
             <a asp-area="Admin" asp-controller="SystemSettings" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SystemSettings" ? "active-link" : "")"><i class="bi bi-gear"></i> System Settings</a>
         </nav>
 
@@ -54,7 +50,6 @@
                         <i class="bi bi-person"></i>Admin
                     </div>
                     <ul class="dropdown-menu">
-                        <li><a href="#!"><i class="bi bi-gear"></i> Settings</a></li>
                         <li class="sub-dropdown">
                             <span><i class="bi bi-cloud-sun"></i> Appearance <i class="bi bi-chevron-right"></i></span>
                             <div class="them-switcher">
@@ -87,7 +82,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li><a href="#!"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        <li class="text-danger"><a asp-area="Admin" asp-controller="AdminAccount" asp-action="Logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -99,13 +94,13 @@
         </main>
 
         <footer>
-            Copyright &copy; 2025 - 2025 by <a href="https://github.com/Learnathon-By-Geeky-Solutions/netninjas" target="_blank" style="margin-left: 5px;"> NetNinjas</a>. All rights reserved.
+            Copyright &copy; 2025 - @DateTime.Now.Year by <a href="https://github.com/Learnathon-By-Geeky-Solutions/netninjas" target="_blank" style="margin-left: 5px;"> NetNinjas</a>. All rights reserved.
         </footer>
     </div>
-    <script src="~/js/admin.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.2.2/datatables.min.js" integrity="sha384-k90VzuFAoyBG5No1d5yn30abqlaxr9+LfAPp6pjrd7U3T77blpvmsS8GqS70xcnH" crossorigin="anonymous"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

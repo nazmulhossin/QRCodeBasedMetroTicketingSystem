@@ -1,0 +1,112 @@
+﻿@using QRCodeBasedMetroTicketingSystem.Application.DTOs
+@model UserDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="content-wrapper dashboard-section">
+    <div class="content-header">
+        <h2 class="content-title">Dashboard</h2>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4">
+        <div class="col-6 col-md-4">
+            <div class="stats-card balance">
+                <div class="stats-icon"><i class="fas fa-wallet"></i></div>
+                <div class="stats-title">Total Top-ups</div>
+                <div class="stats-value"><span class="taka-icon">৳</span>@Model.Stats.TotalTopUps</div>
+                <div class="stats-description">This month</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="stats-card trips">
+                <div class="stats-icon"><i class="fas fa-subway"></i></div>
+                <div class="stats-title">Total Trips</div>
+                <div class="stats-value">@Model.Stats.TotalTrips</div>
+                <div class="stats-description">This month</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="stats-card tickets">
+                <div class="stats-icon"><i class="fa-solid fa-ticket"></i></div>
+                <div class="stats-title">Purchased Tickets</div>
+                <div class="stats-value">@Model.Stats.ValidTickets</div>
+                <div class="stats-description">Valid for use</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a id="rapidPassToggleBtn">
+            <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
+            <div class="quick-action-text">@await Component.InvokeAsync("RapidPassStatus")</div>
+        </a>
+        <partial name="_ShowRapidPassQrModal" />
+        <a asp-area="User" asp-controller="Payment" asp-action="EnterPaymentDetails">
+            <div class="quick-action-icon"><i class="fas fa-wallet"></i></div>
+            <div class="quick-action-text">Add Balance</div>
+        </a>
+        <a href="/home#fare-checker-and-buy-qr-ticket">
+            <div class="quick-action-icon"><i class="fa-solid fa-ticket"></i></div>
+            <div class="quick-action-text">Buy QR Ticket</div>
+        </a>
+        <a href="/home#fare-checker-and-buy-qr-ticket">
+            <div class="quick-action-icon"><i class="fas fa-calculator"></i></div>
+            <div class="quick-action-text">Fare Calculator</div>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="history-card">
+        <div class="history-header">
+            <h3>Recent Activity</h3>
+            <a href="#" class="arrow-card-action">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <ul class="history-list">
+            @foreach (var activity in Model.Activities)
+            {
+                <li>
+                    @switch (activity.Type)
+                    {
+                        case ActivityType.TopUp:
+                            <div class="icon top-up"><i class="fas fa-wallet"></i></div>
+                            break;
+                        case ActivityType.AccountBalancePayment:
+                            <div class="icon account-balance-payment"><i class="fas fa-wallet"></i></div>
+                            break;
+                        case ActivityType.OnlinePayment:
+                            <div class="icon online-payment"><i class="fa-solid fa-credit-card"></i></div>
+                            break;
+                        case ActivityType.Trip:
+                            <div class="icon trip"><i class="fas fa-subway"></i></div>
+                            break;
+                    }
+
+                    <div class="content">
+                        <div class="text">@activity.Description</div>
+                        <div class="time">@(activity.Time.Date == DateTime.Now.Date ? "Today" : activity.Time.Date == DateTime.Now.Date.AddDays(-1) ? "Yesterday" : activity.Time.ToString("MMM d")), @activity.Time.ToString("hh:mm tt")</div>
+                    </div>
+
+                    <div class="amount @(activity.Type == ActivityType.OnlinePayment ? " none" : (activity.IsCredit ? "credit" : "debit"))">
+                        @if (activity.Amount.HasValue && activity.Type == ActivityType.OnlinePayment)
+                        {
+                            <small class="taka-icon">৳</small>@activity.Amount.Value.ToString()
+                        }
+                        else if (activity.Amount.HasValue)
+                        {
+                            @(activity.IsCredit ? "+" : "-")
+                            <small class="taka-icon">৳</small>@activity.Amount.Value.ToString()
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

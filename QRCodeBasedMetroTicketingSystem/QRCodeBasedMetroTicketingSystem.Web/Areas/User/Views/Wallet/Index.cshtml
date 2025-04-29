@@ -1,0 +1,99 @@
+﻿@model WalletViewModel
+
+@{
+    ViewData["Title"] = "My Wallet";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
+}
+
+<div class="content-wrapper my-wallet-section">
+    <div class="content-header">
+        <h2 class="content-title">My Wallet</h2>
+    </div>
+
+    <!-- Wallet Balance Card -->
+    <div class="wallet-balance-card">
+        <div class="pattern"></div>
+        <div class="content">
+            <div class="label">Current Balance</div>
+            <div class="amount"><span class="taka-icon">৳</span>@Model.Balance</div>
+            <div class="actions">
+                <a asp-area="User" asp-controller="Payment" asp-action="EnterPaymentDetails" class="btn add-balance-btn"><i class="fas fa-plus"></i> Add Balance</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="history-card">
+        <div class="history-header">
+            <h3>Recent Transactions</h3>
+            <a href="#" class="arrow-card-action">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <ul class="history-list">
+            @if (Model.RecentTransactions.Any())
+            {
+                @foreach (var transaction in Model.RecentTransactions)
+                {
+                    <li>
+                        @switch (transaction.Type)
+                        {
+                            case "TopUp":
+                                <div class="icon top-up"><i class="fas fa-wallet"></i></div>
+                                break;
+                            case "Payment":
+                                if (transaction.PaymentFor == "RapidPass")
+                                {
+                                    <div class="icon account-balance-payment"><i class="fa-solid fa-qrcode"></i></div>
+                                }
+                                else if (transaction.PaymentFor == "QRTicket" && transaction.PaymentMethod == "AccountBalance")
+                                {
+                                    <div class="icon account-balance-payment"><i class="fa-solid fa-ticket"></i></div>
+                                }
+                                else
+                                {
+                                    <div class="icon online-payment"><i class="fa-solid fa-credit-card"></i></div>
+                                }
+                                break;
+                        }
+                        <div class="content">
+                            <div class="text">@transaction.Description</div>
+                            <div class="time">
+                                @{
+                                    var bdTime = TimeZoneInfo.ConvertTimeFromUtc(transaction.Date, bdTimeZone);
+                                }
+                                @(bdTime.Date == DateTime.Now.Date ? "Today" : bdTime.Date == DateTime.Now.Date.AddDays(-1) ? "Yesterday" : bdTime.ToString("MMM d")), @bdTime.ToString("hh:mm tt")
+                            </div>
+                        </div>
+                        @if (transaction.Status == "Failed")
+                        {
+                            <div class="amount failed">Failed</div>
+                        }
+                        else if (transaction.Status == "Canceled")
+                        {
+                            <div class="amount canceled">Canceled</div>
+                        }
+                        else if (transaction.Status == "Pending")
+                        {
+                            <div class="amount pending">Pending</div>
+                        }
+                        else if (transaction.Type == "TopUp")
+                        {
+                            <div class="amount credit">+<small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                        else if (transaction.PaymentMethod != "AccountBalance")
+                        {
+                            <div class="amount none"><small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                        else
+                        {
+                            <div class="amount debit">-<small class="taka-icon">৳</small>@transaction.Amount</div>
+                        }
+                    </li>
+                }
+            }
+            else
+            {
+                <li>No transactions found</li>
+            }
+        </ul>
+    </div>
+</div>

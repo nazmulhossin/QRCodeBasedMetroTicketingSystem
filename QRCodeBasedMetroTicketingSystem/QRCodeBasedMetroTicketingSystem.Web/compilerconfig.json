@@ -2,5 +2,45 @@
   {
     "outputFile": "wwwroot/css/admin.css",
     "inputFile": "wwwroot/css/admin.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/layout.css",
+    "inputFile": "wwwroot/css/layout.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/home.css",
+    "inputFile": "wwwroot/css/home.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/map-and-routes.css",
+    "inputFile": "wwwroot/css/map-and-routes.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/auth.css",
+    "inputFile": "wwwroot/css/auth.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/my-account.css",
+    "inputFile": "wwwroot/css/my-account.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/Scanner.css",
+    "inputFile": "wwwroot/css/Scanner.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/payment.css",
+    "inputFile": "wwwroot/css/payment.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/buy-qr-ticket.css",
+    "inputFile": "wwwroot/css/buy-qr-ticket.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/admin-auth.css",
+    "inputFile": "wwwroot/css/admin-auth.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/system.css",
+    "inputFile": "wwwroot/css/system.scss"
   }
 ]

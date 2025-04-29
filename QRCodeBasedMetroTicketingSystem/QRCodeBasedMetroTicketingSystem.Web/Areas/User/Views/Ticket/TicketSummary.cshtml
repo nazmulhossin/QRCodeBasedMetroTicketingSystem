@@ -1,0 +1,67 @@
+﻿@model TicketSummaryViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Ticket Summary";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/buy-qr-ticket.min.css" asp-append-version="true" />
+}
+
+<div class="container buy-qr-ticket ticket-summary">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ticket Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="ticket-details-container mt-3">
+                        <div class="ticket-route">
+                            <div class="station">
+                                <div class="station-name">@Model.OriginStationName</div>
+                                <div class="station-label">From</div>
+                            </div>
+                            <div class="route-line"></div>
+                            <div class="station">
+                                <div class="station-name">@Model.DestinationStationName</div>
+                                <div class="station-label">To</div>
+                            </div>
+                        </div>
+
+                        <div class="ticket-details">
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Ticket Type</div>
+                                <div class="detail-value">@Model.TicketType</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Fare</div>
+                                <div class="detail-value"><span class="taka-icon">৳</span>@Model.Fare</div>
+                            </div>
+                        </div>
+                        <div class="ticket-total">
+                            <div class="total-label">Total Amount</div>
+                            <div class="total-value"><span class="taka-icon">৳</span>@Model.Fare</div>
+                        </div>
+                    </div>
+
+                    <form asp-area="User" asp-controller="Ticket" asp-action="SelectPaymentOption" method="post">
+                        <input type="hidden" name="OriginStationId" value="@Model.OriginStationId" />
+                        <input type="hidden" name="DestinationStationId" value="@Model.DestinationStationId" />
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a href="/home#fare-checker-and-buy-qr-ticket" class="btn btn-outline-danger">Cancle</a>
+                            <button type="submit" class="btn btn-primary">Continue to Payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/layout.js"></script>
+}

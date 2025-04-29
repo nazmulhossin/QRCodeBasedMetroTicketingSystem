@@ -1,0 +1,80 @@
+﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/my-account.min.css" asp-append-version="true" />
+}
+
+<!-- My Account Container -->
+<div class="my-account-container py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-4 col-xl-3">
+                <div class="sidebar" id="userSidebar">
+                    <div class="sidebar-user">
+                        <img src="~/images/user.jpg" alt="user">
+                        <div>
+                            <div>Hello,</div>
+                            <div class="user-name">@(User.Identity?.Name?.Length > 20 ? User.Identity.Name.Substring(0, 20) + "..." : User.Identity?.Name)</div>
+                        </div>
+                        <button type="button" class="btn-close" id="closeUserSidebarBtn"></button>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                                <span class="text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="MyProfile" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyProfile" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-user"></i></span>
+                                <span class="text">My Profile</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="Ticket" asp-action="MyQRTickets" asp-route-status="@TicketStatus.Active" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyQrTickets" ? "active" : "")">
+                                <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                                <span class="text">My QR Tickets</span>
+                                @await Component.InvokeAsync("MyQrTicketCount")
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="TripHistory" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "TripHistory" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-subway"></i></span>
+                                <span class="text">Trip History</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="Wallet" asp-action="Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-wallet"></i></span>
+                                <span class="text">My Wallet</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="User" asp-controller="MyAccount" asp-action="SecuritySettings" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "SecuritySettings" ? "active" : "")">
+                                <span class="icon"><i class="fas fa-shield-alt"></i></span>
+                                <span class="text">Security Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-8 col-xl-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/my-account.js" asp-append-version="true"></script>
+    <script src="~/js/auth.js" asp-append-version="true"></script>
+    <script src="~/js/form-loading-spinner.js" asp-append-version="true"></script>
+}

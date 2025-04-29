@@ -1,49 +1,172 @@
-﻿<!DOCTYPE html>
+﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QRCodeBasedMetroTicketingSystem.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QRCodeBasedMetroTicketingSystem.Web.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Dhaka Metro Rail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/layout.min.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">QRCodeBasedMetroTicketingSystem.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg px-0">
+            <div class="container-fluid mx-0 mx-ms-2 mx-lg-4 mx-xl-5">
+                <button class="navbar-toggler ps-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+                <a class="navbar-brand me-auto d-none d-lg-inline" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/metro-logo.png" alt="Metro Rail BD Logo"><span class="ms-2">Dhaka Metro Rail</span>
+                </a>
+
+                <div class="offcanvas offcanvas-start ms-4 ms-xl-5" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <div class="offcanvas-title d-flex justify-content-start" id="offcanvasNavbarLabel">
+                            <img src="~/images/metro-logo.png" alt="Metro Rail BD Logo"><span class="ms-2">Dhaka Metro Rail
+                            </span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav pe-3">
+                            <li class="nav-item"><a asp-controller="Home" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active-link" : "")">Home</a></li>
+                            <li class="nav-item"><a asp-controller="Home" asp-action="MapAndRoutes" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "MapAndRoutes" ? "active-link" : "")">Map & Routes</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("User"))
+                    {
+                        <a asp-area="User" asp-controller="Ticket" asp-action="MyQRTickets" asp-route-status="@TicketStatus.Active" class="nav-link shopping-badge me-3">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            @await Component.InvokeAsync("MyQrTicketCount")
+                        </a>
+                        <button id="balanceBtn" class="balance-btn me-3">
+                            <span class="balance-container">
+                                <span class="taka-icon">৳</span>
+                                <span id="balanceText" class="balanceText">Tap for Balance</span>
+                            </span>
+                        </button>
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle d-flex align-items-center ps-0 ps-sm-2 pe-0" id="profileDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" onKeyDown="handleKeyDown(event)">
+                                <i class="fa-solid fa-user me-2"></i> 
+                                <span class="d-none d-sm-inline">
+                                    @(User.Identity?.Name?.Length > 15 ? User.Identity.Name.Substring(0, 15) + "..." : User.Identity?.Name)
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
+                                <li><a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="dropdown-item"><i class="fas fa-user me-2"></i> My Account</a></li>
+                                <li><a asp-area="User" asp-controller="Wallet" asp-action="Index" class="dropdown-item"><i class="fas fa-wallet me-2"></i> My Wallet</a></li>
+                                <li><a asp-area="User" asp-controller="MyAccount" asp-action="TripHistory" class="dropdown-item"><i class="fas fa-history me-2"></i> Trip History</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a asp-controller="Account" asp-action="Logout" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ms-4" id="openUserSidebarBtn"><i class="fa-solid fa-list-ul"></i></div>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-auth me-1 me-sm-2">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-auth ms-1 me-sm-2">
+                            <i class="fas fa-user-plus me-1"></i> Sign Up
+                        </a>
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - QRCodeBasedMetroTicketingSystem.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main role="main">
+        <partial name="_ToasterNotification" />
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="container-fluid px-4 px-sm-5 px-lg-3 px-xl-5">
+            <div class="row g-3">
+                <div class="col-lg-4">
+                    <div class="footer-about">
+                        <div class="footer-logo">
+                            <img src="~/images/metro-logo.png" alt="Dhaka Metro Rail Logo"><span>Dhaka Metro Rail</span>
+                        </div>
+                        <p>Bangladesh's first QR-based metro ticketing system, making urban transportation faster, easier, and more convenient for everyone.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-2">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/Home">Home</a></li>
+                        <li><a href="/Home#how-it-works">How It Works</a></li>
+                        <li><a href="/Home#guidelines">Metro Guidelines</a></li>
+                        <li><a asp-area="Admin" asp-controller="Home" asp-action="Index">Admin Dashboard</a></li>
+                        <li><a asp-area="System" asp-controller="Home" asp-action="Index">Station Scanner</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6 col-lg-2">
+                    <h4 class="footer-heading">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6 col-lg-2">
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6 col-lg-2">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-map-marker-alt me-2"></i> Agargaon, Dhaka</a></li>
+                        <li><a href="#"><i class="fas fa-phone me-2"></i> 16XXX</a></li>
+                        <li><a href="mailto:info@dhakametrorail.gov.bd"><i class="fas fa-envelope me-2"></i> info@dhakametrorail.gov.bd</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Dhaka Metro Rail. All rights reserved. A service of Bangladesh Government. Developed by <a href="https://github.com/Learnathon-By-Geeky-Solutions/netninjas" target="_blank">NetNinjas</a>.</p>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.1/jspdf.umd.min.js" integrity="sha512-ad3j5/L4h648YM/KObaUfjCsZRBP9sAOmpjaT2BDx6u9aBrKFp7SbeHykruy83rxfmG42+5QqeL/ngcojglbJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+    <script src="~/js/rapidpass-and-qr-ticket-handler.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

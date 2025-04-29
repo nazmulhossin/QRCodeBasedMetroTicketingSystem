@@ -1,0 +1,57 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Payment Failed";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/payment.min.css" asp-append-version="true" />
+}
+
+<div class="container payment-section payment-status py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Payment Failed</h5>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Error Icon -->
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+
+                    <h4 class="payment-status-title error mt-3">Payment Failed!</h4>
+                    <p class="payment-status-message">We couldn't process your payment. Please check the following details carefully and try once more.</p>
+                    <div class="possible-reasons">
+                        <h5><i class="fas fa-info-circle me-1"></i> Possible Reasons:</h5>
+                        <ul>
+                            <li>Insufficient funds in your payment account</li>
+                            <li>Payment gateway timeout or technical issue</li>
+                            <li>Card or payment method declined by the bank</li>
+                            <li>Incorrect payment information provided</li>
+                            <li>Transaction limit exceeded</li>
+                        </ul>
+                    </div>
+                    <div class="d-grid">
+                        <a asp-area="User" asp-controller="MyAccount" asp-action="Dashboard" class="btn btn-primary">Return to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="help-card">
+                <h5>Need Help?</h5>
+                <p>If you're having trouble adding balance to your account, please contact our support team.</p>
+                <button class="btn btn-outline-primary w-100">
+                    <i class="fas fa-headset me-2"></i> Contact Support
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/layout.js"></script>
+}

@@ -1,0 +1,97 @@
+﻿@using QRCodeBasedMetroTicketingSystem.Domain.Entities
+@model IEnumerable<TicketViewModel>
+
+@{
+    ViewData["Title"] = "My QR Ticket";
+}
+
+<div class="content-wrapper my-qr-ticket-section">
+    <div class="content-header">
+        <h2 class="content-title">My QR Tickets</h2>
+    </div>
+
+    <div class="action-buttons">
+        <a asp-area="User" asp-controller="Ticket" asp-action="MyQrTickets" asp-route-status="@TicketStatus.Active" class="btn btn-outline-primary me-2 @(Context.Request.Query["status"] == "Active" ? "active" : "")">Active</a>
+        <a asp-area="User" asp-controller="Ticket" asp-action="MyQrTickets" asp-route-status="@TicketStatus.InUse" class="btn btn-outline-primary ms-2 @(Context.Request.Query["status"] == "InUse" ? "active" : "")">In Use</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div>
+            @if (Context.Request.Query["status"] == "Active")
+            {
+                <p>You don't have any active tickets. Purchase a new ticket to get started.</p>
+            }
+            else
+            {
+                <p>You don't have any tickets currently in use.</p>
+            }
+        </div>
+    }
+
+    @foreach (var ticket in Model)
+    {
+        var statusClass = ticket.Status.ToString().ToLower();
+        <div class="ticket-card @statusClass">
+            <div class="ticket-header">
+                <h3 class="ticket-title">@ticket.OriginStationName to @ticket.DestinationStationName</h3>
+                <span class="ticket-status @statusClass">@ticket.Status</span>
+            </div>
+            <div class="ticket-details">
+                <div class="ticket-info-row">
+                    <div class="ticket-info-label">From</div>
+                    <div class="ticket-info-value">@ticket.OriginStationName</div>
+                </div>
+                <div class="ticket-info-row">
+                    <div class="ticket-info-label">To</div>
+                    <div class="ticket-info-value">@ticket.DestinationStationName</div>
+                </div>
+                <div class="ticket-info-row">
+                    <div class="ticket-info-label">Valid Until</div>
+                    <div class="ticket-info-value">@ticket.ExpiryTimeFormatted</div>
+                </div>
+                <div class="ticket-info-row">
+                    <div class="ticket-info-label">Fare</div>
+                    <div class="ticket-info-value"><span class="taka-icon">৳</span>@ticket.FareAmount</div>
+                </div>
+            </div>
+            <div class="ticket-actions">
+                <button class="btn btn-outline-primary download-ticket" data-ticket-id="@ticket.Id">
+                    <i class="fas fa-download me-2"></i> Download
+                </button>
+                <button class="btn btn-primary show-qr-ticket-btn" data-ticket-id="@ticket.Id">
+                    <i class="fas fa-qrcode me-2"></i> Show QR
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Generate QR Code Modal -->
+<div class="modal fade qr-modal" id="generateQRModal" tabindex="-1" aria-labelledby="generateQRModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateQRModalLabel">QR Ticket</h5>
+                <button type="button" class="btn-close close-qr-modal-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-container text-center">  
+                    <div class="qr-code mb-3">
+                        <img src="" alt="QR Code" class="img-fluid" id="qrCodeImage">
+                    </div>
+                    <p id="infoMessage"></p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary download-ticket" id="downloadQRBtn">
+                            <i class="fas fa-download me-2"></i> Download QR Ticket
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted" id="expiryInfo"></small>
+            </div>
+        </div>
+    </div>
+</div>

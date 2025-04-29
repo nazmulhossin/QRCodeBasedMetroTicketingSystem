@@ -4,9 +4,9 @@
 | Category        | Details                                               |
 |-----------------|-------------------------------------------------------|
 | **Mentor**      | [Jaber Kibria](https://github.com/mhsjaber)           |
-| **Team Member** | [Rabbani Islam Refat](https://github.com/refat75)     |
-|                 | [Md. Nazmul Hossain](https://github.com/nazmulhossin) |
-|                 | [Sujan Roy](https://github.com/sujan-roy24)           |
+| **Team Member** | [Md. Nazmul Hossain](https://github.com/nazmulhossin)     |
+|                 | [Sujan Roy](https://github.com/sujan-roy24) |
+|                 | [Yeakin Iqra ](https://github.com/yeakiniqra) |
 
 
 

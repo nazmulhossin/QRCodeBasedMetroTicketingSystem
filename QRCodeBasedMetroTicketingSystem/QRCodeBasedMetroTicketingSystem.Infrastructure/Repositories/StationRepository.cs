@@ -87,10 +87,10 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
             return await GetDataTablesResponseAsync(request, query, selector, searchFilter);
         }
 
-        public async Task<List<StationListDto>> GetAllStationsOrderedAsync()
+        public async Task<List<StationSummaryDto>> GetAllStationsOrderedAsync()
         {
             var stationList = await _dbSet.OrderBy(s => s.Order).ToListAsync();
-            return _mapper.Map<List<StationListDto>>(stationList);
+            return _mapper.Map<List<StationSummaryDto>>(stationList);
         }
 
         public async Task<Station?> GetStationByIdAsync(int stationId)

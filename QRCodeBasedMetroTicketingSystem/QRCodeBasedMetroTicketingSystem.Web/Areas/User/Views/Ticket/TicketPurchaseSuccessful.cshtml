@@ -1,0 +1,77 @@
+﻿@model PurchaseStatusViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Ticket Purchase Successful";
+    var bdTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/buy-qr-ticket.min.css" asp-append-version="true" />
+}
+
+<div class="container buy-qr-ticket ticket-purchase-status">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ticket Purchase Successful</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Ticket Icon -->
+                    <div class="ticket-icon success my-3">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+
+                    <h4 class="purchase-status-title success text-center">Ticket Purchase Successful!</h4>
+                    <p class="purchase-status-message text-center">Your QR Ticket has been successfully purchased</p>
+
+                    <div class="ticket-details-container mt-3">
+                        <div class="ticket-details">
+                            <h5>Ticket Details</h5>
+
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">From Station</div>
+                                <div class="detail-value">@Model.OriginStationName</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">To Station</div>
+                                <div class="detail-value">@Model.DestinationStationName</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Ticket Type</div>
+                                <div class="detail-value">@Model.TicketType</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Valid Until</div>
+                                <div class="detail-value">@TimeZoneInfo.ConvertTimeFromUtc(Model.ExpiryTime, bdTimeZone).ToString("MMM dd, yyyy h:mm tt")</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Payment Method</div>
+                                <div class="detail-value">@Model.PaymentMethod</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Transaction ID</div>
+                                <div class="detail-value transaction-id">@Model.TransactionId</div>
+                            </div>
+                            <div class="ticket-detail-row">
+                                <div class="detail-label">Fare</div>
+                                <div class="detail-value"><span class="taka-icon">৳</span>@Model.FareAmount</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Back to Home</a>
+                        <a asp-area="User" asp-controller="Ticket" asp-action="MyQrTickets" class="btn btn-primary">View My Tickets</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/layout.js"></script>
+}

@@ -1,0 +1,295 @@
+.buy-qr-ticket {
+    min-height: 90vh;
+    margin-bottom: 30px;
+
+    .row {
+        min-height: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 8% 0;
+    }
+
+    .card {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: none;
+        padding: 20px 30px;
+        color: var(--dark-color);
+
+        .card-header {
+            background-color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-bottom-color: var(--border-color);
+            padding-left: 0;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+
+        .btn-primary, .btn-outline-danger {
+            padding: 0.5rem 1.2rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .card {
+            padding: 10px 20px;
+        }
+    }
+}
+
+.ticket-details-container {
+    .ticket-route {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .station-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .station-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .route-line {
+            flex: 2;
+            height: 2px;
+            background-color: var(--primary-color);
+            position: relative;
+            margin: 0 15px;
+        }
+
+        .route-line::before, .route-line::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            top: -3px;
+        }
+
+        .route-line::before {
+            left: 0;
+        }
+
+        .route-line::after {
+            right: 0;
+        }
+    }
+
+    .ticket-details {
+        background-color: var(--light-color);
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin: 1.5rem 0;
+
+        h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .ticket-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .detail-label {
+                color: var(--gray-color);
+            }
+
+            .detail-value {
+                font-weight: 600;
+
+                &.transaction-id {
+                    font-family: monospace;
+                }
+            }
+        }
+    }
+
+    .ticket-total {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 1px solid var(--border-color);
+
+        .total-label {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .total-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+    }
+}
+
+.ticket-summary {
+    .ticket-details {
+        background-color: white;
+        border-radius: 8px;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.select-payment-option {
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .payment-method-option {
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: var(--transition);
+
+        &:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        &.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        &:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 103, 71, 0.25);
+        }
+
+        .payment-method-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            cursor: pointer;
+
+            .payment-icon {
+                width: 40px;
+                height: 40px;
+                background-color: var(--primary-light);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+                font-size: 18px;
+                color: var(--primary-color);
+                flex-shrink: 0;
+            }
+
+            .payment-option-content {
+                .payment-title {
+                    font-weight: 600;
+                    font-size: 1rem;
+                    margin-bottom: 5px;
+                }
+
+                .payment-description {
+                    color: var(--light-text);
+                    font-size: 0.85rem;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+.ticket-purchase-status {
+    .row {
+        margin: 35px 0;
+    }
+
+    .card-header {
+        .failed {
+            color: var(--danger-color);
+        }
+    }
+    /* Ticket Icon */
+    .ticket-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2.5rem;
+
+        &.success {
+            background-color: rgba(0, 106, 78, 0.1);
+            color: var(--primary-color);
+        }
+
+        &.failed {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+    }
+
+    .purchase-status-title {
+        margin-bottom: 0.75rem;
+
+        &.success {
+            color: var(--primary-color);
+        }
+
+        &.failed {
+            color: var(--danger-color);
+        }
+    }
+
+    .purchase-status-message {
+        color: var(--gray-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .error-details {
+        background-color: var(--danger-light);
+        padding: 1.2rem;
+        margin: 1.5rem 0;
+        border-radius: 10px;
+
+        h5 {
+            color: var(--danger-color);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        p {
+            color: var(--gray-color);
+            text-align: justify;
+            margin-bottom: 8px;
+        }
+    }
+}

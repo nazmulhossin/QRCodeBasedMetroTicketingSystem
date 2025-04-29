@@ -1,0 +1,109 @@
+﻿@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Shippori+Antique&display=swap");
+:root {
+  --font: "Heebo", serif, system-ui, -apple-system;
+  --logo-font: "Shippori Antique", serif;
+  --body-bg-color: #F3F4F7;
+  --dark-color: #212631;
+  --dark-light: #2a303d;
+}
+
+body {
+  background-color: var(--body-bg-color);
+  font-family: var(--font);
+}
+
+header {
+  padding-top: 30px;
+}
+header .logo-container img {
+  height: 2.2rem;
+}
+header .logo-container .title {
+  font-size: 2rem;
+  font-family: var(--logo-font);
+}
+
+.card {
+  margin-top: 12%;
+  margin-bottom: 50vh;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.card-header {
+  background-color: var(--dark-color) !important;
+  border-bottom: none;
+}
+.card-header h2 {
+  font-size: 1.8rem;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(33, 38, 49, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+}
+
+.form-control {
+  border-left-width: 0;
+}
+.form-control:focus {
+  border-color: var(--dark-color);
+  box-shadow: none;
+}
+
+.input-group-text {
+  background-color: var(--dark-color);
+  color: white;
+  border-color: var(--dark-color);
+}
+
+/* Password Toggle */
+.password-container input {
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+.password-container .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-color);
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.3s ease-in-out;
+}
+.password-container .password-toggle:hover {
+  color: var(--primary-color);
+}
+
+.btn-primary {
+  background-color: var(--dark-color);
+  border-color: var(--dark-color);
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:disabled {
+  background-color: var(--dark-light) !important;
+  border-color: var(--dark-light) !important;
+}
+
+footer {
+  background-color: var(--dark-color) !important;
+}
+
+@media (max-width: 768px) {
+  header .logo-container img {
+    height: 1.6rem;
+  }
+  header .logo-container .title {
+    font-size: 1.6rem;
+  }
+  .card-header h2 {
+    font-size: 1.5rem;
+  }
+}
