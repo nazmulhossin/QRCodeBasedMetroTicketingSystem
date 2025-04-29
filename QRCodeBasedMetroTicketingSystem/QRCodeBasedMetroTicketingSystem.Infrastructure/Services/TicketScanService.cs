@@ -228,7 +228,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 {
                     // Apply time limit penalty
                     fareAmount += systemSettings.TimeLimitPenaltyFee;
-                    description += "(with penalty applied)";
+                    description += " (with penalty applied)";
                 }
 
                 // Process payment

@@ -6,7 +6,6 @@ using QRCodeBasedMetroTicketingSystem.Application.Extensions;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
 using QRCodeBasedMetroTicketingSystem.Web.Areas.User.ViewModels;
-using System.Net.Sockets;
 
 namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
 {
@@ -34,7 +33,15 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Areas.User.Controllers
                 return Unauthorized();
 
             var tickets = await _ticketService.GetQrTicketsByStatusAsync(userId.Value, status);
-            var viewModel = _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
+            var viewModel = tickets.Select(ticket => new TicketViewModel
+            {
+                Id = ticket.Id,
+                OriginStationName = ticket.OriginStationName,
+                DestinationStationName = ticket.DestinationStationName,
+                FareAmount = ticket.FareAmount,
+                Status = ticket.Status,
+                ExpiryTimeFormatted = _timeService.FormatAsBdTime(ticket.ExpiryTime)
+            });
 
             return View(viewModel);
         }

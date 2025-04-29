@@ -36,7 +36,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .AsSplitQuery()
                 .Include(t => t.OriginStation)
                 .Include(t => t.DestinationStation)
-                .Where(t => t.UserId == userId && t.Status == status)
+                .Where(t => t.UserId == userId && t.Status == status && t.Type == TicketType.QRTicket)
                 .ToListAsync();
         }
 
