@@ -4,6 +4,7 @@ using QRCodeBasedMetroTicketingSystem.Application.DTOs;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Repositories;
 using QRCodeBasedMetroTicketingSystem.Application.Interfaces.Services;
 using QRCodeBasedMetroTicketingSystem.Domain.Entities;
+using QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories;
 
 namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
 {
@@ -35,6 +36,9 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
         public async Task<IEnumerable<TicketDto>> GetQrTicketsByStatusAsync(int userId, TicketStatus status)
         {
             var tickets = await _unitOfWork.TicketRepository.GetQrTicketsByStatusAsync(userId, status);
+            if (status == TicketStatus.Active)
+                tickets = tickets.Where(t => t.ExpiryTime > DateTime.UtcNow);
+
             return _mapper.Map<IEnumerable<TicketDto>>(tickets);
         }
 
