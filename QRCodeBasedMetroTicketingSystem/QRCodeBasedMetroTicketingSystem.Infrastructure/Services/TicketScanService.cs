@@ -220,7 +220,7 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Services
                 decimal fareAmount = await _fareCalculationService.GetFareAsync(trip.EntryStationId, station.Id);
 
                 // Description for transaction
-                var description = $"Paid for Rapid Pass from {trip.EntryStationId} to {station.Id}";
+                var description = $"Paid for Rapid Pass from {trip.EntryStation.Name} to {station.Name}";
 
                 // Check time limit
                 var tripDuration = DateTime.UtcNow - trip.EntryTime;
