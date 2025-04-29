@@ -30,6 +30,21 @@ namespace QRCodeBasedMetroTicketingSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(t => t.Id == ticketId);
         }
 
+        public async Task<Ticket?> GetActiveQrTicketByIdAsync(int ticketId)
+        {
+            return await _dbSet
+                .AsSplitQuery()
+                .Include(t => t.OriginStation)
+                .Include(t => t.DestinationStation)
+                .FirstOrDefaultAsync(t => 
+                    t.Id == ticketId &&
+                    t.Type == TicketType.QRTicket &&
+                    (
+                        (t.Status == TicketStatus.Active && t.ExpiryTime > DateTime.UtcNow) ||
+                        (t.Status == TicketStatus.InUse)
+                    ));
+        }
+
         public async Task<IEnumerable<Ticket>> GetQrTicketsByStatusAsync(int userId, TicketStatus status)
         {
             return await _dbSet

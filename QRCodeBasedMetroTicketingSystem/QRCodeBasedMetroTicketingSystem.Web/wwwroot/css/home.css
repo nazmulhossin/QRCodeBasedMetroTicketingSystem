@@ -19,6 +19,11 @@
 }
 .hero #rapidPassToggleBtn {
   padding: 0.5rem 1rem;
+  color: #d6d6d6;
+}
+.hero #rapidPassToggleBtn.active-rapid-pass-btn-color {
+  color: white !important;
+  box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.3);
 }
 
 /* Fare Checker & Buy QR Ticket Section */
