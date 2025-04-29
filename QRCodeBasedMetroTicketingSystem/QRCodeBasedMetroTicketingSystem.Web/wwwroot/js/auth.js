@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
     const resetPasswordForm = document.getElementById('resetPasswordForm');
     const changePasswordForm = document.getElementById('changePasswordForm');
+    const originalBtnText = document.querySelector('.btn-text')?.innerHTML;
 
     if (signupForm) {
         const fullName = document.getElementById('fullName');
@@ -192,6 +193,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // If all validations pass, submit the form
         if (isFullNameValid && isEmailValid && isPhoneValid && isNidValid && isPasswordValid && isConfirmPasswordValid && isTermsChecked) {
             signupForm.submit();
+        } else {
+            setTimeout(function () {
+                resetButtonState(signupForm);
+            }, 500);
         }
     });
 
@@ -204,6 +209,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isPhoneValid) {
             loginForm.submit();
+        } else {
+            setTimeout(function () {
+                resetButtonState(loginForm);
+            }, 500);
         }
     });
 
@@ -219,6 +228,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isPasswordValid && isConfirmPasswordValid) {
             resetPasswordForm.submit();
+        } else {
+            setTimeout(function () {
+                resetButtonState(resetPasswordForm);
+            }, 500);
         }
     });
 
@@ -236,6 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isCurrentPasswordValid && isPasswordValid && isConfirmPasswordValid) {
             changePasswordForm.submit();
+        } else {
+            setTimeout(function () {
+                resetButtonState(changePasswordForm);
+            }, 500);
         }
     });
 
@@ -256,4 +273,15 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.classList.add('fa-eye');
         }
     });
+
+    // Helper function to reset the button state
+    function resetButtonState(form) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const spinner = submitBtn.querySelector('#loadingSpinner');
+
+        spinner.classList.add('d-none');
+        submitBtn.disabled = false;
+        btnText.innerHTML = originalBtnText;
+    }
 });
