@@ -5,7 +5,7 @@ The QR Code Based Metro Ticketing System is built to provide fast and secure met
 
 ## 🎨System Architecture
 
-![Alt text](Images/system-architecture.svg)
+![Alt text](images/system-architecture.svg)
 
 ## 📈 ER Diagram
 
