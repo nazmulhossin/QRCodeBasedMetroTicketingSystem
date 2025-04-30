@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin `
+          dotnet sonarscanner begin \
             /k:"Learnathon-By-Geeky-Solutions_netninjas" \
             /o:"learnathon-by-geeky-solutions" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
