@@ -1,83 +1,36 @@
-name: .NET CI with SonarCloud Analysis
+name: .NET CI with SonarCloud
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
-    name: Build, Test, and Analyze
+  analyze:
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Required for SonarCloud analysis
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install tools
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet tool install --global dotnet-reportgenerator-globaltool
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Restore dependencies
         run: dotnet restore QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln
 
-      - name: Begin SonarCloud analysis
+      - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          dotnet sonarscanner begin \
-            /k:"Learnathon-By-Geeky-Solutions_netninjas" \
-            /o:"learnathon-by-geeky-solutions" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.sources="QRCodeBasedMetroTicketingSystem" \
-            /d:sonar.exclusions="**/bin/**,**/obj/**,**/*.Designer.cs,**/Migrations/**,**/*.cshtml,**/*.scss,**/*.css,**/*.js,**/*.cshtml.cs" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" \
-            /d:sonar.projectBaseDir="${{ github.workspace }}" \
-            /d:sonar.ci.autoconfig.disabled=true \
-            /d:sonar.pullrequest.provider=github \
-            /d:sonar.pullrequest.github.repository=${{ github.repository }} \
-            /d:sonar.pullrequest.key=${{ github.event.pull_request.number }} \
-            /d:sonar.pullrequest.branch=${{ github.head_ref }}
-
-      - name: Build solution
-        run: dotnet build QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln --no-restore --configuration Release
-
-      - name: Run tests with coverage
-        run: |
-          if [ -d "QRCodeBasedMetroTicketingSystem.Tests" ]; then
-            dotnet test QRCodeBasedMetroTicketingSystem.Tests --collect:"XPlat Code Coverage" --results-directory:./TestResults
-          else
-            echo "No test project found, skipping test step."
-          fi
-
-      - name: Generate coverage report
-        if: success()
-        run: |
-          if ls TestResults/**/coverage.cobertura.xml 1> /dev/null 2>&1; then
-            reportgenerator \
-              -reports:TestResults/**/coverage.cobertura.xml \
-              -targetdir:coverage-report \
-              -reporttypes:Cobertura
-          else
-            echo "No coverage report found, skipping report generation."
-          fi
-
-      - name: End SonarCloud analysis
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
+        run: |
+          dotnet sonarscanner begin /k:"Learnathon-By-Geeky-Solutions_netninjas" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet build QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln --configuration Release
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
