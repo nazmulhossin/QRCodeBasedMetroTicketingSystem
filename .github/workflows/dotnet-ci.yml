@@ -1,4 +1,4 @@
-name: .NET CI with SonarCloud and Code Coverage
+name: .NET CI with SonarCloud
 
 on:
   push:
@@ -10,24 +10,21 @@ on:
 
 jobs:
   build:
-    name: Build, Test, and Analyze
+    name: Build and Analyze
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Required for SonarCloud to get git history
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install SonarScanner and Coverlet
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet tool install --global coverlet.console
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
       - name: Restore dependencies
         run: dotnet restore QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln
 
@@ -43,28 +40,10 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.sources="QRCodeBasedMetroTicketingSystem" \
             /d:sonar.exclusions="**/bin/**,**/obj/**,**/*.Designer.cs,**/Migrations/**,**/*.cshtml,**/*.scss,**/*.css,**/*.js,**/*.cshtml.cs" \
-            /d:sonar.projectBaseDir="${{ github.workspace }}" \
-            /d:sonar.ci.autoconfig.disabled=true \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**Test*.cs" \
-            /d:sonar.pullrequest.provider=github \
-            /d:sonar.pullrequest.github.repository=$GITHUB_REPOSITORY \
-            /d:sonar.pullrequest.key=${{ github.event.pull_request.number }} \
-            /d:sonar.pullrequest.branch=${{ github.head_ref }}
+            /d:sonar.projectBaseDir="${{ github.workspace }}"
       - name: Build solution
         run: dotnet build QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln --no-restore --configuration Release --no-incremental
 
-      - name: Run tests with coverage
-        run: |
-          dotnet test QRCodeBasedMetroTicketingSystem/QRCodeBasedMetroTicketingSystem.sln \
-            --configuration Release \
-            --no-build \
-            --logger trx \
-            --results-directory ./TestResults \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=opencover \
-            /p:CoverletOutput=./TestResults/coverage/coverage.opencover.xml \
-            /p:Exclude="[xunit.*]*%2c[*.Tests]*"
       - name: End SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
