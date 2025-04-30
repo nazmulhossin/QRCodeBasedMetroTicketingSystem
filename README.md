@@ -11,7 +11,7 @@
 <h3 align="center">Fast . Convenient . Cashless</h3>
 <br>
 
-![Alt text](docs/Images/train-animation.svg)
+![Alt text](docs/images/train-animation.svg)
 
 <br>
 
@@ -68,7 +68,7 @@ This project follows **Clean Architecture** principles and incorporates **indust
 ### 🔧 Clean Architecture
 
 <p align="center">
-  <img src="docs/Images/clean-architecture-.NET-core.jpg" alt="Clean Architecture" width="320" />
+  <img src="docs/images/clean-architecture-.NET-core.jpg" alt="Clean Architecture" width="320" />
   <br/>
   <strong>Clean Architecture</strong>
 </p>
@@ -88,12 +88,10 @@ This project follows well-established industry best practices, including:
 
 ## 🧩 Use Case Diagram
 Illustrates the main interactions between users and the system.
-
-![Alt text](docs/Images/use-case-diagram.PNG)
+![Alt text](docs/images/use-case-diagram.PNG)
 
 ## 🗃️ Entity Relationship (ER) Diagram
 Describes the system's data model and relationships among entities.
-
 ```mermaid
 erDiagram
     Admin ||--o{ Station : manages
