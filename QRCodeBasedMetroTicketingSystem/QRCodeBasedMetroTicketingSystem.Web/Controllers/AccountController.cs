@@ -49,7 +49,7 @@ namespace QRCodeBasedMetroTicketingSystem.Web.Controllers
 
             if (await _userService.CheckPhoneExistsAsync(model.PhoneNumber))
             {
-                ModelState.AddModelError("Phone", "Phone number is already registered");
+                ModelState.AddModelError("PhoneNumber", "Phone number is already registered");
                 return View(model);
             }
 
