@@ -210,11 +210,11 @@ erDiagram
 ```
 ## 📸 Project Screenshots
 
-| ![Image 1](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/home-page-01.PNG) | ![Image 2](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/user-dashboard.PNG) | ![Image 3](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/user-wallet.PNG) |
+| ![Image 1](/docs/project-screenshots/home-page-01.PNG) | ![Image 2](/docs/project-screenshots/user-dashboard.PNG) | ![Image 3](/docs/project-screenshots/user-wallet.PNG) |
 |:--:|:--:|:--:|
-| ![Image 4](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/user-qr-tickets.PNG) | ![Image 5](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/user-security-settings.PNG) | ![Image 6](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/ticket-buy-options.PNG) |
-| ![Image 7](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/scan-ticket-at%20entry-gate.jpg) | ![Image 8](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/scan-ticket-at-exit-gate.jpg) | ![Image 9](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/admin-dashboard-top.PNG) |
-| ![Image 11](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/admin-dashboard-bottom.PNG) | ![Image 12](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/add-station.PNG) | ![Image 13](https://github.com/Learnathon-By-Geeky-Solutions/netninjas/blob/update-readme.md/docs/project-screenshots/system-settings.PNG) 
+| ![Image 4](/docs/project-screenshots/user-qr-tickets.PNG) | ![Image 5](/docs/project-screenshots/user-security-settings.PNG) | ![Image 6](/docs/project-screenshots/ticket-buy-options.PNG) |
+| ![Image 7](/docs/project-screenshots/scan-ticket-at%20entry-gate.jpg) | ![Image 8](/docs/project-screenshots/scan-ticket-at-exit-gate.jpg) | ![Image 9](/docs/project-screenshots/admin-dashboard-top.PNG) |
+| ![Image 11](/docs/project-screenshots/admin-dashboard-bottom.PNG) | ![Image 12](/docs/project-screenshots/add-station.PNG) | ![Image 13](/docs/project-screenshots/system-settings.PNG) 
 
 
 
