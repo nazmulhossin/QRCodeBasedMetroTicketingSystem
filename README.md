@@ -49,17 +49,17 @@ Experience the QR Code-Based Metro Ticketing System in action by visiting our li
 
 #### 📘 User Guide
 - **Home Page**  
-  URL: [https://dhakametrorail.bsite.net/](https://dhakametrorail.bsite.net/)  
+  URL: [https://dhakametrorailbd.bsite.net/](https://dhakametrorailbd.bsite.net/)  
   The landing page where users can register or log in, check fare, generate RapidPass QR codes, purchase QR tickets, add wallet balance, and view recent trips.
 
 - **Admin Dashboard**  
-  URL: [https://dhakametrorail.bsite.net/Admin/](https://dhakametrorail.bsite.net/Admin/)  
+  URL: [https://dhakametrorailbd.bsite.net/Admin/](https://dhakametrorailbd.bsite.net/Admin/)  
   The admin dashboard for managing stations, configuring system settings, and monitoring overall system activity.
 
   Login Credentials: (`admin@gmail.com` and `admin123`)
 
 - **Scanner Interface**  
-  URL: [https://dhakametrorail.bsite.net/System/Scanner](https://dhakametrorail.bsite.net/System/Scanner)  
+  URL: [https://dhakametrorailbd.bsite.net/System/Scanner](https://dhakametrorailbd.bsite.net/System/Scanner)  
   This interface is used by the metro station system to scan and validate QR code tickets in real time.
 
 ## 📁 Code Structure
